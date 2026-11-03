@@ -779,3 +779,289 @@ T6 LIVE = SCOPED PASS A–H
 ROUTER-INTEGRATED PACKAGE SELECTION/RETRIEVAL = NOT RUN
 LOCAL HOST-BINDING SUCCESSOR = NOT IMPLEMENTED
 T7 = NOT STARTED
+
+
+# T7 — Router Local Retrieval: kiểm chứng tĩnh
+
+Ngày: 2026-11-04. Baseline: `main` sạch tại `8f402ebcb6845f0a8f0b0d080824c0ada94a85fc`.
+
+`T7 IMPLEMENTED / STATIC VERIFIED / LIVE NOT RUN`
+
+T7 thêm luồng trả lời thường gồm ba pha model: chọn root qua Structured Outputs từ nguyên nội dung CI 1.1 / Router 1.1 / Architecture 1.8 / Root Catalog 1.8 / manifest local; chọn leaf qua Structured Outputs chỉ khi Concept đã được chọn và interface đã đọc đủ; trả lời từ các artifact đã chọn và xác minh. Mọi pha dùng cùng model/config, toàn bộ history thường hiện tại, `store=False`, không retry. Python không phân loại prompt, chia task, phân tích control span hoặc quyết định applicability.
+
+Manifest duy nhất `runtime/HUB_LOCAL_BINDINGS_v0.1.json` khai báo `LOCAL_RUNTIME_FILE`, Technical 1.0 và năm artifact Concept: core/Catalog/Creative/Brainstorm 1.1, Debate 1.0. Mỗi artifact khai báo identity/role/version, đường dẫn tương đối và SHA-256. JSON được dùng để consumer Python đọc bằng thư viện chuẩn, tránh thêm PyYAML; không phải thay đổi sở thích kiến trúc hay package manager.
+
+Binding kế nhiệm local chỉ đổi binding lưu trữ/truy xuất. Metadata ChatGPT Library cũ được giữ nguyên, không viết lại hoặc tuyên bố đã xác minh Library. Failure Debate của T5 vẫn là bằng chứng lịch sử trong đúng phạm vi T5; T7 dự kiến được thử live riêng để xác định binding kế nhiệm local có giải quyết việc truy xuất/thực thi Debate hay không. Kiểm thử tĩnh chỉ chứng minh body Debate được chọn, hash-verify và chuyển vào payload dù Catalog vẫn giữ `UNRESOLVED / NOT_PERFORMED`; chưa chứng minh model thực thi Debate thành công.
+
+Authoring/AIS/ImageT vẫn chưa có binding T7. Chọn các package đó tạo blocker phần chuyên biệt và không đọc body/fallback/mô phỏng; các phần Technical, Concept hoặc baseline độc lập vẫn có thể tiếp tục. Thiếu/sai control hoặc config dừng trước API. Lỗi tệp đã chọn, UTF-8, SHA-256 hoặc đường dẫn thoát runtime chặn phần phụ thuộc; core/Catalog lỗi chặn lựa chọn leaf phụ thuộc. Kết quả Structured Outputs sai cấu trúc dừng lượt, không đoán/thử lại. Lượt thất bại toàn bộ không thay đổi history, nhãn hoặc bản ghi T3.
+
+Bằng chứng tĩnh:
+
+- 29 kiểm thử T0–T6 giữ nguyên; thêm 18 kiểm thử T7 bằng HTTP transport giả lập, không chi API credit.
+- `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5 test_t6 test_t7`: **47/47 PASS**.
+- `python -X utf8 -m compileall -q app.py test_app.py test_t3.py test_t4.py test_t5.py test_t6.py test_t7.py`: PASS.
+- `git diff --check`: PASS.
+- Kiểm tra chính xác inventory, hash/path, reread control/config qua nhiều request, không nạp package body trong root phase, Technical-only, Concept core-only, từng leaf độc lập và thứ tự coexistence cố định.
+- Kiểm tra package/leaf identity không tồn tại hoặc sai role/version bị chặn; blocker do model cung cấp và nhiều scope của cùng leaf được giữ; một body chỉ đọc một lần trong request.
+- Kiểm tra missing, permission/I/O, UTF-8, hash mismatch, traversal/outside path, config sai/JSON trùng key và Structured Outputs sai cấu trúc; không truy xuất nguồn thay thế hoặc tự đổi mode.
+- AppTest kiểm tra nhãn/lịch sử T7, T7 → T3 → T7, T3 chỉ nhận prompt riêng và không vào history thường, lỗi trước API giữ nguyên history/prompt/nhãn/bản ghi.
+- Sáu artifact runtime hiện có so sánh nguyên byte với HEAD; **208 tệp upstream được Git theo dõi** so sánh nguyên byte với HEAD, không có tệp upstream mới chưa được bỏ qua. Bốn tệp `.pytest_cache` đã bị bỏ qua không thuộc inventory Git và không được sửa trong T7. Số 212 trong bằng chứng cũ bao gồm bốn tệp cache này.
+- T0–T6 giữ nguyên read set và hành vi kiểm thử; T3 vẫn là structured route inspection riêng. Không thêm dependency, server hoặc framework registry/eval.
+
+Router-integrated local retrieval chỉ **STATIC VERIFIED** cho đến campaign live do ChatGPT giám sát chạy từ prompt UTF-8. Codex không chạy prompt live hoặc gọi API thật trong T7. Không quy bằng chứng live T5/T6 thành bằng chứng live T7.
+
+Phạm vi thay đổi: `app.py`, `README.md`, append `VERIFICATION.md`, thêm manifest runtime và `test_t7.py`. Không stage/commit/push/tag/branch/thay remotes. `STOP: T8 NOT STARTED`.
+
+# T7 — kiểm chứng live Router → local retrieval
+
+Phần này cập nhật trạng thái LIVE NOT RUN của mục T7 tĩnh phía trên. Campaign cuối được chạy bằng UTF-8 sạch qua API thật với gpt-5.6-sol, sau khi sửa hai lỗi triển khai phát hiện trong audit/lần live đầu.
+
+T7 LIVE ROUTER → LOCAL RETRIEVAL: SCOPED PASS
+
+## Hai lỗi T7 phát hiện trước campaign cuối
+
+Audit và lần live đầu phát hiện hai lỗi triển khai, không phải lỗi module:
+
+1. Root routing phase được gửi nguyên manifest local, khiến Router nhìn thấy inventory leaf của Concept. Điều này trái invariant ROUTER MAY KNOW PACKAGE INTERFACES; ROUTER MUST NOT KNOW PACKAGE LEAF INVENTORIES. Bản sửa vẫn đọc/kiểm manifest ở platform mỗi request nhưng không gửi leaf map cho root Router. Chỉ Concept-local selector được thấy binding availability của leaf thuộc chính package đó.
+2. Concept-local selection từng trả blocker tạm kiểu body chưa truy xuất, rồi Python đã hash-verify/đọc body thành công nhưng blocker cũ vẫn đi vào final handoff. Bản sửa xác định rõ retrieval là pha sau selection: trạng thái chưa truy xuất vì chưa đến pha retrieval không phải unresolved blocker. Blocker semantic/control/identity thật vẫn được giữ.
+
+Hai lỗi này được sửa cục bộ trước campaign cuối. Không sửa Hub CI, Router, Architecture, Root Catalog, Concept core/Catalog hoặc leaf body.
+
+## Campaign cuối
+
+Tổng cộng 10 request live: A–G và I một lượt; H hai lượt trong cùng history. Không có API exception hay lỗi host.
+
+A: giải thích RAM/SSD đơn giản → root không chọn package, không retrieval. PASS.
+B: chẩn đoán máy khựng chưa có log → chỉ Technical, chỉ đọc HUB-DOM-TECHNICAL. PASS.
+C: audit thể chế hư cấu, không thiết kế lại → Concept core + Catalog, không leaf. PASS.
+D: /BRAINSTORM → Concept + Brainstorm; không Creative/Debate; output tạo nhánh và hệ quả bậc hai. PASS.
+E: /CREATIVE → Concept + Creative; output thực thi cảnh sáng tác. PASS.
+F: /DEBATE → Concept + Debate; core + Catalog + Debate được đọc, blocker rỗng; output thực thi phản đối có hệ quả và điều kiện dừng. PASS.
+G: audit thể chế + chẩn đoán kỹ thuật → Concept + Technical, không leaf. PASS.
+H1: Brainstorm → Concept + Brainstorm. PASS.
+H2: đổi hẳn sang PC diagnosis → chỉ Technical, không Concept/leaf. PASS cho routing recompute/no persistence.
+I: /AUTHOR GENERIC → Router chọn Authoring nhưng local retrieval rỗng; một blocker platform; không đọc body/fallback/emulate. PASS expected blocker.
+
+## Debate: đối chiếu failure T5
+
+T5 đã tái hiện:
+LOCAL DEBATE BODY = PRESENT / BYTE-EXACT
+OLD CHATGPT LIBRARY METADATA = UNRESOLVED / NOT_PERFORMED
+T5 MODEL RESULT = REFUSES SPECIALIZED DEBATE EXECUTION
+
+T7 campaign cuối:
+ROOT PACKAGE = HUB-PKG-CONCEPT-DEVELOPMENT
+LOCAL LEAF SELECTION = HUB-CAP-DEBATE
+LOCAL RETRIEVAL = CORE + CATALOG + DEBATE
+SHA-256 VERIFIED = YES
+UNRESOLVED BLOCKER = NONE
+FINAL BEHAVIOR = DEBATE EXECUTED
+
+Kết luận giới hạn đúng host:
+REPRODUCED T5 HOST-BINDING FAILURE = RESOLVED FOR T7 LOCAL_RUNTIME_FILE PATH
+
+Điều này không thay đổi hay xác minh lại ChatGPT Library. Metadata nguồn cũ của Debate vẫn giữ nguyên UNRESOLVED / NOT_PERFORMED; T7 dùng local-host successor binding riêng.
+
+## Trạng thái T7 sau live
+
+ROOT ROUTING WITHOUT LEAF INVENTORY EXPOSURE = STATIC VERIFIED + LIVE OBSERVED
+SELECTIVE LOCAL RETRIEVAL = STATIC VERIFIED + LIVE PASS A–I
+TECHNICAL-ONLY = LIVE PASS
+CONCEPT CORE-ONLY = LIVE PASS
+CREATIVE LOCAL RETRIEVAL / EXECUTION = LIVE PASS
+BRAINSTORM LOCAL RETRIEVAL / EXECUTION = LIVE PASS
+DEBATE LOCAL RETRIEVAL / EXECUTION = LIVE PASS
+TECHNICAL + CONCEPT COMPOSITION = LIVE PASS
+ROUTING RECOMPUTE ACROSS TURNS = LIVE PASS
+UNBOUND AUTHORING = SELECTED THEN BLOCKED WITHOUT FALLBACK
+AIS / IMAGET T7 LOCAL EXECUTION = NOT RUN / UNBOUND BY DESIGN
+T8 = NOT STARTED
+
+PASS chỉ áp dụng các prompt và revision hiện tại. Nó không chứng minh mọi Router case, mọi control/provenance edge case, Authoring/AIS/ImageT local execution, hay ChatGPT Library deployment.
+
+# T8 — Authoring Lifecycle: kiểm chứng tĩnh
+
+Ngày: 2026-11-04. `T8 IMPLEMENTED / STATIC VERIFIED / LIVE NOT RUN`.
+Baseline: `main`, HEAD `8f402ebcb6845f0a8f0b0d080824c0ada94a85fc`; T7 đã có thay đổi local chưa stage/commit. Mọi bằng chứng T7 phía trên được giữ nguyên.
+
+Triển khai:
+
+- Thêm mode `T8 - Authoring Lifecycle`, dispatch tới `t8.call_t8(config, messages)`; trả `(answer, trace)`. T8 giữ trạng thái activation trong biến cục bộ của từng request, không lưu mode Authoring vào history/session.
+- Mỗi request đọc lại nguyên CI 1.1, Router 1.1, Architecture 1.8, Root Catalog 1.8 và manifest v0.2. Model chọn root theo ngữ nghĩa trước kiểm tra storage; root không nhận manifest thô hoặc inventory leaf. Package không bind vẫn được chọn rồi bị chặn sau selection.
+- Manifest `runtime/HUB_LOCAL_BINDINGS_v0.2.json` chỉ có Technical + Concept như v0.1 và Authoring 0.6. Body `runtime/packages/authoring/HUB-CAP-AUTHORING_v0.6.md` là bản sao byte-exact của nguồn ACTIVE `upstream/Central Hub/library_modules/HUB-CAP-AUTHORING_v0.6.md`; host xác minh đường dẫn runtime, SHA-256 và UTF-8 trước admission.
+- Chỉ khi root chọn Authoring mới có admission Structured Outputs. Model nhận CI + handoff storage tối thiểu + nguyên Authoring + history hiện tại; Python kiểm tra shape/enums và quan hệ active/target/preset/contributor, không phân tích trigger, spacing, case, provenance, preset hoặc nội dung user.
+- Inactive không đưa Authoring body vào instructions cuối, chỉ tiếp tục Hub CI baseline. Active dùng CI → handoff đã xác minh → nguyên Authoring, tạo một prompt rồi dừng. Không nạp hoặc thực thi target body/tools chỉ vì target là AIS/IMAGET/CODEX/WORK/GENERIC; preset chỉ là chiến lược biến đổi prompt.
+- Contributor chỉ đi qua Concept owner khi admission yêu cầu CREATIVE/BRAINSTORM. Owner đọc core + Catalog, phân giải identity/role/scope/protected constraints/provenance theo semantics hiện hành. Nhãn contributor không vượt qua gate explicit span của Concept; thiếu điều kiện phải trả blocker. Python chỉ đối chiếu identity chính xác với contributor được yêu cầu, Catalog và binding.
+- Chỉ leaf yêu cầu được hash-verify/đọc và chạy một pha contribution. Authoring cuối nhận artifact thực tế có provenance, scope, protected constraints, evidence hash và trạng thái GENERATED_CONTRIBUTION_NOT_ACCEPTED_STATE; không nhận lại raw core/Catalog/leaf controls. Thiếu/sai contributor chặn prompt phối hợp, không fallback thành prompt single-target tương đương. Debate không phải contributor được phép.
+- Lỗi controls/manifest dừng trước API. Lỗi body/path/hash/UTF-8 chặn phần phụ thuộc, không dùng upstream/repository fallback. Structured record sai hoặc API refusal/incomplete/thiếu output dừng request, không retry; lượt thất bại toàn bộ không sửa history thường.
+
+Bằng chứng static/mock:
+
+- Baseline trước T8: 47/47 kiểm thử T0–T7 PASS.
+- Sau T8: `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5 test_t6 test_t7 test_t8`: **70/70 PASS**, gồm nguyên 47 kiểm thử cũ và 23 kiểm thử T8. Mọi request trong kiểm thử T8 dùng HTTP MockTransport, không đi tới API thật.
+- Bao phủ năm target và từng P1/P2/P3; hai contributor trên cả năm target; impossible admission combinations, enum/shape sai, record malformed, root identity sai/trùng; đọc lại controls/manifest và recompute qua lượt dù history có `/AUTHOR`, clarification/reauthor.
+- Kiểm tra chính xác read set, root không thấy leaf/manifest, inactive không có Authoring body, final Authoring không có target/Concept/leaf bodies, contribution/provenance/protected state được chuyển nguyên vào handoff. Đây là kiểm tra host/payload; mock không chứng minh model tạo contribution hoặc prompt đúng semantics.
+- Bao phủ lỗi missing/permission/I/O/hash/UTF-8, UTF-8 sai dù hash hợp lệ, path traversal/outside runtime, Catalog identity/version/interface mismatch, contributor sai/unknown/Debate, blocker owner/admission, refusal/incomplete/empty output. Không tự drop contributor hoặc retry.
+- AppTest xác minh nhãn T8, history thường, T8 → T3 isolation và lỗi trước API/structured admission không đổi history/nhãn/route records/prompt. T7 vẫn chọn rồi chặn Authoring vì chỉ đọc v0.1; 47 kiểm thử regression giữ nguyên.
+- `python -X utf8 -m compileall -q app.py t8.py test_app.py test_t3.py test_t4.py test_t5.py test_t6.py test_t7.py test_t8.py`: PASS.
+- `git diff --check`: PASS; kiểm tra riêng UTF-8/EOF/trailing whitespace trên file T8 mới.
+- Snapshot SHA-256 đầu/cuối: toàn bộ 219 tệp upstream/runtime có trước T8 giữ nguyên byte (212 upstream gồm bốn cache đã bị Git bỏ qua; bảy runtime gồm v0.1). Kiểm thử cũ cũng so sánh 208 tệp upstream được Git theo dõi với HEAD. Không thêm file upstream.
+- `test_t7.py` giữ nguyên byte. `app.py` chính xác bằng snapshot T7 cộng mode T8 và dispatch ba dòng; các hàm T7 giữ nguyên. VERIFICATION có trước T8 được giữ nguyên byte làm prefix. README thêm mô tả T8 và cập nhật dòng liệt kê lịch sử chung để bao gồm T8; các đoạn T7 còn lại giữ nguyên.
+
+## Binding cũ và giới hạn bằng chứng
+
+Authoring old ChatGPT Library metadata vẫn **UNRESOLVED / NOT_PERFORMED**. T8 v0.2 là local-host successor cho LOCAL_RUNTIME_FILE, không viết lại hoặc xác minh lại binding host cũ. Upstream không đổi. v0.1 tiếp tục là manifest riêng của T7; không thêm Authoring, AIS hoặc ImageT vào v0.1. v0.2 không bind AIS/ImageT body.
+
+**Codex không gọi API live trong T8.** Exact linguistic activation (first non-empty current-user line, case/spacing, quote/fence/source provenance, clarification/reauthor) do model quyết định theo nguyên body; kiểm thử mock chỉ xác lập phản ứng host với record. Semantics contributor theo Concept owner và chất lượng/preservation của prompt cuối vẫn **LIVE NOT VERIFIED**. Không quy kết PASS live T7 thành PASS live Authoring.
+
+## Ngân sách live dành cho ChatGPT giám sát
+
+Cases và campaign live sẽ do ChatGPT giám sát chọn/chạy riêng, chỉ kiểm tra semantics mà mock không xác lập được:
+
+- Tối đa **4 user requests tổng cộng**, kể cả lượt tiếp theo trong cùng conversation.
+- Không lặp request trừ khi đã phát hiện một lỗi đáng kể.
+- Khi gặp lỗi đáng kể, dừng campaign ngay trước mọi lần chạy lại; chỉ xem xét chạy lại sau khi lỗi đã được phân tích.
+- Không dùng live để lặp lại kiểm tra inventory/hash/read set/schema đã xác lập tĩnh; không mở rộng budget ngầm.
+
+Phạm vi T8: sửa `app.py`, append `README.md`/`VERIFICATION.md`; thêm `t8.py`, `test_t8.py`, manifest v0.2 và runtime Authoring 0.6. Diff Git tổng còn chứa T7 có trước, không được quy toàn bộ diff cho T8. Không stage, commit, push, tag, tạo branch hoặc thay remotes.
+
+**STOP: T9 NOT STARTED.**
+
+# T8 — Authoring Lifecycle: kiểm chứng tĩnh
+
+Ngày: 2026-11-04. Baseline Git vẫn là `8f402eb`; T7 và T8 đều là thay đổi local chưa stage/commit/push.
+
+`T8 STATIC / MOCK VERIFIED: PASS`
+
+T8 thêm successor binding riêng `runtime/HUB_LOCAL_BINDINGS_v0.2.json`. v0.1 của T7 không bị sửa và vẫn chỉ bind Technical + Concept. v0.2 giữ nguyên các binding đó và thêm đúng `HUB-PKG-AUTHORING -> HUB-CAP-AUTHORING ACTIVE/0.6` bằng `LOCAL_RUNTIME_FILE`.
+
+Authoring runtime:
+- `runtime/packages/authoring/HUB-CAP-AUTHORING_v0.6.md`
+- byte-exact với `upstream/Central Hub/library_modules/HUB-CAP-AUTHORING_v0.6.md`
+- SHA-256 `3a3c067a4eabccc4355d9c8a33dd96bef063ec8654d758aa6a3827862ffd6328`
+
+Metadata ChatGPT Library cũ trong Root Catalog vẫn giữ nguyên `UNRESOLVED / NOT_PERFORMED`. T8 không sửa hoặc nâng trạng thái đó; v0.2 chỉ là binding kế nhiệm cho host local.
+
+## Host behavior được kiểm bằng mock/static
+
+- Root routing vẫn do model quyết định từ exact Hub CI / Router / Architecture / Root Catalog.
+- Root Router không nhận raw v0.2 manifest và không thấy inventory leaf.
+- Python không parse cú pháp `/AUTHOR`, không quyết định first-nonempty-line, case, spacing, quote/fence, preset hoặc contributor.
+- Authoring admission là Structured Outputs do model quyết định cho current user turn.
+- Admission inactive không thực thi Authoring và không dùng Authoring body ở final phase.
+- Active single-target/preset chỉ nạp exact Authoring body; target AIS/IMAGET/CODEX/WORK/GENERIC không tự kích hoạt pipeline/tool.
+- Mỗi call tính lại root/admission; Python không giữ persistent Authoring mode.
+- CREATIVE/BRAINSTORM contributor đi qua Concept owner interface, không do Python suy từ intent. Python chỉ kiểm identity/role/version/path/hash.
+- Contributor label không được phép bỏ qua exact Concept leaf activation/scope/provenance rules; unmet owner requirement phải trở thành blocker.
+- Contributor hợp lệ chỉ nạp đúng leaf được chọn; Debate không phải Authoring contributor.
+- Contributor output được handoff như scoped generated contribution, không thành accepted canon/design/state.
+- Contributor failure không được hạ cấp thành single-target prompt tương đương.
+- Missing/hash/UTF-8/path traversal/identity/schema/refusal/incomplete đều fail hoặc block đúng phần, không upstream/repository fallback.
+- T7 vẫn dùng v0.1; T8 không retroactively bind Authoring cho T7.
+- T3 isolation và UI/history regression được giữ.
+
+Kiểm thử:
+- `python -X utf8 -m unittest -q test_t8`: 22/22 PASS.
+- Full suite `test_app test_t3 test_t4 test_t5 test_t6 test_t7 test_t8`: 69/69 PASS.
+- `compileall`: PASS.
+- `git diff --check`: PASS.
+- `git diff --exit-code -- upstream`: PASS.
+- Codex không gọi live OpenAI API trong T8.
+
+## Live budget
+
+Campaign live do ChatGPT giám sát bị giới hạn cứng:
+- tối đa 4 user requests tổng cộng;
+- không lặp nếu chưa có material failure;
+- gặp material failure thì dừng trước mọi rerun/case sau;
+- live chỉ dùng để xác lập semantics mà mock/static không chứng minh được.
+
+Tại checkpoint static này:
+`T8 LIVE = NOT RUN`
+`T9 = NOT STARTED`
+
+# T8 — live budgeted campaign và correction
+
+Campaign live dừng ở 3/4 user requests theo đúng cost policy. Không có request thứ 4 và không rerun sau material failure.
+
+## Request 1 — exact target + preset
+
+Input bắt đầu bằng /AUTHOR CODEX P1.
+
+Trace:
+- root: HUB-PKG-AUTHORING
+- local retrieval: Authoring 0.6
+- authoring_active = true
+- target = CODEX
+- preset = P1
+- contributor = NONE
+- blockers = []
+
+Output là một prompt ngắn cho Codex, giữ phạm vi sửa tối thiểu và giữ cấm commit/push. Không có downstream Codex execution.
+
+Phân loại: LIVE PASS trong scope.
+
+## Request 2 — no persistence + later-line lookalike
+
+Cùng history với request 1. Current user turn có yêu cầu sửa prompt nhưng dòng /AUTHOR CODEX chỉ xuất hiện ở phía sau, được ghi rõ là ví dụ chứ không phải trigger.
+
+Trace:
+- root selected packages = []
+- Authoring không được retrieve
+- authoring_active = false
+- target/preset/contributor đều NONE
+- blockers = []
+
+Output vẫn hỗ trợ sửa câu chữ bằng Hub baseline, nhưng không dùng Authoring capability.
+
+Phân loại: LIVE PASS cho per-turn reassessment, no persistence và later-line non-trigger.
+
+## Request 3 — Authoring + Brainstorm contributor
+
+Input có exact Authoring composition trigger /AUTHOR CODEX + BRAINSTORM và đồng thời có explicit valid Concept span /BRAINSTORM ... #.
+
+Observed trace trước correction:
+- root: Authoring + Concept + Technical
+- Authoring được local-retrieve
+- admission active, target CODEX, contributor BRAINSTORM
+- Concept core + Catalog được retrieve
+- contributor body chưa được retrieve
+- contributor_retrieved_module_ids = []
+- model trả blocker nói Brainstorm body chưa được truy xuất/xác minh nên không thể tạo contribution
+
+Final response chặn composed prompt và không giả lập Brainstorm.
+
+Phân loại: REPRODUCED T8 IMPLEMENTATION FAILURE — POST-SELECTION RETRIEVAL SEQUENCING.
+
+Failure này không chứng minh Brainstorm semantics sai và cũng không phải trường hợp contributor-label-only: request đã có explicit valid /BRAINSTORM ... # span. Vấn đề là Concept owner selection phase biết body chưa được đọc nhưng chưa được cung cấp đủ local-binding evidence để phân biệt pending retrieval by design với unavailable/unverified artifact.
+
+## Correction sau failure — STATIC ONLY
+
+Không sửa Hub CI, Router, Architecture, Root Catalog, Authoring 0.6, Concept core/Catalog hoặc Brainstorm body.
+
+T8 được sửa cục bộ:
+- thêm T8 CONCEPT OWNER LOCAL BINDING AVAILABILITY cho Concept-owner phase;
+- view này xác nhận identity/version của các leaf đã local-bind nhưng không đưa body vào trước selection;
+- ghi rõ body retrieval + SHA-256 verification xảy ra sau valid owner selection;
+- expected pending post-selection retrieval không phải unresolved blocker;
+- contributor label vẫn không bypass exact Concept activation/scope/provenance rules;
+- actual leaf body vẫn chỉ được đọc sau model owner selection và identity validation.
+
+Static/mock sau correction:
+- test_t8: 23/23 PASS
+- full T0–T8 suite: 70/70 PASS
+- compileall: PASS
+- git diff --check: PASS
+- upstream: unchanged
+
+Theo cost policy, không rerun request 3 sau correction.
+
+T8 SINGLE-TARGET / PRESET LIVE = PASS
+T8 NO-PERSISTENCE / LATER-LINE NON-TRIGGER LIVE = PASS
+T8 CONTRIBUTOR PATH BEFORE CORRECTION = REPRODUCED SEQUENCING FAILURE
+T8 CONTRIBUTOR CORRECTION = STATIC / MOCK VERIFIED; NOT LIVE REVERIFIED
+LIVE USER REQUESTS USED = 3 / 4 MAX
+REQUEST 4 = NOT RUN
+T9 = NOT STARTED
+
+Không được nâng contributor path thành live PASS cho đến khi có live evidence mới. Failure trước correction được giữ làm bằng chứng lịch sử; correction không xóa nó.

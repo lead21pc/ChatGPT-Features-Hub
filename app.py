@@ -1,4 +1,6 @@
+import hashlib
 import json
+import re
 from pathlib import Path
 
 import streamlit as st
@@ -97,7 +99,7 @@ ROUTE_SCHEMA = {
     "required": ["task_scope", "selected_packages", "unresolved_blockers"],
     "additionalProperties": False,
 }
-MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect", "T4 - Hub CI + Concept Core", "T5 - Concept Scoped Leaves", "T6 - Concept + Technical Composition")
+MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect", "T4 - Hub CI + Concept Core", "T5 - Concept Scoped Leaves", "T6 - Concept + Technical Composition", "T7 - Router Local Retrieval", "T8 - Authoring Lifecycle")
 
 
 def read_config():
@@ -118,6 +120,11 @@ def read_config():
 
 
 def call_model(config, messages, mode=MODES[0]):
+    if mode == MODES[8]:
+        from t8 import call_t8
+        return call_t8(config, messages)[0]
+    if mode == MODES[7]:
+        return call_t7(config, messages)[0]
     if not config["openai_api_key"]:
         raise ValueError("Chưa có API key. Hãy điền openai_api_key trong config.json rồi bấm Send lại.")
     instructions = {}
@@ -242,6 +249,303 @@ def inspect_route(config, prompt):
     ):
         raise ValueError("T3: Bản ghi không đúng cấu trúc schema; chưa lưu bản ghi định tuyến.")
     return record
+
+
+T7_BINDINGS_PATH = Path(__file__).resolve().parent / "runtime" / "HUB_LOCAL_BINDINGS_v0.1.json"
+T7_BINDING_NOTE = (
+    "[T7 LOCAL HOST BINDING]\n"
+    "T7 changes host storage/retrieval binding only. For artifacts explicitly listed in "
+    "HUB_LOCAL_BINDINGS_v0.1.json, LOCAL_RUNTIME_FILE is the current T7 binding authority. "
+    "An artifact becomes executable only after the platform reads it and verifies its declared SHA-256. "
+    "This is a local-host successor binding, not fallback from failed LIBRARY_MODULE. "
+    "ChatGPT Library location/resolution fields in upstream/root/local catalogs remain historical "
+    "source-host metadata and do not block eligibility under an explicit T7 local binding. "
+    "All non-storage semantics of Hub CI, Router, Architecture, Catalog and module bodies remain unchanged. "
+    "Unlisted packages/artifacts remain unavailable and must not be emulated. "
+    "Selection != retrieval != execution. Availability does not activate a package or leaf.\n"
+)
+LEAF_FIELDS = ("module_id", "runtime_role", "application_scope", "reason")
+LEAF_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "selected_leaves": {"type": "array", "items": {
+            "type": "object", "properties": {key: {"type": "string"} for key in LEAF_FIELDS},
+            "required": list(LEAF_FIELDS), "additionalProperties": False,
+        }},
+        "unresolved_blockers": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["selected_leaves", "unresolved_blockers"], "additionalProperties": False,
+}
+
+
+def t7_catalog_identities(text, section, id_field):
+    # Read only exact scalar identity fields in the current catalogs' flat entry lists.
+    # This is not YAML semantic/applicability evaluation or a general YAML consumer.
+    identities = {}
+    current = None
+    inside = False
+    for line in text.splitlines():
+        if line == section + ":":
+            inside = True
+            continue
+        if not inside:
+            continue
+        if line and not line[0].isspace() and not line.startswith("- "):
+            break
+        match = re.fullmatch(r"- " + id_field + r": ([A-Z0-9-]+)", line)
+        if match:
+            current = match[1]
+            if current in identities:
+                raise ValueError("T7: Catalog có identity trùng lặp.")
+            identities[current] = {id_field: current}
+        elif current:
+            match = re.fullmatch(r"  (entrypoint_module_id|runtime_role|status|version): ([^ ]+)", line)
+            if match:
+                key, value = match.groups()
+                if key in identities[current]:
+                    raise ValueError("T7: Catalog có trường identity trùng lặp.")
+                identities[current][key] = value.strip("'\"")
+    required = {id_field, "runtime_role", "status", "version"}
+    if id_field == "package_id":
+        required.add("entrypoint_module_id")
+    if not identities or any(set(value) != required for value in identities.values()):
+        raise ValueError("T7: Không đọc được identity Catalog chính xác.")
+    return identities
+
+
+def t7_read(path):
+    try:
+        return path.read_bytes().decode("utf-8")
+    except (OSError, UnicodeError):
+        raise ValueError(f"T7: Không đọc được {path.name}; không chuyển chế độ hoặc dùng nguồn thay thế.") from None
+
+
+def t7_load_bindings(text):
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate key")
+            result[key] = value
+        return result
+
+    try:
+        manifest = json.loads(text, object_pairs_hook=unique_object)
+        if (set(manifest) != {"binding_version", "status", "host_purpose", "retrieval_authority", "packages"}
+            or manifest["binding_version"] != "0.1" or manifest["status"] != "ACTIVE"
+            or manifest["retrieval_authority"] != "LOCAL_RUNTIME_FILE"
+            or not isinstance(manifest["host_purpose"], str) or not manifest["host_purpose"].strip()):
+            raise ValueError()
+        packages = manifest["packages"]
+        if set(packages) != {"HUB-PKG-TECHNICAL", "HUB-PKG-CONCEPT-DEVELOPMENT"}:
+            raise ValueError()
+        technical = packages["HUB-PKG-TECHNICAL"]
+        concept = packages["HUB-PKG-CONCEPT-DEVELOPMENT"]
+        if set(technical) != {"entrypoint"} or set(concept) != {"entrypoint", "local_catalog", "leaves"}:
+            raise ValueError()
+        if not isinstance(concept["leaves"], list) or len(concept["leaves"]) != 3:
+            raise ValueError()
+        artifacts = [technical["entrypoint"], concept["entrypoint"], concept["local_catalog"], *concept["leaves"]]
+        expected = [("HUB-DOM-TECHNICAL", "REASONING_PROFILE", "1.0"),
+                    ("HUB-DOM-CONCEPT-DEVELOPMENT", "DOMAIN_CONTROL", "1.1"),
+                    ("HUB-CATALOG-CONCEPT-DEVELOPMENT", "PACKAGE_CATALOG", "1.1"),
+                    ("HUB-DOM-CREATIVE", "DOMAIN_CONTROL", "1.1"),
+                    ("HUB-CAP-BRAINSTORM", "CAPABILITY", "1.1"),
+                    ("HUB-CAP-DEBATE", "CAPABILITY", "1.0")]
+        for artifact, identity in zip(artifacts, expected):
+            if (set(artifact) != {"module_id", "runtime_role", "version", "path", "sha256"}
+                or (artifact["module_id"], artifact["runtime_role"], artifact["version"]) != identity
+                or not all(isinstance(value, str) for value in artifact.values())
+                or not re.fullmatch(r"[0-9a-f]{64}", artifact["sha256"])):
+                raise ValueError()
+        return packages
+    except (ValueError, TypeError, KeyError, AttributeError):
+        raise ValueError("T7: HUB_LOCAL_BINDINGS_v0.1.json không hợp lệ; yêu cầu chưa gửi API.") from None
+
+
+def t7_concept_binding_view(bindings):
+    concept = bindings["HUB-PKG-CONCEPT-DEVELOPMENT"]
+    return "[T7 CONCEPT LOCAL BINDING AVAILABILITY]\n" + json.dumps({
+        "retrieval_authority": "LOCAL_RUNTIME_FILE",
+        "package_id": "HUB-PKG-CONCEPT-DEVELOPMENT",
+        "entrypoint": {key: concept["entrypoint"][key] for key in ("module_id", "runtime_role", "version")},
+        "local_catalog": {key: concept["local_catalog"][key] for key in ("module_id", "runtime_role", "version")},
+        "locally_bound_leaves": [
+            {key: leaf[key] for key in ("module_id", "runtime_role", "version")}
+            for leaf in concept["leaves"]
+        ],
+        "selection_rule": (
+            "This is storage-binding availability only. Select leaves only under the exact supplied "
+            "Concept core/Catalog semantics. Body retrieval and SHA-256 verification happen after selection."
+        ),
+    }, ensure_ascii=False)
+
+
+def t7_retrieve(artifact):
+    repo = Path(__file__).resolve().parent
+    relative = Path(artifact["path"])
+    try:
+        if relative.is_absolute() or relative.drive or ".." in relative.parts:
+            raise ValueError()
+        path = (repo / relative).resolve()
+        if not path.is_relative_to(repo / "runtime"):
+            raise ValueError()
+        data = path.read_bytes()
+        if hashlib.sha256(data).hexdigest() != artifact["sha256"]:
+            raise ValueError()
+        return data.decode("utf-8")
+    except (OSError, UnicodeError, ValueError, RuntimeError):
+        raise ValueError(f"T7: {artifact['module_id']} không truy xuất được hoặc sai path/SHA-256/UTF-8; phần phụ thuộc bị chặn, không fallback.") from None
+
+
+def t7_structured(client, config, messages, instructions, schema, name):
+    response = client.responses.create(
+        model=config["model"], input=messages, instructions=instructions, store=False,
+        text={"format": {"type": "json_schema", "name": name, "schema": schema, "strict": True}},
+    )
+    try:
+        if response.status != "completed" or any(
+            part.type == "refusal" for item in response.output if item.type == "message" for part in item.content
+        ):
+            raise ValueError()
+        record = json.loads(response.output_text)
+        key, fields = ("selected_packages", ROUTE_PACKAGE_FIELDS) if schema is ROUTE_SCHEMA else ("selected_leaves", LEAF_FIELDS)
+        if (not isinstance(record, dict) or set(record) != set(schema["required"])
+            or not isinstance(record["unresolved_blockers"], list)
+            or not all(isinstance(value, str) for value in record["unresolved_blockers"])
+            or (key == "selected_packages" and not isinstance(record["task_scope"], str))
+            or not isinstance(record[key], list)
+            or not all(isinstance(item, dict) and set(item) == set(fields)
+                       and all(isinstance(value, str) for value in item.values()) for item in record[key])):
+            raise ValueError()
+        return record
+    except (ValueError, TypeError, AttributeError):
+        raise ValueError("T7: Phản hồi lựa chọn không hợp lệ; không đoán hoặc thử lại; chưa lưu lượt.") from None
+
+
+def call_t7(config, messages):
+    """Return (normal answer, small structured selection/retrieval trace). No live tests here."""
+    if not config["openai_api_key"]:
+        raise ValueError("T7: Chưa có API key.")
+    controls = [t7_read(path) for path in (HUB_CI_PATH, HUB_ROUTER_PATH, HUB_ARCHITECTURE_PATH, HUB_CATALOG_PATH)]
+    binding_text = t7_read(T7_BINDINGS_PATH)
+    bindings = t7_load_bindings(binding_text)
+    catalog = t7_catalog_identities(controls[3], "packages", "package_id")
+    trace = {"root_selected_package_ids": [], "locally_retrieved_package_ids": [],
+             "concept_selected_leaf_ids": [], "locally_retrieved_module_ids": [], "unresolved_blockers": []}
+    blockers = trace["unresolved_blockers"]
+    bodies = {}
+    accepted = []
+    leaf_selections = []
+
+    def retrieve(artifact):
+        body = t7_retrieve(artifact)
+        trace["locally_retrieved_module_ids"].append(artifact["module_id"])
+        return body
+
+    def handoff():
+        return T7_BINDING_NOTE + "\n[T7 VERIFIED EXECUTION HANDOFF]\n" + json.dumps({
+            "task_scope": route["task_scope"], "selected_packages": accepted,
+            "selected_leaves": leaf_selections, **trace,
+            "retrieval_evidence": "Only locally_retrieved_module_ids passed full local SHA-256 retrieval. "
+                "Apply supplied artifacts only in their selected scopes. Block unavailable dependent specialized "
+                "work; continue independent supported/baseline portions and expose material blockers. Do not emulate missing artifacts.",
+        }, ensure_ascii=False)
+
+    with OpenAI(api_key=config["openai_api_key"], base_url="https://api.openai.com/v1",
+                timeout=120.0, max_retries=0) as client:
+        route = t7_structured(client, config, messages, "\n\n".join(controls + [T7_BINDING_NOTE,
+            "Perform TASK_SCOPE and ROOT_PACKAGE_SELECTION only under the exact supplied controls for the current "
+            "request using relevant conversation context. Select packages by semantic applicability before local "
+            "storage availability. Do not inspect or infer package leaf inventory at root. Do not suppress a "
+            "semantically required package because its local body may be unavailable; the platform validates "
+            "retrieval after selection. Do not report expected post-selection retrieval availability as a routing "
+            "blocker. Return exact root Catalog identities and scoped reasons. No package bodies have been retrieved "
+            "yet. An empty selection is valid."]), ROUTE_SCHEMA, "hub_t7_root")
+        blockers.extend(route["unresolved_blockers"])
+        seen = set()
+        for selection in route["selected_packages"]:
+            package_id = selection["package_id"]
+            trace["root_selected_package_ids"].append(package_id)
+            identity = catalog.get(package_id)
+            if (identity is None or package_id in seen or any(selection[key] != identity[key]
+                for key in ("entrypoint_module_id", "runtime_role"))):
+                blockers.append(f"{package_id}: unknown, duplicate or mismatched root identity; selected portion blocked.")
+                continue
+            seen.add(package_id)
+            accepted.append(selection)
+            if package_id not in bindings:
+                blockers.append(f"{package_id}: unavailable in T7 LOCAL_RUNTIME_FILE; specialized portion blocked; must not be emulated.")
+                continue
+            package = bindings[package_id]
+            entry = package["entrypoint"]
+            try:
+                if (entry["module_id"] != identity["entrypoint_module_id"]
+                    or entry["runtime_role"] != identity["runtime_role"]
+                    or entry["version"] != identity["version"] or identity["status"] != "ACTIVE"):
+                    raise ValueError(f"{package_id}: binding/Catalog identity mismatch; package blocked.")
+                core = retrieve(entry)
+                if "local_catalog" in package:
+                    local = retrieve(package["local_catalog"])
+                    leaf_catalog = t7_catalog_identities(local, "entries", "module_id")
+                    # The catalog interface identity is declared by the root, not inferred from a filename.
+                    local_id = package["local_catalog"]
+                    package_block = controls[3].split("- package_id: " + package_id + "\n", 1)[1].split("\n- package_id:", 1)[0]
+                    interface_block = package_block.split("  local_catalog:\n", 1)[1].split("    location:", 1)[0]
+                    expected_interface = {**local_id, "package_id": package_id, "status": "ACTIVE"}
+                    for key in ("module_id", "package_id", "runtime_role", "status", "version"):
+                        scalar = f"    {key}: "
+                        root_value = [line[len(scalar):].strip("'\"") for line in interface_block.splitlines()
+                                      if line.startswith(scalar)]
+                        if root_value != [expected_interface[key]]:
+                            raise ValueError(f"{package_id}: local Catalog interface identity mismatch.")
+                    bodies[package_id] = [core, local]
+                else:
+                    bodies[package_id] = [core]
+                trace["locally_retrieved_package_ids"].append(package_id)
+            except (ValueError, IndexError) as exc:
+                blockers.append(f"{package_id}: required interface blocked: {exc}")
+
+        concept_id = "HUB-PKG-CONCEPT-DEVELOPMENT"
+        if concept_id in bodies:
+            local_result = t7_structured(client, config, messages, "\n\n".join([
+                controls[0], handoff(), t7_concept_binding_view(bindings), *bodies[concept_id],
+                "Perform Concept-local leaf selection only for the current selected Concept scopes. "
+                "Use the exact supplied core and Catalog semantics. The T7 Concept binding view changes storage "
+                "binding only: old ChatGPT Library resolution fields do not block selection of a locally bound leaf. "
+                "Specialized leaf bodies are intentionally retrieved only after this selection phase, so their "
+                "expected not-yet-retrieved state is not an unresolved blocker. Report only semantic/control/identity "
+                "blockers that prevent a valid selection. Return zero or more scoped leaf identities and blockers."]),
+                LEAF_SCHEMA, "hub_t7_concept")
+            blockers.extend(local_result["unresolved_blockers"])
+            requested = {}
+            for leaf in local_result["selected_leaves"]:
+                module_id = leaf["module_id"]
+                trace["concept_selected_leaf_ids"].append(module_id)
+                identity = leaf_catalog.get(module_id)
+                bound = next((a for a in bindings[concept_id]["leaves"] if a["module_id"] == module_id), None)
+                if (identity is None or bound is None or identity["status"] != "ACTIVE"
+                    or leaf["runtime_role"] != identity["runtime_role"]
+                    or any(bound[key] != identity[key] for key in ("module_id", "runtime_role", "version"))):
+                    blockers.append(f"{module_id}: unknown, unbound or mismatched leaf identity; leaf portion blocked.")
+                    continue
+                leaf_selections.append(leaf)
+                requested[module_id] = bound
+            for bound in bindings[concept_id]["leaves"]:
+                if bound["module_id"] in requested:
+                    try:
+                        bodies[concept_id].append(retrieve(bound))
+                    except ValueError as exc:
+                        blockers.append(str(exc))
+
+        instructions = [controls[0], handoff()]
+        for package_id in ("HUB-PKG-TECHNICAL", concept_id):
+            instructions.extend(bodies.get(package_id, []))
+        response = client.responses.create(model=config["model"], input=messages,
+                                           instructions="\n\n".join(instructions), store=False)
+        if response.status != "completed" or not response.output_text or not response.output_text.strip():
+            raise ValueError("T7: API chưa hoàn tất hoặc thiếu văn bản; lượt này chưa được lưu vào lịch sử.")
+        return response.output_text, trace
 
 
 def main():
