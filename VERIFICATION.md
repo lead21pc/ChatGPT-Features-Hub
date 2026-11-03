@@ -412,3 +412,370 @@ LOCAL LIBRARY/FILESYSTEM BINDING MIGRATION
 ```
 
 T3 không tạo local Router/Catalog/Architecture successor, không sửa binding ChatGPT hiện tại và không bắt đầu T4.
+
+# Kết quả kiểm chứng T4 — Concept Development core chọn thủ công
+
+Ngày kiểm chứng: 2026-11-04 (Asia/Ho_Chi_Minh). Baseline trước T4 là commit \`476cf3a\` đã được push lên \`origin/main\`. T4 được triển khai local sau checkpoint đó; không stage, commit hoặc push T4 trong bước này.
+
+\`T4 IMPLEMENTED / STATIC VERIFIED / LIVE BEHAVIOR OBSERVED\`
+
+## Phạm vi triển khai
+
+T4 thêm chế độ \`T4 - Hub CI + Concept Core\`. Đây là hiệu chuẩn chọn package thủ công, tương tự T2: \`HUB-PKG-CONCEPT-DEVELOPMENT\` được giả định đã được chọn cho phần yêu cầu hiện tại. Router không thực hiện package selection trong T4.
+
+Mỗi request T4 đọc lại theo đúng thứ tự:
+
+1. \`HUB_CI_v1.1.md\`
+2. ghi chú liên kết T4 tối thiểu
+3. \`HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md\`
+4. \`HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml\`
+
+Hai control Concept được sao chép nguyên byte vào \`runtime/packages/concept-development/\`. Không có body của Creative, Brainstorm, Debate hoặc anti-drift trong runtime T4. Ghi chú T4 không thay đổi semantics của core/Catalog, không mô phỏng Router và không tuyên bố Library retrieval hoặc migration binding.
+
+SHA-256:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Hub CI 1.1 | \`7bb946874663627060d28e47674decb07ba99f51acbffb6550db98d65746157b\` |
+| Concept core 1.1 | \`b93c4b3045c5ce980fdc3157d01728f3bd650e0cc4e908c8f89fda3f8346a4b0\` |
+| Concept local Catalog 1.1 | \`eaf480160e055ac7afc12ee4f8d511d09b6828abd14063d85ca571f5e6f03c07\` |
+
+Runtime core và Catalog có cùng kích thước/hash với exact upstream ACTIVE sources tương ứng.
+
+## Kiểm chứng tĩnh và hồi quy
+
+- \`python -X utf8 -m compileall -q app.py test_app.py test_t3.py test_t4.py\`: PASS.
+- \`python -X utf8 -m unittest -q test_app test_t3 test_t4\`: 20/20 PASS sau correction của một test UI; lỗi ban đầu chỉ do mock sai namespace AppTest, không phải runtime failure.
+- T4 đọc lại CI/core/Catalog ở mỗi request và payload giữ đúng thứ tự byte.
+- T4 thiếu tệp, lỗi quyền, I/O hoặc UTF-8: dừng trước API, không fallback T2/T1/T0.
+- T0/T1/T2 không đọc Concept runtime; T3 vẫn chỉ đọc bốn control routing riêng và giữ route records tách khỏi history.
+- \`runtime/packages/concept-development/\` chỉ có hai file core/Catalog; không có leaf body.
+- Toàn bộ 212 tệp \`upstream/\` byte-identical trước/sau T4.
+- \`git diff --exit-code -- upstream test_app.py test_t3.py\`: PASS.
+- T5 không bắt đầu.
+
+## Live T4 và đối chứng T1
+
+Mỗi ca chạy trong AppTest session mới qua API thật với \`gpt-5.6-sol\`. Cùng năm prompt được chạy ở T4 và T1. Không có UI/API error hoặc exception.
+
+| Ca | Quan sát T4 | Phân loại |
+| --- | --- | --- |
+| A — audit thể chế thuế ký ức | Giữ đúng audit; nêu lỗ hổng nhân quả, trade-off và dữ kiện thiếu; không sửa thiết kế hay biến giả định thành fact | PASS trong scope |
+| B — phát triển hệ quả + feedback | Tách phần suy ra được khỏi nhánh đề xuất, phát triển hệ quả trực tiếp và vòng phản hồi | PASS trong scope |
+| C — cụm tự nhiên “Brainstorm sâu…” | Tạo các nhánh/hệ quả như công việc concept thường; không tuyên bố \`HUB-CAP-BRAINSTORM\` được chọn hoặc áp dụng | PASS cho \`SEMANTIC FIT != LEAF ACTIVATION\` |
+| D — span \`/BRAINSTORM ... #\` hợp lệ | Nhận diện đúng span nhưng báo specialized Brainstorm execution không thể thực hiện vì body leaf không được cung cấp; không emulation bằng core | PASS cho selection/block boundary |
+| E — \`/CREATIVE ...\` thiếu \`#\` | Báo span chưa hợp lệ vì thiếu terminator; không implicit close, không thực thi Creative | PASS cho malformed-span boundary |
+
+Đối chứng T1 có khác biệt material ở D/E: T1 không có Concept core/Catalog nên đã trực tiếp tạo nội dung brainstorm cho D và xây nghi lễ Creative cho E. Vì vậy việc T4 chặn D/E là hành vi quan sát được của control Concept được nạp, không phải hành vi baseline tự nhiên của cùng API trong các ca này.
+
+Ở C, T4 vẫn tạo nhiều ý tưởng dù không kích hoạt leaf. Điều này phù hợp contract: core có thể làm sufficient ordinary unscoped concept work; natural-language “brainstorm” không tự cấp quyền cho specialized Brainstorm leaf. Live smoke này không chứng minh mọi prompt tự nhiên sẽ luôn phân biệt đúng.
+
+## Giới hạn bằng chứng
+
+\`\`\`text
+T4 MANUAL CONCEPT HOST PATH
+= VERIFIED
+
+CONCEPT CORE + LOCAL CATALOG BYTE-EXACT RUNTIME COPIES
+= VERIFIED
+
+ORDINARY CORE AUDIT / CAUSAL DEVELOPMENT
+= SCOPED LIVE PASS
+
+EXPLICIT LEAF DETECTION + BLOCK WITHOUT BODY
+= SCOPED LIVE PASS FOR BRAINSTORM
+
+MALFORMED LEAF REJECTION
+= SCOPED LIVE PASS FOR CREATIVE
+
+SPECIALIZED LEAF EXECUTION
+= NOT RUN
+
+ROUTER-INTEGRATED PACKAGE RETRIEVAL
+= NOT RUN
+
+LOCAL LIBRARY/FILESYSTEM BINDING MIGRATION
+= NOT STARTED
+
+T5
+= NOT STARTED
+\`\`\`
+
+---
+
+## T5 — Concept Scoped Leaves (2026-11-04, Asia/Bangkok)
+
+**IMPLEMENTED / STATIC PASS / LIVE MIXED.** Các mục T0–T4 phía trên giữ nguyên như bằng chứng lịch sử; dòng T5 NOT STARTED trước đó mô tả thời điểm kết thúc T4.
+
+Baseline trước T5: repository `<LOCAL_REPO>`, nhánh `main`, HEAD `476cf3a282ddc951181a986e44e3ef7e76a79ae8`. Dirty baseline: `.gitattributes`, `README.md`, `VERIFICATION.md`, `app.py`; untracked `runtime/packages/concept-development/`, `test_t4.py`. Index trống. T4 được giữ tại chỗ; không stage/commit/push/tag/branch hoặc sửa remotes.
+
+### Triển khai và ranh giới
+
+Thêm nhãn UI `T5 - Concept Scoped Leaves`, dùng luồng trả lời `call_model` thông thường. Payload giữ nguyên byte UTF-8 theo thứ tự: CI 1.1 → adapter T5 tiếng Anh tối thiểu → Concept core 1.1 → Concept local Catalog 1.1 → Creative 1.1 → Brainstorm 1.1 → Debate 1.0. Mỗi request đọc lại đúng sáu tệp; không cache. Không có parser span, regex router, leaf detector, state machine hoặc heuristic trong Python. Core/Catalog giữ quyền nhận diện/chọn span.
+
+T5 chọn thủ công `HUB-PKG-CONCEPT-DEVELOPMENT` cho phần yêu cầu hiện tại, với ba leaf khả dụng cục bộ; availability không phải activation. Không nạp anti-drift hoặc package body khác. Các entry anti-drift của Catalog vẫn INACTIVE. Đây không phải retrieval tích hợp Router, không mô phỏng Router và không migration ChatGPT Library resolution.
+
+Creative/Brainstorm có bằng chứng binding Library cũ RESOLVED trong Catalog. Debate vẫn UNRESOLVED/NOT_PERFORMED ở host ChatGPT cũ. Bản Debate local được đối chiếu toàn bộ byte với upstream ACTIVE/1.0 và chỉ là **T5 local test binding only**. Không sửa Catalog, binding lịch sử hoặc nguồn upstream. Local byte verification không chứng minh Library retrieval.
+
+### Kiểm chứng tĩnh
+
+- Trước T5: 20/20 test T0–T4 PASS. Sau T5: `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5`: **25/25 PASS**.
+- Test T4 chỉ đổi kỳ vọng inventory thư mục từ hai sang năm tệp để phản ánh T5. Kiểm tra payload T4 vẫn giữ nguyên, xác nhận T4 chỉ đọc CI/core/Catalog.
+- Ba runtime leaf byte-exact với upstream ACTIVE; core/Catalog của T4 không đổi. Inventory runtime Concept đúng năm tệp.
+- Payload T5 so sánh byte đầy đủ và thứ tự đọc chính xác qua hai request, thay nội dung giữa request (cả BOM/CRLF), chứng minh đọc lại, không chuẩn hóa hoặc cache. Input control được chuyển nguyên vẹn tới model; Python không chọn leaf.
+- 24 tổ hợp lỗi trên sáu tệp (missing, permission, I/O, invalid UTF-8): client API không được khởi tạo; history, response labels, route records và prompt giữ nguyên; không fallback T4/T2/T1/T0.
+- T0–T4 không đọc ba leaf mới. T0/T1/T2/T4/T5 dùng chung history và nhãn UI; T3 vẫn JSON schema inspection, chỉ prompt hiện tại và route records riêng. Quay về T5 không nhận bản ghi T3 vào history.
+- `python -X utf8 -m compileall -q app.py test_app.py test_t3.py test_t4.py test_t5.py sessions/run_t5_live.py`: PASS.
+- `git diff --check`: PASS. `git diff --exit-code -- upstream test_app.py test_t3.py`: PASS.
+- Đối chiếu manifest SHA-256 trước/sau: toàn bộ **212 tệp upstream byte-identical**; `.gitattributes`, `test_app.py`, `test_t3.py`, Technical runtime, Concept core/Catalog giữ nguyên so với baseline T5. Evidence T4 không bị ghi đè. Phần VERIFICATION trước mục T5 giữ nguyên byte.
+
+SHA-256 của runtime và upstream tương ứng (nguồn: `upstream/Central Hub/library_modules/`; runtime: `runtime/packages/concept-development/`):
+
+| Tệp | SHA-256 runtime | SHA-256 upstream |
+| --- | --- | --- |
+| HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md | b93c4b3045c5ce980fdc3157d01728f3bd650e0cc4e908c8f89fda3f8346a4b0 | b93c4b3045c5ce980fdc3157d01728f3bd650e0cc4e908c8f89fda3f8346a4b0 |
+| HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml | eaf480160e055ac7afc12ee4f8d511d09b6828abd14063d85ca571f5e6f03c07 | eaf480160e055ac7afc12ee4f8d511d09b6828abd14063d85ca571f5e6f03c07 |
+| HUB-DOM-CREATIVE_v1.1.md | 0430934d81b57743854543c52d9b78100d6209d8415a59c890e89f19296b4052 | 0430934d81b57743854543c52d9b78100d6209d8415a59c890e89f19296b4052 |
+| HUB-CAP-BRAINSTORM_v1.1.md | 3758bf748ab11886656f0ea2a73472323301d14e7bf93bca5767079fea824843 | 3758bf748ab11886656f0ea2a73472323301d14e7bf93bca5767079fea824843 |
+| HUB-CAP-DEBATE_v1.0.md | 430d1c01892c510e3d0c605654626b69202065a113e1fe4bf4c60da332ab0ddc | 430d1c01892c510e3d0c605654626b69202065a113e1fe4bf4c60da332ab0ddc |
+
+### Live A–H
+
+Chạy qua AppTest UI và API thật, model cấu hình `gpt-5.6-sol`, từ `2026-11-03T18:09:14Z` đến `18:10:49Z` (01:09–01:10 ngày 04/11 giờ local). Mỗi ca một session mới; G có hai lượt trong cùng session. Tổng 10 request: 9 request T5 và một đối chứng T4/A. Không UI/API error hoặc exception. Không thay model, tham số, nguồn hoặc adapter giữa các ca.
+
+Prompt yêu cầu ban đầu bị mất dấu thành `?`; bản khôi phục tiếng Việt sạch UTF-8 lưu nguyên văn ở `sessions/t5_live_prompts.json`. Runner: `sessions/run_t5_live.py`; toàn bộ prompt, lỗi và history trả lời: `sessions/t5_live_results.json`. Chạy lại bằng `python -X utf8 sessions/run_t5_live.py` sẽ gọi API thật và ghi đè kết quả T5, cần sao lưu kết quả hiện tại trước nếu muốn giữ cả hai lần. Các tệp `sessions/` bị Git ignore theo chính sách sẵn có; bằng chứng này chỉ tồn tại local, không có tuyên bố đã commit.
+
+| Ca | Kết quả | Bằng chứng và giới hạn |
+| --- | --- | --- |
+| A | PASS | Trước span audit cơ chế định giá/trích xuất; trong span đảo premise thành bắt buộc tiếp nhận ký ức, phát triển hệ quả bậc hai và feedback; sau span đánh giá điều kiện sinh học/pháp lý, không mở nhánh mới. T4/A nhận diện span nhưng chặn Brainstorm do thiếu body, không tạo nhánh. |
+| B | PARTIAL | Creative tạo cảnh ga tàu; giữa hai span phân tích đơn vị tính, bảo lưu, quyền can thiệp. Debate không chạy: model nói “chưa có liên kết đọc đã được xác minh trong danh mục hiện tại”. Không kiểm chứng được consequential objection hoặc stopping của Debate. |
+| C | PASS | Hai nhóm Brainstorm theo thứ tự, phần đầu có đúng hai nhánh phong tỏa ký ức/chuyển quyền sở hữu; giữa là ràng buộc xác minh; phần sau đảo tự nguyện thành tự động thế chấp. Không gộp hai span hoặc buộc nhánh sau phụ thuộc một kết quả cụ thể ở trước. |
+| D | PASS | Báo `/DEBATE` xuất hiện trước khi `/CREATIVE` đóng, toàn bộ nhóm không hợp lệ; không dựng nghi lễ hoặc thực thi phản đối. Không có yêu cầu core độc lập để tiếp tục. |
+| E | PASS | Phân biệt inline code và câu trích dẫn là dữ liệu; không đổi premise hoặc thêm cảnh. |
+| F | PARTIAL | Không chạy Creative, không đóng span ngầm; nhưng đưa ví dụ đã bổ sung `#` dưới nhãn “Cú pháp đúng”. Không tự thực thi bản sửa, song chưa đạt yêu cầu nghiêm ngặt “no syntax repair” ở đầu ra. |
+| G | FAILURE | Lượt 1 chặn Debate do Catalog “chưa phân giải”/chưa xác minh Library; lượt 2 làm core, phát triển chuỗi che giấu cảm xúc → định giá kém → giám sát. Không có Debate đã kích hoạt ở lượt 1 nên không thể kết luận no-persistence sau thực thi Debate là PASS. |
+| H | PASS | Creative hiện thực nghi lễ đổi màu mắt, chi tiết màu/loại ký ức và hệ quả xã hội; không gọi hoặc tự chọn Brainstorm. Không có bước đổi premise vật chất được nêu rõ, nên nhánh xử lý conditional material change chưa bị thử mạnh bởi ca này. |
+
+### Failures/partials và giới hạn
+
+B/G cho thấy model vẫn ưu tiên yêu cầu Library verification và metadata Debate UNRESOLVED của core/Catalog/leaf hơn khai báo local availability trong adapter. Đây là diễn giải nguyên nhân dựa trên lời từ chối quan sát được, không phải bằng chứng truy cập nội bộ model. Local Debate body byte-exact đã được cung cấp nhưng **specialized Debate execution chưa được quan sát thành công**. Không sửa controls/adapter hoặc lịch sử binding để làm lại kết quả sau failure; cần ủy quyền riêng nếu muốn xử lý xung đột này.
+
+F giữ đúng cổng không thực thi nhưng đưa ra cú pháp đã sửa; ghi PARTIAL thận trọng. Các PASS chỉ thuộc các prompt/lần chạy trên; không chứng minh toàn bộ module, mọi provenance/nesting case, Library binding, Router retrieval hoặc tính ổn định nhiều lần chạy. H chưa chứng minh xử lý mọi material premise change. Không thêm kiểm thử dựa trên khớp câu chữ để biến các giả thuyết hành vi thành PASS.
+
+### Tệp và Git
+
+T5 sửa `app.py`, `README.md`, append `VERIFICATION.md`, chỉnh duy nhất inventory assertion trong `test_t4.py`; thêm `test_t5.py` và ba runtime leaf. Bằng chứng local trong `sessions/`: runner, prompts, results, manifest baseline T5 và bản nội dung append này. `.gitattributes` cùng các thay đổi T4 khác được giữ lại. Git diff so với HEAD chứa cả T4 chưa commit và T5; không được diễn giải toàn bộ diff là riêng T5. Không stage, commit, push, tag, tạo branch hoặc sửa remotes. **STOP: T6 NOT STARTED.**
+
+# Kết quả kiểm chứng T5 — Concept scoped leaves
+
+Ngày kiểm chứng: 2026-11-04 (Asia/Ho_Chi_Minh). Baseline Git vẫn là commit `476cf3a` đã push trước T4. T4 và T5 đều còn là thay đổi local chưa stage/commit/push.
+
+`T5 IMPLEMENTED / STATIC VERIFIED / LIVE PARTIAL WITH REPRODUCED DEBATE BINDING FAILURE`
+
+## Phạm vi triển khai
+
+T5 thêm chế độ `T5 - Concept Scoped Leaves`. Concept package vẫn được chọn thủ công để hiệu chuẩn; T3 Router không thực hiện retrieval/execution trong chế độ này.
+
+Mỗi request T5 đọc lại đúng thứ tự:
+
+1. `HUB_CI_v1.1.md`
+2. adapter T5 local calibration tối thiểu
+3. `HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md`
+4. `HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml`
+5. `HUB-DOM-CREATIVE_v1.1.md`
+6. `HUB-CAP-BRAINSTORM_v1.1.md`
+7. `HUB-CAP-DEBATE_v1.0.md`
+
+Python không phân tích `/CREATIVE`, `/BRAINSTORM`, `/DEBATE`, dấu `#`, nesting, overlap hoặc provenance. Core/Catalog và model giữ toàn bộ semantics nhận diện/chọn span.
+
+Ba leaf runtime là bản sao nguyên byte của nguồn ACTIVE:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Concept core 1.1 | `b93c4b3045c5ce980fdc3157d01728f3bd650e0cc4e908c8f89fda3f8346a4b0` |
+| Concept Catalog 1.1 | `eaf480160e055ac7afc12ee4f8d511d09b6828abd14063d85ca571f5e6f03c07` |
+| Creative 1.1 | `0430934d81b57743854543c52d9b78100d6209d8415a59c890e89f19296b4052` |
+| Brainstorm 1.1 | `3758bf748ab11886656f0ea2a73472323301d14e7bf93bca5767079fea824843` |
+| Debate 1.0 | `430d1c01892c510e3d0c605654626b69202065a113e1fe4bf4c60da332ab0ddc` |
+
+Creative và Brainstorm có binding ChatGPT Library cũ RESOLVED trong Catalog. Debate vẫn giữ đúng metadata lịch sử `resolution: UNRESOLVED`, `verification: NOT_PERFORMED`. T5 không sửa metadata này và không tuyên bố local copy đã biến thành ChatGPT Library binding.
+
+## Kiểm chứng tĩnh và hồi quy
+
+- `python -X utf8 -m compileall -q app.py test_app.py test_t3.py test_t4.py test_t5.py`: PASS.
+- `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5`: 25/25 PASS.
+- T5 reread CI/core/Catalog/ba leaf mỗi request; không cache.
+- Payload giữ nguyên byte và đúng thứ tự nêu trên.
+- Mất file, lỗi quyền, I/O hoặc UTF-8 ở bất kỳ một trong sáu file đọc từ disk của T5: dừng trước API, không fallback, không làm đổi history/route records.
+- T0–T4 không bắt đầu đọc ba leaf mới. T4 vẫn chỉ đọc CI/core/Catalog dù inventory runtime Concept đã có năm file.
+- T3 vẫn là Structured Outputs route inspection riêng, không nhận T5 body.
+- Không nạp anti-drift hoặc package khác.
+- Toàn bộ 212 file `upstream/` không thay đổi.
+- `git diff --check`: PASS.
+- Không stage/commit/push T4/T5. T6 chưa bắt đầu.
+
+## Live T5 — A đến H
+
+Các prompt được lưu/đọc bằng UTF-8 sạch. Mỗi case dùng session mới, trừ G cố ý dùng hai lượt trong cùng session. Tất cả request live dùng `gpt-5.6-sol`; không có UI/API error.
+
+| Case | Kết quả quan sát | Phân loại |
+| --- | --- | --- |
+| A — core → Brainstorm → core trong cùng turn | Phần trước span audit bằng core; span Brainstorm đảo premise sang thuế bắt buộc nhận thêm ký ức, theo second-order/feedback; sau `#` trở lại đánh giá causal bằng core | PASS |
+| B — Creative → core → Debate | Creative dựng cảnh hoạt động; phần giữa core audit hoạt động; Debate bị chặn vì Catalog vẫn ghi Debate Library binding UNRESOLVED/NOT_PERFORMED | PARTIAL / REPRODUCED BINDING FAILURE |
+| C — hai Brainstorm span tách nhau | Hai span được thực hiện riêng theo thứ tự; phần giữa là ràng buộc core; span thứ hai đảo giả định tự nguyện mà không bị nhập vào span đầu | PASS |
+| D — opener lồng/đè | `/DEBATE` xuất hiện trước khi `/CREATIVE` đóng; model từ chối toàn nhóm và không chạy leaf nào | PASS |
+| E — control nằm trong code/quote | Cả Brainstorm và Creative được nhận là dữ liệu/literal, không phải directive; không leaf nào chạy | PASS |
+| F — Creative thiếu `#` | Không chạy Creative và không tự đóng cuối turn; nhưng phản hồi đưa ra một ví dụ cú pháp đã thêm `#` | PARTIAL |
+| G — Debate rồi lượt sau core | Lượt 1 Debate bị chặn bởi cùng metadata UNRESOLVED; lượt 2 chạy core bình thường. Vì Debate chưa từng thực thi, chưa chứng minh được no-persistence sau một Debate thành công | PARTIAL / BLOCKED |
+| H — Creative không tự gọi Brainstorm | Creative hiện thực hóa nghi lễ đổi màu mắt; không mở Brainstorm hoặc biến nó thành pipeline; không thấy activation ngoài span | PASS trong scope |
+
+Đối chứng T4 cho case A tiếp tục chặn Brainstorm vì T4 không cung cấp leaf body. T5 cùng prompt đã thực thi Brainstorm thật rồi trở lại core. Đây là bằng chứng scoped rằng việc thêm leaf body local thay đổi đúng phần được cấp phép, không biến Brainstorm thành mode toàn turn.
+
+## Failure quan trọng: Debate
+
+B và G tái hiện cùng một failure:
+
+```text
+LOCAL DEBATE BODY
+= PRESENT
+= BYTE-EXACT ACTIVE/1.0 SOURCE
+
+OLD CHATGPT LIBRARY METADATA
+= UNRESOLVED
+= NOT_PERFORMED
+
+MODEL RESULT
+= REFUSES DEBATE EXECUTION
+```
+
+Đây là `REPRODUCED FAILURE` của **host-binding migration path**, không phải bằng chứng Debate logic sai. Core yêu cầu selected leaf phải qua xác minh identity/FULL_FILE dưới binding hiện hành; Catalog vẫn mô tả host ChatGPT cũ. Adapter T5 cố ý không được phép viết lại trạng thái đó, nên model giữ Catalog làm authority và chặn execution.
+
+T5 không sửa failure này. Việc giải quyết cần một bước binding local có thẩm quyền riêng; không được ngầm biến local file presence thành Library verification.
+
+## Giới hạn và trạng thái
+
+```text
+T5 HOST PAYLOAD PATH
+= VERIFIED
+
+CREATIVE LOCAL SCOPED EXECUTION
+= SCOPED LIVE PASS
+
+BRAINSTORM LOCAL SCOPED EXECUTION
+= SCOPED LIVE PASS
+
+SPAN ORDER / EXIT / REPEAT
+= SCOPED LIVE PASS
+
+NESTED / LITERAL / UNCLOSED CONTROL HANDLING
+= PASS EXCEPT F WORDING PARTIAL
+
+DEBATE LOCAL SCOPED EXECUTION
+= BLOCKED
+= REPRODUCED HOST-BINDING FAILURE
+
+DEBATE NO-PERSISTENCE AFTER SUCCESSFUL EXECUTION
+= NOT ESTABLISHED
+
+ROUTER-INTEGRATED LOCAL RETRIEVAL
+= NOT RUN
+
+LOCAL LIBRARY/FILESYSTEM BINDING MIGRATION
+= NOT STARTED
+
+T6
+= NOT STARTED
+```
+
+# T6 — Concept + Technical Composition: kiểm chứng tĩnh
+
+Ngày: 2026-11-04. `T6 IMPLEMENTED / STATIC VERIFIED / LIVE NOT RUN`.
+Baseline: `main`, HEAD `476cf3a282ddc951181a986e44e3ef7e76a79ae8`; T4/T5 đã có sẵn và cố ý chưa stage/commit. Nội dung phía trên là bằng chứng lịch sử tại thời điểm T6 chưa bắt đầu; mục này ghi trạng thái T6 mới.
+
+T6 thêm lựa chọn `T6 - Concept + Technical Composition` vào đường trả lời thông thường. Mỗi request đọc lại bảy tệp UTF-8, không cache, ghép nguyên byte theo thứ tự:
+
+1. `upstream/Central Hub/HUB_CI_v1.1.md`
+2. adapter T6 tối thiểu bằng tiếng Anh
+3. `runtime/packages/technical/HUB-DOM-TECHNICAL_v1.0.md`
+4. `runtime/packages/concept-development/HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md`
+5. `runtime/packages/concept-development/HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml`
+6. `runtime/packages/concept-development/HUB-DOM-CREATIVE_v1.1.md`
+7. `runtime/packages/concept-development/HUB-CAP-BRAINSTORM_v1.1.md`
+8. `runtime/packages/concept-development/HUB-CAP-DEBATE_v1.0.md`
+
+Adapter chỉ thiết lập điều kiện phối hợp thủ công và ranh giới trách nhiệm; không viết lại quy tắc chi tiết của module. Python chỉ nạp tệp, gọi API, dùng history hiện có và xử lý lỗi; không thêm semantic router, classifier, splitter, span parser, detector, authority resolver, dependency solver, state machine hoặc heuristic. Không có framework eval mới.
+
+Kiểm chứng đã thực hiện:
+
+- Baseline T0–T5: `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5`: **25/25 PASS**.
+- Sau T6: `python -X utf8 -m unittest -q test_app test_t3 test_t4 test_t5 test_t6`: **29/29 PASS**; API được mock, không phát sinh request live.
+- Payload T6 được so sánh toàn bộ nội dung và thứ tự qua hai request; thay nội dung cả bảy tệp giữa request, gồm BOM/CRLF, xác nhận đọc lại và không chuẩn hóa byte. Input/history được chuyển nguyên vẹn, kể cả control literal hoặc malformed; test không diễn giải semantics của chúng.
+- Theo dõi chính xác read set T6: chỉ bảy tệp nêu trên; không đọc Router, Architecture, Root Catalog, Authoring, AIS, ImageT, anti-drift hoặc package body khác.
+- 28 tổ hợp lỗi (missing, permission, I/O, invalid UTF-8 trên từng tệp): dừng trước khởi tạo client API, không fallback; giữ nguyên history, response labels, route records và prompt UI.
+- Read set T0–T5 giữ nguyên. T3 tiếp tục Structured Outputs `json_schema`, chỉ prompt hiện tại, route records riêng; chuyển T6 → T3 → T6 không đưa bản ghi T3 vào history thường. Nhãn T6 hiển thị đúng, không gửi vào API.
+- `python -X utf8 -m compileall -q app.py test_app.py test_t3.py test_t4.py test_t5.py test_t6.py`: PASS.
+- `git diff --check`: PASS.
+- Manifest SHA-256 đầu/cuối T6: 223 tệp được bảo vệ không đổi, gồm toàn bộ **212 tệp upstream**, sáu tệp runtime, `.gitattributes` và bốn test T0–T5. Không thêm package body hay tệp runtime mới. Phần VERIFICATION có trước T6 được giữ nguyên byte.
+
+Blocker được giữ nguyên:
+
+- Debate local body vẫn hiện diện và byte-exact; Catalog vẫn `UNRESOLVED / NOT_PERFORMED` cho binding ChatGPT Library cũ. T6 không sửa hoặc vượt qua binding; Debate có thể tiếp tục bị chặn. Failure T5 vẫn là bằng chứng trong phạm vi đã ghi.
+- **Authoring cố ý bị loại khỏi T6 do binding host cũ hiện còn `UNRESOLVED / NOT_PERFORMED`**. Không nạp, thêm body, mô phỏng hoặc tuyên bố thực thi Authoring. Theo Architecture, blocker này chỉ chặn công việc phụ thuộc Authoring, không chặn Hub độc lập.
+- Đây là hiệu chuẩn phối hợp thủ công, không phải Router-integrated composition/retrieval hoặc local Library binding migration. Chưa kiểm chứng live về phạm vi trách nhiệm trong cùng request/qua lượt, authority bleed, premature convergence hay leaf persistence. Live campaign UTF-8 sẽ do ChatGPT giám sát chạy riêng; Codex không chạy prompt live tiếng Việt hoặc ASCII smoke trong T6.
+
+T6 thay đổi `app.py`, `README.md`, append `VERIFICATION.md`, thêm `test_t6.py`. Diff so với HEAD còn bao gồm T4/T5 có sẵn; không được quy toàn bộ diff cho T6. Không stage, commit, push, tag, tạo branch hoặc thay remotes.
+
+**STOP: T7 NOT STARTED.**
+
+# T6 — kiểm chứng live composition
+
+Phần này cập nhật trạng thái LIVE NOT RUN của mục T6 tĩnh ngay phía trên. Campaign live được chạy sau khi Codex đã dừng, bằng prompt UTF-8 sạch và AppTest qua API thật với gpt-5.6-sol.
+
+T6 LIVE COMPOSITION: SCOPED PASS
+
+Tổng cộng 11 request live:
+- 9 request T6: A–F, H một lượt; G hai lượt trong cùng session.
+- 1 đối chứng T5/A.
+- 1 đối chứng T2/A.
+Không có UI error, API error hoặc exception.
+
+| Case | Quan sát | Phân loại |
+| --- | --- | --- |
+| A — premise hư cấu khóa + audit thể chế + chẩn đoán tải cao | Giữ nguyên premise “sao chép, không xóa”; tách audit thể chế khỏi các giả thuyết kỹ thuật; không xếp hạng nguyên nhân khi chưa có log; không dùng kỹ thuật để sửa canon | PASS về composition boundary |
+| B — lỗi kỹ thuật chưa xác nhận → hệ quả thể chế có điều kiện | Giữ cảm biến/bộ đệm/lưu trữ là giả thuyết cạnh tranh; đưa phép kiểm tra phân biệt; chỉ phát triển hệ quả thể chế dưới điều kiện lỗi thật sự được xác nhận; không nâng chẩn đoán thành fact của thế giới | PASS |
+| C — Brainstorm span xen chẩn đoán kỹ thuật | Brainstorm tạo hai nhánh đảo premise; sau # chuyển sang đánh giá tải thiết bị, giữ nhiệt/nhiễu là giả thuyết chưa xác định và không chọn nhánh nào làm thiết kế chính thức | PASS |
+| D — Creative span rồi audit kỹ thuật | Creative dựng cảnh; sau span phân biệt rõ chi tiết mà cảnh đã thiết lập với cơ chế kỹ thuật chưa có bằng chứng; không viết lại cảnh để “sửa” kỹ thuật | PASS |
+| E — chỉ audit chính danh xã hội | Dù Technical body hiện diện, phản hồi chỉ làm Concept work về chấp nhận/phản đối/vòng phản hồi chính trị; không tự mở chẩn đoán máy móc | PASS cho no Technical bleed |
+| F — chỉ chẩn đoán máy tính thật | Phản hồi chỉ làm chẩn đoán kỹ thuật và phép kiểm tra phân biệt; không kéo worldbuilding/Concept vào task | PASS cho no Concept bleed |
+| G — Brainstorm ở lượt 1, đổi hẳn sang PC diagnosis ở lượt 2 | Lượt 1 thực thi Brainstorm; lượt 2 bỏ hẳn worldbuilding/Brainstorm và làm Technical diagnosis | PASS cho no leaf/package persistence qua lượt |
+| H — axiom hư cấu khóa + bottleneck kỹ thuật quy mô thành phố | Ghi rõ axiom là premise hư cấu đã khóa, không dùng vật lý đời thực để bác bỏ; đồng thời tách các nút thể chế khỏi các giả thuyết kỹ thuật chưa có số liệu | PASS mạnh cho authority boundary |
+
+## Đối chứng A: T6 so với T5 và T2
+
+Cùng prompt A được chạy trong session mới ở T6, T5 và T2.
+
+- T6 thực hiện đầy đủ cả audit thể chế và chẩn đoán tải cao, giữ hai loại trạng thái tách biệt.
+- T5, dù không nạp Technical, vẫn tự làm được phần lớn chẩn đoán cơ chế tải cao.
+- T2, dù không nạp Concept package, vẫn tự làm được phần lớn audit thể chế.
+
+Do đó campaign này không xác lập rằng việc nạp hai package tạo ra một năng lực mà model/Hub CI vốn không có. Nó xác lập điều hẹp hơn nhưng quan trọng cho Central Hub: khi cả hai package cùng hiện diện, model không quan sát thấy authority bleed, package domination hoặc tự biến availability thành global mode trong các ca đã thử.
+
+MULTI-PACKAGE COEXISTENCE = SCOPED LIVE PASS
+TECHNICAL → FICTIONAL CANON AUTHORITY BLEED = NOT OBSERVED
+CONCEPT → TECHNICAL FACT/DIAGNOSIS OVERRIDE = NOT OBSERVED
+LEAF PERSISTENCE ACROSS # = NOT OBSERVED
+LEAF / CONCEPT PERSISTENCE ACROSS DOMAIN-SWITCH TURN = NOT OBSERVED
+PACKAGE AVAILABILITY → FORCED APPLICABILITY = NOT OBSERVED
+ADDED CAPABILITY OF T6 OVER T2/T5 = NOT ESTABLISHED
+
+## Blocker vẫn giữ nguyên
+
+T6 không chạy Debate và không sửa metadata Debate. Failure T5 vẫn giữ nguyên: local Debate body có mặt và byte-exact nhưng old-host Catalog binding vẫn UNRESOLVED / NOT_PERFORMED.
+
+Authoring tiếp tục cố ý không được nạp trong T6 vì Root Catalog/Architecture hiện coi binding Authoring old-host là unresolved. Không có bằng chứng T6 nào nâng Authoring hoặc Debate thành resolved.
+
+T6 STATIC = 29/29 PASS
+T6 LIVE = SCOPED PASS A–H
+ROUTER-INTEGRATED PACKAGE SELECTION/RETRIEVAL = NOT RUN
+LOCAL HOST-BINDING SUCCESSOR = NOT IMPLEMENTED
+T7 = NOT STARTED

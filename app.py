@@ -24,6 +24,48 @@ T2_BINDING_BRIDGE = (
 HUB_ROUTER_PATH = HUB_CI_PATH.with_name("HUB_ROUTER_v1.1.yaml")
 HUB_ARCHITECTURE_PATH = HUB_CI_PATH.with_name("HUB_ARCHITECTURE_v1.8.md")
 HUB_CATALOG_PATH = HUB_CI_PATH.with_name("HUB_PACKAGE_CATALOG_v1.8.yaml")
+CONCEPT_CORE_PATH = Path(__file__).resolve().parent / "runtime" / "packages" / "concept-development" / "HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md"
+CONCEPT_CATALOG_PATH = CONCEPT_CORE_PATH.with_name("HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml")
+CREATIVE_PATH = CONCEPT_CORE_PATH.with_name("HUB-DOM-CREATIVE_v1.1.md")
+BRAINSTORM_PATH = CONCEPT_CORE_PATH.with_name("HUB-CAP-BRAINSTORM_v1.1.md")
+DEBATE_PATH = CONCEPT_CORE_PATH.with_name("HUB-CAP-DEBATE_v1.0.md")
+T5_CALIBRATION_ADAPTER = (
+    "\n\n[T5 LOCAL CALIBRATION]\n"
+    "HUB-PKG-CONCEPT-DEVELOPMENT is manually selected for the current request/task portion; "
+    "Router package selection and execution are intentionally absent. "
+    "The supplied Concept core and local Catalog govern exact control spans, leaf selection and applicability. "
+    "All three supplied leaf bodies are available under T5 local test bindings only and may execute "
+    "only when the core/Catalog select them for a valid current-user-authored span. "
+    "Availability does not activate a leaf. Specialized behavior ends at that span's standalone # "
+    "terminator, with no persistence; ordinary unscoped concept work remains core behavior. "
+    "This local calibration does not change or claim old ChatGPT Library resolution, "
+    "migrate Library bindings or simulate Router behavior.\n\n"
+)
+T6_COMPOSITION_ADAPTER = (
+    "\n\n[T6 LOCAL COMPOSITION CALIBRATION]\n"
+    "HUB-PKG-TECHNICAL and HUB-PKG-CONCEPT-DEVELOPMENT are manually supplied for T6 composition calibration; "
+    "Router selection/retrieval is intentionally absent. Apply each package only to task portions materially "
+    "within its existing applicability/responsibility. Participation does not expand authority; neither package "
+    "dominates the other. Technical mechanism reasoning must not decide fictional canon, concept acceptance "
+    "or design state. Concept/leaf work must not fabricate technical evidence, resolve technical uncertainty "
+    "or override Technical diagnosis. Exact Concept leaf activation remains owned by Concept core/Catalog; "
+    "availability does not activate leaves and specialized behavior does not persist beyond valid spans. "
+    "Existing old-host binding metadata remains unchanged. Debate may remain blocked where the current Catalog "
+    "requires unresolved old binding verification; preserve this as evidence without bypassing it. "
+    "Authoring is intentionally absent because its current old-host binding is unresolved; no Authoring "
+    "behavior may be emulated or claimed. This is not Router-integrated retrieval or local Library binding migration.\n\n"
+)
+T4_BINDING_NOTE = (
+    "\n\n[T4 LOCAL MANUAL SELECTION]\n"
+    "HUB-PKG-CONCEPT-DEVELOPMENT is manually selected for this request/task portion "
+    "because Router execution is intentionally outside this calibration. "
+    "The supplied local Catalog is the selection metadata required by the supplied core. "
+    "No specialized leaf body is available in T4. Valid explicit leaf spans may be "
+    "identified from metadata, but their specialized execution is blocked and must not be performed. "
+    "Continue sufficient ordinary unscoped concept work through the shared core. "
+    "This note does not change Concept semantics, claim Library retrieval, simulate Router "
+    "behavior or establish local binding migration.\n\n"
+)
 T3_SIMULATION_ADAPTER = (
     "[T3 ROUTING INSPECTION]\n"
     "This is Router eligibility.simulation only, a test-only metadata view. "
@@ -55,7 +97,7 @@ ROUTE_SCHEMA = {
     "required": ["task_scope", "selected_packages", "unresolved_blockers"],
     "additionalProperties": False,
 }
-MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect")
+MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect", "T4 - Hub CI + Concept Core", "T5 - Concept Scoped Leaves", "T6 - Concept + Technical Composition")
 
 
 def read_config():
@@ -94,6 +136,41 @@ def call_model(config, messages, mode=MODES[0]):
         except (OSError, UnicodeError):
             raise ValueError("T2: Không đọc được runtime/packages/technical/HUB-DOM-TECHNICAL_v1.0.md. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang T1/T0.") from None
         instructions["instructions"] = ci + T2_BINDING_BRIDGE + technical
+    elif mode == MODES[4]:
+        controls = []
+        for path in (HUB_CI_PATH, CONCEPT_CORE_PATH, CONCEPT_CATALOG_PATH):
+            try:
+                controls.append(path.read_bytes().decode("utf-8"))
+            except (OSError, UnicodeError):
+                raise ValueError(
+                    f"T4: Không đọc được {path.name}. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; "
+                    "yêu cầu chưa được gửi, không chuyển sang T2/T1/T0."
+                ) from None
+        instructions["instructions"] = controls[0] + T4_BINDING_NOTE + controls[1] + controls[2]
+    elif mode == MODES[5]:
+        controls = []
+        for path in (HUB_CI_PATH, CONCEPT_CORE_PATH, CONCEPT_CATALOG_PATH,
+                     CREATIVE_PATH, BRAINSTORM_PATH, DEBATE_PATH):
+            try:
+                controls.append(path.read_bytes().decode("utf-8"))
+            except (OSError, UnicodeError):
+                raise ValueError(
+                    f"T5: Không đọc được {path.name}. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; "
+                    "yêu cầu chưa được gửi, không chuyển sang T4/T2/T1/T0."
+                ) from None
+        instructions["instructions"] = controls[0] + T5_CALIBRATION_ADAPTER + "".join(controls[1:])
+    elif mode == MODES[6]:
+        controls = []
+        for path in (HUB_CI_PATH, TECHNICAL_PATH, CONCEPT_CORE_PATH, CONCEPT_CATALOG_PATH,
+                     CREATIVE_PATH, BRAINSTORM_PATH, DEBATE_PATH):
+            try:
+                controls.append(path.read_bytes().decode("utf-8"))
+            except (OSError, UnicodeError):
+                raise ValueError(
+                    f"T6: Không đọc được {path.name}. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; "
+                    "yêu cầu chưa được gửi, không chuyển sang chế độ khác."
+                ) from None
+        instructions["instructions"] = controls[0] + T6_COMPOSITION_ADAPTER + "".join(controls[1:])
     with OpenAI(
         api_key=config["openai_api_key"],
         base_url="https://api.openai.com/v1",

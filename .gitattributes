@@ -1,2 +1,3 @@
 * text=auto eol=lf
 upstream/** -text
+runtime/packages/concept-development/** -text
