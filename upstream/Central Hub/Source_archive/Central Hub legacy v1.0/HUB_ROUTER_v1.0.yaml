@@ -1,0 +1,39 @@
+router_version: "1.0"
+role: "Select only scoped specialization; do not select Hub CI or conversation operations."
+axes:
+  DOMAIN: [NONE, CREATIVE, TECHNICAL]
+  CAPABILITY: [NONE, BRAINSTORM]
+  TOOL_PIPELINE: [NONE, AIS, IMAGET]
+default: [NONE, NONE, NONE]
+controls:
+  CREATIVE: "domains/creative/CREATIVE_v1.0.md"
+  TECHNICAL: "domains/technical/TECHNICAL_v1.0.md"
+  BRAINSTORM: "capabilities/BRAINSTORM_v1.0.md"
+  AIS: "tool_pipelines/AIS/AIS_PIPELINE_v1.0.md"
+  IMAGET: "tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.1.md"
+selection:
+  CREATIVE: "The task portion needs development of imagery, action, rhythm, situations, relationships or functional fictional detail. A fictional topic alone is insufficient; ordinary writing may still use NONE."
+  TECHNICAL: "The task portion needs mechanism reasoning, distinguishing causes during diagnosis or evaluation of a bounded technical change. A technical term or simple explanation request alone is insufficient."
+  BRAINSTORM: "The task portion needs premise-changing branches, assumption reversal/relaxation, second-order consequences, feedback into a premise or connections between incomplete premises; ordinary brainstorming alone is insufficient."
+  AIS: "Hub has determined that this task portion needs verification, collection, comparison, synthesis or option discovery from external sources; this includes explicit search requests. Do not select the research mode here."
+  IMAGET: "Actual image analysis, creation, editing, variation or correction is requested; discussing images or writing descriptive prose alone is insufficient."
+scoping:
+  independent_axes: true
+  independent_portions: "Select independently for each task portion; a portion may need all three axes. Multiple domains/pipelines require separate selections, not hybrid names."
+  output: "For each task portion: scope, DOMAIN, CAPABILITY, TOOL_PIPELINE list, controls to read and directly dependent inputs/outputs. NONE has no file."
+  sequence: "Order by task-assigned dependencies; independent portions may proceed separately. AIS precedes IMAGET only when the image depends on research output with an assigned role. Do not invent dependencies."
+  handoff: "Pass the objective, Hub-assigned stage, constraints, sources and their roles, protected state and completion criteria. Only attributes with assigned roles become visual input."
+  uncertainty: "If additional need is unclear, use NONE on that axis when baseline is sufficient; consequential ambiguity uses Hub CI's clarification behavior."
+persistence:
+  reassess: "Reassess each turn and when scope changes; retain useful context, not modes. PREVIOUS ACTIVATION != CURRENT ACTIVATION."
+  listing_activates: false
+  applicability_activates: false
+  self_activation: false
+boundaries:
+  internal_dependencies: "HUB SELECTS PIPELINE; PIPELINE RESOLVES INTERNAL DEPENDENCIES. AIS Router selects mode/authority/stages; ImageT Router/manifest resolve controller/modules/template/preference/compatibility."
+  no_operation_routing: "explain/compare/scrutinize/explore/create/summarize/decide and stage belong to TURN AND STATE."
+  no_authority_promotion: "DOMAIN != CAPABILITY; TOOL PIPELINE != DOMAIN; evidence does not automatically become a requirement, canon or acceptance."
+failure:
+  selected_control: "Read the exact selected control before use. If missing/unreadable, name the dependency; block the dependent task portion if specialization is decisive or explicitly requested. Use baseline only where sufficient, without claiming equivalence. Continue independent portions."
+  conflict: "Expose conflicts, preserve state; never silently merge controls."
+  forbidden_fallbacks: [archive, memory, prior_chat, lookalike_filename, latest_version_discovery]

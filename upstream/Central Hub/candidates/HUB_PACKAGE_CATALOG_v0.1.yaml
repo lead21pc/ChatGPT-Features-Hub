@@ -1,0 +1,88 @@
+format_version: '1'
+module_id: HUB-CORE-PACKAGE-CATALOG
+runtime_role: PACKAGE_CATALOG
+scope: Major Central Hub package entrypoints only; no leaf-module inventory.
+status: CANDIDATE
+version: '0.1'
+active: false
+runtime_ready: false
+identity_binding: PROPOSED_NOT_INSTALLED
+library_discovery_root: Central Hub Config
+live_library_retrieval: TECHNICAL_REAL_CANDIDATE_ONLY_USER_REPORTED
+trial_evidence_record: library_trial/HUB_TECHNICAL_LIBRARY_LIVE_RESULT.md
+real_candidate_evidence_record: library_trial/HUB_TECHNICAL_REAL_CANDIDATE_RESULT.md
+# Repository paths below are STATIC validation inputs, never runtime locators.
+# Entry status describes the proposed binding, not the current source's status.
+# TECHNICAL ACTIVE is a promotion-ready expectation; this catalog is not active.
+packages:
+  - package_id: HUB-PKG-CREATIVE
+    entrypoint_module_id: HUB-DOM-CREATIVE
+    runtime_role: DOMAIN_CONTROL
+    status: CANDIDATE
+    version: '1.0'
+    applicability: Focused development of imagery, action, rhythm, situations, relationships or functional fictional detail; not fiction topics alone.
+    repository_path: domains/creative/CREATIVE_v1.0.md
+    location:
+      class: LIBRARY
+      root: Central Hub Config
+      locator: null
+      verification: UNRESOLVED
+    local_catalog: null
+    requires: []
+  - package_id: HUB-PKG-TECHNICAL
+    entrypoint_module_id: HUB-DOM-TECHNICAL
+    runtime_role: REASONING_PROFILE
+    status: ACTIVE
+    version: '1.0'
+    applicability: Mechanism reasoning, distinguishing causes during diagnosis or bounded technical-change evaluation; not simple technical explanations alone.
+    repository_path: candidates/promotion/HUB-DOM-TECHNICAL_v1.0.md
+    location:
+      class: LIBRARY
+      root: Central Hub Config
+      locator: null
+      verification: UNRESOLVED
+      retrieval_mechanism: LIVE_VERIFIED_REAL_CANDIDATE_SCOPED
+      evidence_basis: USER_REPORTED_LIVE_VERIFICATION
+      real_module_deployment: NOT_PERFORMED
+    local_catalog: null
+    requires: []
+  - package_id: HUB-PKG-BRAINSTORM
+    entrypoint_module_id: HUB-CAP-BRAINSTORM
+    runtime_role: CAPABILITY
+    status: CANDIDATE
+    version: '1.0'
+    applicability: Premise-changing branches, reversal or relaxation, second-order consequences, feedback or links between incomplete premises; not ordinary brainstorming alone.
+    repository_path: capabilities/BRAINSTORM_v1.0.md
+    location:
+      class: LIBRARY
+      root: Central Hub Config
+      locator: null
+      verification: UNRESOLVED
+    local_catalog: null
+    requires: []
+  - package_id: HUB-PKG-AIS
+    entrypoint_module_id: HUB-PIPE-AIS
+    runtime_role: TOOL_PIPELINE
+    status: CANDIDATE
+    version: '1.0'
+    applicability: Hub-assigned external evidence verification, collection, comparison, synthesis or option discovery, including explicit search requests.
+    repository_path: tool_pipelines/AIS/AIS_PIPELINE_v1.0.md
+    location:
+      class: PROJECT_SOURCES
+      source_name: AIS_PIPELINE_v1.0.md
+      verification: NOT_VERIFIED
+    local_catalog: null
+    requires: []
+  - package_id: HUB-PKG-IMAGET
+    entrypoint_module_id: HUB-PIPE-IMAGET
+    runtime_role: TOOL_PIPELINE
+    status: CANDIDATE
+    version: '1.1'
+    applicability: Actual image analysis, creation, editing, variation or correction; not image discussion or descriptive prose alone.
+    repository_path: tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.1.md
+    location:
+      class: PROJECT_SOURCES
+      source_name: IMAGE_CONTROLLER_v1.1.md
+      verification: NOT_VERIFIED
+    local_catalog: null
+    requires: []

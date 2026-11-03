@@ -1,0 +1,30 @@
+{
+  "reason": "Superseded Central Hub runtime sources; explicit user-authorized archive and publication",
+  "files": [
+    {
+      "source": "HUB_CI_v1.0.md",
+      "archive": "Source_archive/Central Hub legacy v1.0/HUB_CI_v1.0.md",
+      "sha256": "d4d5cd24ec8da6a6603f163f882eeb4fd896d867b5e245098d0a64b877a4abd3"
+    },
+    {
+      "source": "HUB_ROUTER_v1.0.yaml",
+      "archive": "Source_archive/Central Hub legacy v1.0/HUB_ROUTER_v1.0.yaml",
+      "sha256": "465ecbf6b1c6ff80e1be51a57b6ac3743f19a210f94a36bad185993b4c2de844"
+    },
+    {
+      "source": "domains/technical/TECHNICAL_v1.0.md",
+      "archive": "Source_archive/Central Hub legacy v1.0/domains/technical/TECHNICAL_v1.0.md",
+      "sha256": "008e1be28a32fd956ff4ca4edc64536de4e9e3b3b6b7b124ae4ecebdc60b1894"
+    },
+    {
+      "source": "domains/creative/CREATIVE_v1.0.md",
+      "archive": "Source_archive/Central Hub legacy v1.0/domains/creative/CREATIVE_v1.0.md",
+      "sha256": "df732077f19ddd346bfb8d5d4e0c595cd574c831ec8e9696f9d4a80c98f8bb70"
+    },
+    {
+      "source": "capabilities/BRAINSTORM_v1.0.md",
+      "archive": "Source_archive/Central Hub legacy v1.0/capabilities/BRAINSTORM_v1.0.md",
+      "sha256": "d7b5a21595d46e2442e51adf20cee18cc29cdef14581cef8ab27cbfc85e8d8e0"
+    }
+  ]
+}

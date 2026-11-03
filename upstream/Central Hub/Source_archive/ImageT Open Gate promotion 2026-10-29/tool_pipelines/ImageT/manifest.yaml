@@ -1,0 +1,83 @@
+format_version: '1'
+manifest_version: 2.1.0
+release:
+  id: central-hub-imaget-1.1
+  working_state: local_implementation
+  published: false
+  project_deployment: not_performed
+integrity:
+  algorithm: sha256
+  scope: exact_local_bytes
+  self_hash: null
+  self_hash_policy: excluded_to_avoid_self_reference
+  runtime_without_hash: exact_filename_and_header_report_unverified_hash
+artifacts:
+  router:
+    id: router
+    file: IMAGE_SOURCE_ROUTER.yaml
+    local_path: IMAGE_SOURCE_ROUTER.yaml
+    version: 3.1.0
+    status: active
+    required: true
+    sha256: 066b47a697c4cace1bcef86233d556a2ca4ae8c56f2e1b54e6779d3547b80fc4
+  prior_guard:
+    id: prior-guard
+    file: IMAGE_ANTI_PRIOR.md
+    local_path: IMAGE_ANTI_PRIOR.md
+    version: 1.1.0
+    status: active
+    required: true
+    sha256: f08a1d1a09c8b31cd3fe6ed80b38b19f2c662e15f7e192b42c8a5e044aa69b5c
+  anti_drift:
+    id: anti-drift
+    file: config.md
+    local_path: config.md
+    version: 2.0.0
+    status: active
+    required: true
+    sha256: 20b08b3b99b237eebeec0442024e0818245d0b0bebc2fb756e972aca67d4d3d7
+  visual_template:
+    id: visual-template
+    file: null
+    local_path: null
+    version: null
+    status: optional_absent
+    required: false
+    sha256: null
+    reserved_file: template.md
+  ready_gate:
+    id: ready-gate
+    file: READY_GATE_v1.0.md
+    local_path: READY_GATE_v1.0.md
+    version: '1.0'
+    status: active
+    required: true
+    sha256: c61bccbc88560c40a9f600473d84b54c7f6b27f527eea6b713f78615d04de1d5
+preferences:
+- id: humanoid-character-design
+  file: HUMANOID_CHARACTER_DESIGN_PREFERENCE.md
+  local_path: preferences/HUMANOID_CHARACTER_DESIGN_PREFERENCE.md
+  version: 0.1.1-candidate
+  status: candidate
+  required: false
+  sha256: 1eb0a6e136cbf3b21de1726565b47bd3a80d1ee9b55e86ba10ea0d880a1371b3
+  selectable: false
+  selection_scope: direct_input_experiment
+  activation: inactive
+  source_routing: not_implemented
+  direct_input_selection: explicit_current_operation_under_own_contract
+controllers:
+  active:
+    id: baseline
+    file: IMAGE_CONTROLLER_v1.1.md
+    local_path: IMAGE_CONTROLLER_v1.1.md
+    version: '1.1'
+    status: active
+    required: true
+    sha256: 6d33c80f4852c1b44c32abf6e898c14e8f001d24796d406aafc49a95ab3a2733
+    compatibility:
+      router: 3.1.0
+      prior_guard: 1.1.0
+      anti_drift: 2.0.0
+      ready_gate: '1.0'
+  experiments: []

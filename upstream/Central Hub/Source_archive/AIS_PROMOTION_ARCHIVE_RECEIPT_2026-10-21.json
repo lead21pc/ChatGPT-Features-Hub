@@ -1,0 +1,37 @@
+[
+  {
+    "old": "tool_pipelines/AIS/AIS_PIPELINE_v1.0.md",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/tool_pipelines/AIS/AIS_PIPELINE_v1.0.md",
+    "sha256": "c7f78f10be855d6b77aa3e0bbf67c3856c7fa42f890382752056de71abd10f69"
+  },
+  {
+    "old": "tool_pipelines/AIS/AIS_ROUTER_v1.1.yaml",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/tool_pipelines/AIS/AIS_ROUTER_v1.1.yaml",
+    "sha256": "ea5e22648fdcb1da239126ec25220b474444de11521887cd93711f41b4b32901"
+  },
+  {
+    "old": "candidates/ais_research_core/AIS_PIPELINE_v1.1-candidate.md",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/AIS_PIPELINE_v1.1-candidate.md",
+    "sha256": "917cea2c7d2cf785f75164375b979e07b3ce9f4dff038a50e43901a9a5beffeb"
+  },
+  {
+    "old": "candidates/ais_research_core/AIS_ROUTER_v1.2-candidate.yaml",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/AIS_ROUTER_v1.2-candidate.yaml",
+    "sha256": "ab5b0d6e0ca4eb6f9714fec10e5b0bb95e696bb72a95b7817a5d8facbe71a942"
+  },
+  {
+    "old": "candidates/ais_research_core/IMPLEMENTATION_REPORT.md",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/IMPLEMENTATION_REPORT.md",
+    "sha256": "be335cd764b5524c4a4b3f6ec21a2bea8f6e95b774c56afe255cb81efbc245c8"
+  },
+  {
+    "old": "candidates/ais_research_core/RESEARCH_CORE_TEST_CASES.md",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/RESEARCH_CORE_TEST_CASES.md",
+    "sha256": "a128c7691c0e5e1155fdd7a61940a1729124175923d6a0b0015dac4f2098dca2"
+  },
+  {
+    "old": "tests/test_ais_research_candidate.py",
+    "archive": "Source_archive/AIS research-core promotion 2026-10-21/tests/test_ais_research_candidate.py",
+    "sha256": "24bf34125054e008e77c948e798299e5a8735609998855a0728d6dbe39454ef7"
+  }
+]

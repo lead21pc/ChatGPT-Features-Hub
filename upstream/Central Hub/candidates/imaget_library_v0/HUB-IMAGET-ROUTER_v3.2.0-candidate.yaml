@@ -1,0 +1,87 @@
+format_version: '1'
+module_id: HUB-IMAGET-ROUTER
+package_id: HUB-PKG-IMAGET
+runtime_role: DOMAIN_PROCEDURE
+scope: ImageT core resolution and authority-bounded local leaf selection only.
+status: CANDIDATE
+version: 3.2.0-candidate
+active: false
+manifest: HUB-IMAGET-MANIFEST_v2.3.0-candidate.yaml
+resolution:
+  root: Central Hub Config
+  binding_mode: LIBRARY_MODULE
+  read: FULL_FILE
+  identity: Exact Module ID, Package ID, role, status, bound artifact version and material body; verify available hashes.
+  candidate_admission: Explicit static fixture only; normal runtime requires separately accepted ACTIVE bindings.
+  coverage: Complete relevant scoped pagination and plausible-match checks; multiple or incompletely checked identities block.
+  missing_hash: Report UNVERIFIED_HASH; never invent a hash or Library revision.
+  forbidden_fallbacks: [project_sources, repository, local_filesystem, memory, prior_chat, archive, lookalike_filename]
+  missing_or_mismatch: BLOCK_DEPENDENT; continue sufficient independent work only.
+bootstrap:
+  inventory_owner: manifest
+  self_hash: Verify against the already verified manifest; no self-authorization.
+  dependencies: Resolve only required operation-specific core; ANALYZE needs no Ready Gate.
+  cycles: BLOCK_DEPENDENT
+catalog:
+  module_id: HUB-CATALOG-IMAGET
+  package_id: HUB-PKG-IMAGET
+  runtime_role: PACKAGE_CATALOG
+  version_binding: Exact artifact version passed through the accepted Hub local_catalog binding.
+  format_version: '1'
+  inventory_owner: Optional independently selectable specialized leaves only.
+selection:
+  ordering: Controller establishes operation/Open Gate/field authority before semantic leaf selection.
+  metadata_read: May precede Open Gate; reading metadata is not execution.
+  inputs: [subject_scope, actual_work_needed, input_authority, authorized_fields, explicitly_delegated_fields, preference_authorized_fields]
+  raw: Select construction only for actual humanoid construction need within already-authorized fields/relations.
+  preserved: Zero humanoid leaves by default; construction only on exact explicitly delegated fields; preference only on exact explicitly preference-authorized fields.
+  preference: Separate explicit current-operation selection/authority required; never auto-activate from applicability, presence or earlier selection.
+  non_humanoid: Neither humanoid leaf selected.
+  no_authority: Select nothing; return unresolved required decision to controller.
+  applicability: APPLICABILITY ALONE != SELECTION AUTHORITY; membership grants no field authority.
+  execution: FULL_FILE and verify each selected leaf before use; no whole-package load.
+  conflict: Do not average incompatible same-field instructions; return conflict to controller.
+  persistence: Reassess every operation and material scope change; preference selection expires with operation.
+flow: [required_core, controller_operation_and_open_gate, catalog_selection, verified_selected_leaves, controller_prompt_gate, required_ready_gate_for_generation, exact_approved_call, controller_visible_verification]
+template_conflicts:
+  require:
+  - identifier
+  - version
+  - status
+  - scope_or_applicability
+  - owned_fields
+  - unowned_fields
+  - override_conditions
+  malformed_or_contradictory: stop
+  compare: each_field_against_current_request
+  clear_explicit_user_override: change_only_conflicting_field
+  compatible_fields: retain
+  ambiguous_hard_invariant_conflict: smallest_clarification_before_execution
+  hard_invariants:
+  - identity
+  - count
+  - anatomy
+  - topology
+  - attachment
+  - reference_role
+  - protected_region
+  average_conflicts: false
+  outside_declared_scope: reject
+operations:
+  analyze: inspect_only_no_generation
+  create: compose_from_resolved_request
+  edit: preserve_outside_explicit_delta_as_tool_permits
+  variation: vary_only_authorized_open_fields
+  correct: bounded_failed_fields_or_fresh_creation_for_structural_failure
+execution:
+  prompt_gate: selected_controller_contract
+  ready_gate: manifest_selected_ready_gate_contract
+  unresolved_required_source_or_material_decision: stop
+  absent_tool_call: do_not_claim_execution_or_verification
+references:
+  assign: only_attributes_authorized_by_request_or_active_template
+  unassigned_traits: non_authorizing
+  ambiguous_hard_constraint_role: clarify
+freshness:
+  changes: [effective_sources, request, input_authority, authorized_fields, prompt, operation_lock, references, reference_roles, attachments, relevant_execution_inputs, exposed_tool_options]
+  action: Reload affected sources and return through controller; Ready Gate alone invalidates/consumes approval. No silent retry.

@@ -1,0 +1,47 @@
+format_version: '1'
+module_id: HUB-CATALOG-IMAGET
+package_id: HUB-PKG-IMAGET
+runtime_role: PACKAGE_CATALOG
+scope: Optional specialized ImageT leaf inventory; no execution or field authority.
+status: CANDIDATE
+version: 0.1-candidate
+active: false
+authority: Current request/accepted source authority -> controller Open Gate and field authority -> Router selection.
+candidate_admission: Explicit static candidate fixtures only; no active Hub admission.
+entries:
+- module_id: HUB-IMAGET-HUMANOID-CONSTRUCTION
+  package_id: HUB-PKG-IMAGET
+  runtime_role: DOMAIN_PROCEDURE
+  status: CANDIDATE
+  version: 0.1-candidate
+  active: false
+  applicability: Actual humanoid structure-expression need within fields already authorized for construction; subject alone is insufficient.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    observed_path: null
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    candidate_artifact: HUB-IMAGET-HUMANOID-CONSTRUCTION_v0.1-candidate.md
+    verification: NOT_PERFORMED
+  requires: []
+- module_id: HUB-IMAGET-HUMANOID-DESIGN-PREFERENCE
+  package_id: HUB-PKG-IMAGET
+  runtime_role: PREFERENCE
+  status: CANDIDATE
+  version: 0.2-candidate
+  active: false
+  activation: inactive
+  eligibility: Separate explicit current-operation preference authority; preserved input requires exact preference-authorized fields.
+  applicability: Soft aesthetic relationships for authorized existing humanoid components; no design authority from selection.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    observed_path: null
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    candidate_artifact: HUB-IMAGET-HUMANOID-DESIGN-PREFERENCE_v0.2-candidate.md
+    verification: NOT_PERFORMED
+  requires: []

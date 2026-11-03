@@ -1,0 +1,111 @@
+"format_version": "1"
+"manifest_version": "1.0.0-yaml-candidate"
+"release":
+  "id": "image-transcendent-1.0.0"
+  "working_state": "repository_published_candidate"
+  "published": true
+  "publication_scope": "repository_sources"
+  "project_deployment": "not_tested"
+  "identity_policy": "retain_baseline_identity_without_claiming_new_release"
+"integrity":
+  "algorithm": "sha256"
+  "scope": "exact_local_bytes"
+  "self_hash": null
+  "self_hash_policy": "excluded_to_avoid_self_reference"
+  "runtime_without_hash": "exact_filename_and_header_report_unverified_hash"
+"ci":
+  "active":
+    "id": "baseline"
+    "file": "ImageT_v1.0.0.md"
+    "local_path": "../Image Transcendent CI/ImageT_v1.0.0.md"
+    "version": "1.0.0"
+    "status": "active"
+    "required": true
+    "sha256": "21302c724c6c3358f25fd45e084d23db674600309311ce08a8e8f8f9bca89bc6"
+    "compatibility":
+      "router": "2.0.0-yaml-candidate"
+      "prior_guard": "1.1.0"
+      "anti_drift": "2.0.0"
+  "candidates":
+  - "id": "ready-gate"
+    "file": "ImageT_v1.0.0-ready-gate-candidate.md"
+    "local_path": "../Image Transcendent CI/ImageT_v1.0.0-ready-gate-candidate.md"
+    "version": "1.0.0-ready-gate-candidate"
+    "status": "candidate"
+    "required": false
+    "sha256": "ec4553319aec54403a5ceaf94598fddc099e03aa99f5ea9380e28a0adaf389ee"
+    "selectable": true
+    "selection_scope": "isolated_test"
+    "compatibility":
+      "router": "2.0.0-yaml-candidate"
+      "prior_guard": "1.1.0"
+      "anti_drift": "2.0.0"
+"artifacts":
+  "router":
+    "id": "router"
+    "file": "IMAGE_SOURCE_ROUTER.yaml"
+    "local_path": "IMAGE_SOURCE_ROUTER.yaml"
+    "version": "2.0.0-yaml-candidate"
+    "status": "active"
+    "required": true
+    "sha256": "b621ff4922edf75cd6f9f49e57e11b59747691568db02651a478792c6c0416c9"
+  "prior_guard":
+    "id": "prior-guard"
+    "file": "IMAGE_ANTI_PRIOR.md"
+    "local_path": "IMAGE_ANTI_PRIOR.md"
+    "version": "1.1.0"
+    "status": "active"
+    "required": true
+    "sha256": "f08a1d1a09c8b31cd3fe6ed80b38b19f2c662e15f7e192b42c8a5e044aa69b5c"
+  "anti_drift":
+    "id": "anti-drift"
+    "file": "config.md"
+    "local_path": "config.md"
+    "version": "2.0.0"
+    "status": "active"
+    "required": true
+    "sha256": "20b08b3b99b237eebeec0442024e0818245d0b0bebc2fb756e972aca67d4d3d7"
+  "visual_template":
+    "id": "visual-template"
+    "file": null
+    "local_path": null
+    "version": null
+    "status": "optional_absent"
+    "required": false
+    "sha256": null
+    "reserved_file": "template.md"
+"preferences":
+- "id": "humanoid-character-design"
+  "file": "HUMANOID_CHARACTER_DESIGN_PREFERENCE.md"
+  "local_path": "HUMANOID_CHARACTER_DESIGN_PREFERENCE.md"
+  "version": "0.1.1-candidate"
+  "status": "candidate"
+  "required": false
+  "sha256": "3652c341c3f3c5c4caefeca107643b40c58c4ff721c4aa26a3be49095fb7a16e"
+  "selectable": false
+  "selection_scope": "direct_input_experiment"
+  "activation": "inactive"
+  "source_routing": "not_implemented"
+  "direct_input_selection": "explicit_current_operation_under_own_contract"
+"archives":
+- "file": "source_archive/02-02-config-1.md"
+  "status": "archived"
+  "sha256": "1458eff9790c02bf146cca48232a7d352308a00f8fa1b684eba5a32b94ff8faa"
+- "file": "source_archive/03-01-IMAGE_SOURCE_ROUTER-1-.md"
+  "status": "archived"
+  "sha256": "aac3d5326c663334332a5c95e9ebb41445e9df61ea23311cada316fb946b2abc"
+- "file": "source_archive/IMAGE_ANTI_PRIOR.md"
+  "status": "archived"
+  "sha256": "3083b0a6de6843845f50c5a23073864254dddfec651ef9d5ede6d749dbc0033e"
+- "file": "../Image Transcendent CI/source_archive/CI.md"
+  "status": "archived"
+  "sha256": "a2bce4ef9275b99441ac420c4cee36ad98d053278e9fd9519a7f7765ccdacebc"
+- "file": "source_archive/manifest.md"
+  "status": "archived"
+  "sha256": "609bc18cec5ec1868732b50e9bddf169c4ecb56df1c36d2f8d6c7b4ff9e5dbc2"
+- "file": "source_archive/IMAGE_SOURCE_ROUTER.md"
+  "status": "archived"
+  "sha256": "de3daf811c5b14e03ea24dc101655aa0d177153a29c6c6c7c768ee76b6732227"
+- "file": "source_archive/HUMANOID_CHARACTER_DESIGN_PREFERENCE_v0.1.0-candidate.md"
+  "status": "archived"
+  "sha256": "2e4663e4b897d9c144cee5f8199c3ad5d768608f27bb2778e81573cb09e70442"

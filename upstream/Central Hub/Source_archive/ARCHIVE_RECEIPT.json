@@ -1,0 +1,218 @@
+[
+  {
+    "old": "llm-controls/Friendly Support Project/FSP_CI_v0.2.md",
+    "archive": "Source_archive/Friendly Support Project/FSP_CI_v0.2.md",
+    "bytes": 7852,
+    "sha256": "3de265f54e26ebd1be9888591db6b8552aa4c0a9e500b2f2c4effb19397a4915"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/FSP_CI_v0.3.1.md",
+    "archive": "Source_archive/Friendly Support Project/FSP_CI_v0.3.1.md",
+    "bytes": 7690,
+    "sha256": "193879ab921f95655e2b507b76eef075bee3897236e98d541b1bc015fbf7ede8"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/FSP_CI_v0.3.md",
+    "archive": "Source_archive/Friendly Support Project/FSP_CI_v0.3.md",
+    "bytes": 7413,
+    "sha256": "ed42fad5d1a36ca92ee0102e4051a9690dd53c1bb1e09b2d6299ae1d1fe5b6a4"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/overlays/BRAINSTORM_v0.1.md",
+    "archive": "Source_archive/Friendly Support Project/overlays/BRAINSTORM_v0.1.md",
+    "bytes": 2598,
+    "sha256": "4af3173fd85c0f116549aa5588d6a31b646f332b642b62f1f499fb123cc39917"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/profiles/CREATIVE_v0.1.md",
+    "archive": "Source_archive/Friendly Support Project/profiles/CREATIVE_v0.1.md",
+    "bytes": 2115,
+    "sha256": "471177aa863b46afacbe4eda663f89bcc7bffcec870bd00e387a9df8a4a4e631"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/profiles/TECHNICAL_v0.1.md",
+    "archive": "Source_archive/Friendly Support Project/profiles/TECHNICAL_v0.1.md",
+    "bytes": 2577,
+    "sha256": "a866cb9e0d001cc906143b08f8fd31a9176b69db7379e5d0ddd211bb2a494492"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/router/FSP_ROUTER_v0.1.md",
+    "archive": "Source_archive/Friendly Support Project/router/FSP_ROUTER_v0.1.md",
+    "bytes": 2874,
+    "sha256": "2c88df7cf9d067041ea18a92f53fb3ff24f8bb84f593344c5e0021e20e72d165"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/router/FSP_ROUTER_v0.2.md",
+    "archive": "Source_archive/Friendly Support Project/router/FSP_ROUTER_v0.2.md",
+    "bytes": 5518,
+    "sha256": "e60c83cd316b90db4684abdb9645d3a503508631699e99224c056d05f5d3b54f"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/source_archive/FSP_CI_v0.1.md",
+    "archive": "Source_archive/Friendly Support Project/historical_sources/FSP_CI_v0.1.md",
+    "bytes": 10253,
+    "sha256": "5a8bf3492fe4ab1f4fba097b1eed51aaace02afb6bc8ce8645f4e732135db714"
+  },
+  {
+    "old": "llm-controls/Friendly Support Project/source_archive/Project CI v0.1 — Controlled Flexible Interaction.txt",
+    "archive": "Source_archive/Friendly Support Project/historical_sources/Project CI v0.1 — Controlled Flexible Interaction.txt",
+    "bytes": 11813,
+    "sha256": "c4f71b6e9e9b249cdf909d9ee314607d53fca4c52b83f85c0847f80ad825b005"
+  },
+  {
+    "old": "Authorize Integrity Search/Authorize Integrity Search CI/AIS_CI_v0.1.md",
+    "archive": "Source_archive/Authorize Integrity Search/Authorize Integrity Search CI/AIS_CI_v0.1.md",
+    "bytes": 5172,
+    "sha256": "6ad515e8f60ca148a31dfe14c561d3372d82d2e09a3f119bf4f779ac2dc00487"
+  },
+  {
+    "old": "Authorize Integrity Search/Authorize Integrity Search Modules/AIS_SOURCE_ROUTER_v0.1.yaml",
+    "archive": "Source_archive/Authorize Integrity Search/Authorize Integrity Search Modules/AIS_SOURCE_ROUTER_v0.1.yaml",
+    "bytes": 7094,
+    "sha256": "851499d58c29b3722bfcfdb93b26cbb43b6506ddb3febc50df9e5b19478389f0"
+  },
+  {
+    "old": "Authorize Integrity Search/README.md",
+    "archive": "Source_archive/Authorize Integrity Search/README.md",
+    "bytes": 8122,
+    "sha256": "82bfcd84c3e1c30df6bae8d08ea2c4773af056ec8a08cf3192a7cbb882ecab0b"
+  },
+  {
+    "old": "Authorize Integrity Search/tests/ROUTE_TEST_CASES.md",
+    "archive": "Source_archive/Authorize Integrity Search/tests/ROUTE_TEST_CASES.md",
+    "bytes": 9126,
+    "sha256": "4f80e43bac7edd4a48491978db7ceb7543220d76beab0c3a297a68b72b8cc762"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/.gitattributes",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/.gitattributes",
+    "bytes": 66,
+    "sha256": "d5ee7a79f983554a67325d8159570fa9b5e2130078a124bc1ee6fc0c3af6e489"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/ImageT_v1.0.0-ready-gate-candidate.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/ImageT_v1.0.0-ready-gate-candidate.md",
+    "bytes": 7883,
+    "sha256": "ec4553319aec54403a5ceaf94598fddc099e03aa99f5ea9380e28a0adaf389ee"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/ImageT_v1.0.0.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/ImageT_v1.0.0.md",
+    "bytes": 5809,
+    "sha256": "21302c724c6c3358f25fd45e084d23db674600309311ce08a8e8f8f9bca89bc6"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/README.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/README.md",
+    "bytes": 1584,
+    "sha256": "71e7f96f6a2478a3deb03ec5c2da3cb0fa4a027d7548d236e4f9064a7b9dfd95"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/READY_GATE_CANDIDATE_TESTS.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/READY_GATE_CANDIDATE_TESTS.md",
+    "bytes": 6349,
+    "sha256": "8a3f6ebd333a0d758037a0b90b78613a7da1dcc85f75bb2c966fb40d49a8c499"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent CI/source_archive/CI.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent CI/historical_sources/CI.md",
+    "bytes": 7527,
+    "sha256": "a2bce4ef9275b99441ac420c4cee36ad98d053278e9fd9519a7f7765ccdacebc"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/.gitattributes",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/.gitattributes",
+    "bytes": 70,
+    "sha256": "ea35f200b65189346372e8bf0754ecdbc13227ad1a79fbbfb4755242dd36b8c1"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/config.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/config.md",
+    "bytes": 2520,
+    "sha256": "20b08b3b99b237eebeec0442024e0818245d0b0bebc2fb756e972aca67d4d3d7"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/HUMANOID_CHARACTER_DESIGN_PREFERENCE.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/HUMANOID_CHARACTER_DESIGN_PREFERENCE.md",
+    "bytes": 6687,
+    "sha256": "3652c341c3f3c5c4caefeca107643b40c58c4ff721c4aa26a3be49095fb7a16e"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/IMAGE_ANTI_PRIOR.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/IMAGE_ANTI_PRIOR.md",
+    "bytes": 2528,
+    "sha256": "f08a1d1a09c8b31cd3fe6ed80b38b19f2c662e15f7e192b42c8a5e044aa69b5c"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/IMAGE_SOURCE_ROUTER.yaml",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/IMAGE_SOURCE_ROUTER.yaml",
+    "bytes": 3697,
+    "sha256": "b621ff4922edf75cd6f9f49e57e11b59747691568db02651a478792c6c0416c9"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/manifest.yaml",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/manifest.yaml",
+    "bytes": 4131,
+    "sha256": "51b1f28e0295f5781e57945268c594564fad3fc934a05b4b4b8dd42ad20f5538"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/PREFERENCE_M2_TEST_PLAN.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/PREFERENCE_M2_TEST_PLAN.md",
+    "bytes": 7022,
+    "sha256": "0d0d73224a1b692a28fc24f8e97705fd1b9ad926eb2bd17c2bec2cfd58c61b63"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/ROUTE_TEST_CASES.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/ROUTE_TEST_CASES.md",
+    "bytes": 3183,
+    "sha256": "bd2123617d2d45b61e74a6c947794a8cc85720f0d259293826a444bae47fc860"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/02-02-config-1.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/02-02-config-1.md",
+    "bytes": 22046,
+    "sha256": "1458eff9790c02bf146cca48232a7d352308a00f8fa1b684eba5a32b94ff8faa"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/03-01-IMAGE_SOURCE_ROUTER-1-.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/03-01-IMAGE_SOURCE_ROUTER-1-.md",
+    "bytes": 6355,
+    "sha256": "aac3d5326c663334332a5c95e9ebb41445e9df61ea23311cada316fb946b2abc"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/HUMANOID_CHARACTER_DESIGN_PREFERENCE_v0.1.0-candidate.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/HUMANOID_CHARACTER_DESIGN_PREFERENCE_v0.1.0-candidate.md",
+    "bytes": 6630,
+    "sha256": "2e4663e4b897d9c144cee5f8199c3ad5d768608f27bb2778e81573cb09e70442"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/IMAGE_ANTI_PRIOR.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/IMAGE_ANTI_PRIOR.md",
+    "bytes": 4205,
+    "sha256": "3083b0a6de6843845f50c5a23073864254dddfec651ef9d5ede6d749dbc0033e"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/IMAGE_SOURCE_ROUTER.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/IMAGE_SOURCE_ROUTER.md",
+    "bytes": 4606,
+    "sha256": "de3daf811c5b14e03ea24dc101655aa0d177153a29c6c6c7c768ee76b6732227"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/source_archive/manifest.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/manifest.md",
+    "bytes": 2955,
+    "sha256": "609bc18cec5ec1868732b50e9bddf169c4ecb56df1c36d2f8d6c7b4ff9e5dbc2"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/tests/test_yaml_routing.py",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/tests/test_yaml_routing.py",
+    "bytes": 14980,
+    "sha256": "3c9a74dfead36b7f34763f84410792caffae84057856c19e2f482add206f61ea"
+  },
+  {
+    "old": "Image Transcendent/Image Transcendent Modules/YAML_MIGRATION_NOTES.md",
+    "archive": "Source_archive/Image Transcendent/Image Transcendent Modules/YAML_MIGRATION_NOTES.md",
+    "bytes": 3854,
+    "sha256": "9247c395c96c1cf1f7f3c954414aa820452d27e7132c3a4c616824435c6f2243"
+  }
+]

@@ -1,0 +1,23 @@
+format_version: '1'
+trial_status: CANDIDATE
+active: false
+deployment: MANUAL_TRIAL_ONLY_NOT_PERFORMED
+package_id: HUB-PKG-TECHNICAL
+entrypoint_module_id: HUB-DOM-TECHNICAL
+runtime_role: REASONING_PROFILE
+status: CANDIDATE
+version: '0.1-trial'
+location: LIBRARY
+library_root: Central Hub Config
+locator: UNRESOLVED
+retrieval_status: NOT_VERIFIED
+live_trial: NOT_RUN
+artifact_file: HUB-DOM-TECHNICAL_v0.1-trial.md
+artifact_file_usage: Repository-side preparation and manual placement only; filename is not runtime identity or locator.
+role_boundary: Trial-specific REASONING_PROFILE binding explicitly requested by the user; does not change DOMAIN_CONTROL in the root candidate Catalog.
+authorization: Explicit identified trial and selected technical scope only, after actual FULL_FILE and exact header verification; never automatic activation.
+invariants:
+  - CENTRAL HUB CONFIG = SOLE LIBRARY DISCOVERY ROOT.
+  - TRIAL PREPARATION != LIVE VERIFICATION.
+  - CANDIDATE PRESENCE != ACTIVATION.
+  - STATIC PASS != LIVE LIBRARY PASS.
