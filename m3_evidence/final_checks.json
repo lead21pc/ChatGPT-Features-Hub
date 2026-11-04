@@ -1,0 +1,25 @@
+{
+  "exact_prompts": "PASS",
+  "live_attempts": 4,
+  "responses_calls": 22,
+  "retries": 0,
+  "source_hashes_stable_during_each_run": true,
+  "baseline_to_candidate_changes": [
+    "m1.py",
+    "t8.py"
+  ],
+  "all_baseline_tracked_sources_restored": true,
+  "secret_scan": "PASS",
+  "compileall_files": 62,
+  "compileall": "PASS",
+  "diff_check": "PASS",
+  "tracked_diff": "EMPTY",
+  "index": "EMPTY",
+  "evidence_scripts_sha256": {
+    "candidate_test_m3.py": "a9ec13f008de40a676435668f555eaf563282d986b08c654c6d85cc307d11c59",
+    "run.py": "1ae5f226acbbdc41082c5ba0314909515eb33da5e4e4e9703f1f22d39cae8142",
+    "summarize.py": "9934e60049d450acb35c70624d495378ed50be685dc850d9a65abda0d0984a88"
+  },
+  "head": "8f5487ca8b124edb339192a9704b5d74157bcf00",
+  "origin_main": "8f5487ca8b124edb339192a9704b5d74157bcf00"
+}

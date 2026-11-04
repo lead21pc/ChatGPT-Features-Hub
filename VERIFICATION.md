@@ -1,5 +1,19 @@
 # Kết quả kiểm chứng Giai đoạn 1
 
+## Quyết định cuối workstream — 2026-11-05
+
+- **CENTRAL HUB LOCAL/API: BACKUP — VERIFIED + LIVE VERIFIED.** Static verification, live API verification M1/M2 và các workload đã chạy đủ xác lập backup path trong phạm vi đã kiểm chứng. Quyết định này không nâng mọi diagnostic path hoặc experiment thành live PASS.
+- **M3: CLOSED. M3 TOKEN/CACHE OPTIMIZATION: CLOSED / NO FURTHER WORK PLANNED.** Không còn yêu cầu API cost thấp hơn subscription; backup hoạt động và đã kiểm chứng là mục tiêu hoàn tất. Không retry mặc định, không tạo experiment mới; chỉ mở lại M3 khi người dùng yêu cầu rõ ràng.
+- Experiment 1: đã live-run, **FAILED TARGET** vì không có Concept W2 cache reuse như mục tiêu. Giữ nguyên usage, chi phí ước tính và báo cáo [REPORT.md](m3_evidence/REPORT.md).
+- Experiment 2 explicit cache: **STATIC VERIFIED / LIVE NOT ESTABLISHED / CLOSED WITHOUT PROMOTION**. Đúng một live attempt bị chặn ở root W1 bởi `429 project_spend_limit_exceeded`, chưa tới Concept call; không có usage để kết luận cache hit/write hay savings. Xem [EXPERIMENT_2_REVIEW.md](m3_evidence/EXPERIMENT_2_REVIEW.md). Không tuyên bố explicit caching đã live-pass.
+- Runtime giữ nguyên baseline đã restore `8f5487ca8b124edb339192a9704b5d74157bcf00`, branch `main`; không áp lại `explicit_candidate_runtime.patch`. **M4: NOT STARTED.**
+
+Trạng thái/handoff cuối: [M3_FINAL_STATUS.md](m3_evidence/M3_FINAL_STATUS.md). Các hồ sơ M1/M2 và M3 bên dưới/được liên kết giữ phạm vi bằng chứng lịch sử; quyết định đóng mục tiêu tối ưu không thay đổi kết quả các experiment. Lượt wrap-up này chỉ cập nhật tài liệu/trạng thái và kiểm chứng local/static, không gọi API live.
+
+Kiểm chứng wrap-up: full local suite **117/117 PASS**, focused upstream Authoring **33/33 PASS**, chặn toàn cục `socket.socket.connect`; `compileall` **65 file PASS**, bytecode đặt trong thư mục tạm. `git diff --check` PASS. So sánh SHA-256 trước/sau xác nhận mọi tracked file ngoài README/VERIFICATION giữ nguyên byte; cả 30 evidence files ngoài status/handoff giữ nguyên, không thêm/xóa evidence. Không chuẩn hóa lại line endings. Quét exact configured API key và mẫu credential trong tài liệu cập nhật cùng toàn bộ M3 evidence không phát hiện secret; chuỗi trùng mẫu bên trong `encrypted_content` của response lịch sử được phân biệt với credential.
+
+Chỉ sửa `README.md`, `VERIFICATION.md` và `m3_evidence/M3_FINAL_STATUS.md`. Index giữ nguyên và không có staged diff; `m3_evidence/` vẫn untracked như baseline. Không stage/commit/push trong wrap-up.
+
 ## M2 — Authoring 0.7 source isolation, 2026-11-05
 
 Checkpoint trước mutation: repo `<LOCAL_REPO>`, branch `main`, worktree/index sạch, `HEAD=origin/main=c619a5a6895cf0d9aa67a92ebb46f36a8bb9e228` (`Complete local runtime M1 and M2 acceptance`). Người dùng đã cho phép candidate live, promotion có điều kiện, stage, commit và push trong M2. Không tạo branch/tag; không bắt đầu M3/M4.

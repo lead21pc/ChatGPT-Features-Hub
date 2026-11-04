@@ -1,6 +1,10 @@
-# Central Hub Local — M1 Unified Local Runtime
+# Central Hub Local — phương án backup
 
-Checkpoint M2 ngày 2026-11-05: Authoring **0.7 ACTIVE trong runtime local**, Architecture/Catalog 1.9; CI/Router 1.1. Binding v0.2/v0.3 dùng bản 0.7 byte-exact. Exact `/AUTHOR <OUTPUT_TARGET> ISOLATED` hoặc `/AUTHOR <OUTPUT_TARGET> P<n> ISOLATED` giới hạn nguồn task material cho lượt hiện tại; không có suffix thì giữ hành vi 0.6. Không xóa lịch sử, không lưu chế độ và không cấp quyền chạy target. Contributor + ISOLATED không kích hoạt. Các mô tả phiên bản trong hồ sơ T0–T9 bên dưới giữ bối cảnh kiểm chứng lịch sử; xem [VERIFICATION.md](VERIFICATION.md) và [bằng chứng 0.7](m2_evidence/authoring_0_7/) cho kết quả hiện tại. Không bắt đầu M3/M4.
+Quyết định đóng workstream ngày 2026-11-05: Central Hub local/API được giữ làm **BACKUP**, functional status **VERIFIED + LIVE VERIFIED** theo bằng chứng M1/M2 và các workload đã chạy. **M3 CLOSED**; không tiếp tục tối ưu chi phí/token/cache, không có kế hoạch retry mặc định và **M4 NOT STARTED**. Một backup path hoạt động và đã kiểm chứng là mục tiêu hoàn tất; API không cần rẻ hơn subscription để được coi là thành công. Chỉ mở lại M3 khi người dùng yêu cầu rõ ràng.
+
+Experiment 1 đã live-run nhưng không đạt mục tiêu cache reuse. Experiment 2 explicit cache đạt static verification, nhưng live attempt bị chặn tại root bởi `429 project_spend_limit_exceeded`, trước Concept call: **LIVE NOT ESTABLISHED / CLOSED WITHOUT PROMOTION**. Runtime giữ baseline đã restore `8f5487ca8b124edb339192a9704b5d74157bcf00`; không áp lại patch candidate. Xem [trạng thái M3 cuối](m3_evidence/M3_FINAL_STATUS.md) và [VERIFICATION.md](VERIFICATION.md); toàn bộ `m3_evidence/` được giữ làm lịch sử.
+
+Checkpoint M2 ngày 2026-11-05: Authoring **0.7 ACTIVE trong runtime local**, Architecture/Catalog 1.9; CI/Router 1.1. Binding v0.2/v0.3 dùng bản 0.7 byte-exact. Exact `/AUTHOR <OUTPUT_TARGET> ISOLATED` hoặc `/AUTHOR <OUTPUT_TARGET> P<n> ISOLATED` giới hạn nguồn task material cho lượt hiện tại; không có suffix thì giữ hành vi 0.6. Không xóa lịch sử, không lưu chế độ và không cấp quyền chạy target. Contributor + ISOLATED không kích hoạt. Các mô tả phiên bản trong hồ sơ T0–T9 bên dưới giữ bối cảnh kiểm chứng lịch sử; xem [VERIFICATION.md](VERIFICATION.md) và [bằng chứng 0.7](m2_evidence/authoring_0_7/) cho kết quả hiện tại. Tại checkpoint M2 này chưa bắt đầu M3/M4; quyết định đóng M3 hiện tại nằm ở đầu tài liệu.
 
 Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa README này.
 

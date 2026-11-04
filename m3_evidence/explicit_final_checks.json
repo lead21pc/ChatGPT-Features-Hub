@@ -1,0 +1,26 @@
+{
+  "local": {
+    "exit_code": 0,
+    "log": "explicit_final_local.txt"
+  },
+  "upstream_authoring": {
+    "exit_code": 0,
+    "log": "explicit_final_upstream_authoring.txt"
+  },
+  "compileall": {
+    "exit_code": 0,
+    "files": 65
+  },
+  "diff_check": {
+    "exit_code": 0
+  },
+  "experiment_1_preserved": true,
+  "secret_scan_pass": true,
+  "static_pass": true,
+  "final_evidence_scan": {
+    "files_scanned": 31,
+    "exact_api_key_absent": true,
+    "experiment_1_preserved": true
+  },
+  "status": "M3 NOT COMPLETE"
+}

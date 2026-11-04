@@ -1,0 +1,132 @@
+{
+  "reviewed_utc": "2026-11-04T17:39:43.239321+00:00",
+  "baseline_current": {
+    "status": "M2_SCOPED_SEMANTIC_PASS",
+    "workload_1": {
+      "calls": 7,
+      "result": "PASS",
+      "checks": [
+        "Root Authoring + Concept; admission GENERIC/BRAINSTORM; exact Brainstorm/CAPABILITY owner and verified body; final self-contained prompt requests six distinct parallel candidates; contribution state remains GENERATED_CONTRIBUTION_NOT_ACCEPTED_STATE; no AIS/ImageT/tools/target execution; no blockers"
+      ],
+      "limit": "Intermediate contribution is itself a prompt; no independent claim that its execution produced six fully developed candidates, consistent with historical M2 acceptance boundary."
+    },
+    "workload_2": {
+      "calls": 4,
+      "result": "PASS",
+      "checks": [
+        "Independent Technical + Concept + AIS; Brainstorm only; native search executed; official Tauri domains and official tauri-apps repository; final separates evidence, Technical diagnosis, four parallel Concept candidates and unknowns; no accepted candidate, target execution or ImageT; no blockers"
+      ],
+      "limits": [
+        "Only explicit tool actions prove page reads: sidecar open_page twice, config find_in_page. Search/citation URLs do not prove full-page reads. AIS prose claims broader reads; not independently verified.",
+        "Version/date assertions are not independently verified; final explicitly declines reliance on latest-version claims. Semantic PASS is scoped coordination/authority acceptance, not independent audit of each external claim."
+      ]
+    },
+    "reproduced_cache_miss": {
+      "w1_concept_cached": 0,
+      "w1_concept_write": 9328,
+      "w2_concept_cached": 0,
+      "w2_concept_write": 10712,
+      "both_root_cached": 12679
+    }
+  },
+  "disposition": "ACCEPT WITH LOCAL CORRECTION: implement only A and B; retain C and D context because necessity of removal is not established.",
+  "root_cause": "Dynamic verified handoff precedes stable Concept binding/core/catalog; non-selected AIS still duplicates root route and empty trace in every T8 phase.",
+  "changes": [
+    "A: reorder hub_t8_concept stable controls/binding/core/catalog before full handoff; imperative remains last.",
+    "B: pass ais_evidence=None only when AIS is not selected; retain local_route/selected scopes, bindings, and public M1 trace."
+  ],
+  "preserved": [
+    "Full generated contribution in all prior receiving phases and final Authoring",
+    "scoped_package_output in final Authoring",
+    "Full AIS evidence when selected",
+    "AIS request payload order and semantics",
+    "No model/reasoning/verbosity/tools/call count/retry semantics changes"
+  ],
+  "static": {
+    "local": {
+      "tests": 119,
+      "failures": 0,
+      "errors": 0,
+      "network": "socket.socket.connect blocked globally",
+      "log": "static_local.txt"
+    },
+    "focused_upstream": {
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "modules": [
+        "test_authoring_isolation",
+        "test_authoring_candidate",
+        "test_authoring_m1",
+        "test_authoring_m2",
+        "test_authoring_m4"
+      ],
+      "network": "socket.socket.connect blocked globally",
+      "log": "static_upstream_authoring.txt",
+      "scope": "Focused Authoring only; not mirror-wide upstream PASS."
+    },
+    "compileall": {
+      "files": 62,
+      "result": "PASS",
+      "pycache": "temporary directory removed"
+    },
+    "git_diff_check": "PASS",
+    "protected_tracked_paths": "upstream runtime app.py t9.py m2_acceptance.py unchanged",
+    "api_key_scan": "PASS: exact configured key absent in task files; key never printed."
+  },
+  "post": {
+    "semantic_status": "M2_SCOPED_SEMANTIC_PASS",
+    "workload_1": {
+      "calls": 7,
+      "result": "PASS",
+      "checks": [
+        "Same root packages, GENERIC/BRAINSTORM admission, exact owner/verified retrieval; full contribution and scoped output in final; self-contained prompt for six parallel candidates; no acceptance/target/tools/AIS/ImageT/blockers"
+      ],
+      "limit": "Same intermediate prompt-form contribution limitation as baseline."
+    },
+    "workload_2": {
+      "calls": 4,
+      "result": "PASS",
+      "checks": [
+        "Independent Technical/Concept/AIS selection unchanged; only Brainstorm selected; final separates official evidence, three parallel Concept candidates, Technical diagnosis and unknowns; no rank/acceptance/target/ImageT/blockers; only AIS has tools; full AIS evidence reaches final Hub"
+      ],
+      "limits": [
+        "Explicit reads: sidecar open_page twice, shell API find_in_page, shell 2.5.0 release open_page. Other search/citation URLs do not establish full reads.",
+        "External claims and source coverage were not independently verified claim by claim. Runtime packaging/architecture feasibility remains conditional."
+      ]
+    },
+    "responses_api_calls": 11,
+    "web_search_calls": 5,
+    "retries": 0
+  },
+  "optimization": {
+    "status": "FAIL",
+    "m3_complete": false,
+    "w2_concept_cached_tokens": 0,
+    "w1_concept_cached_tokens": 0,
+    "identical_stable_prefix_bytes": 30301,
+    "same_schema": true,
+    "w1_concept_started_utc": "2026-11-04T17:40:16.901769+00:00",
+    "w2_concept_started_utc": "2026-11-04T17:41:21.437851+00:00",
+    "baseline_pair_token_cost_usd": 0.8712832,
+    "post_pair_token_cost_usd": 0.8730792,
+    "cost_increase_usd": 0.001796,
+    "cost_increase_percent": 0.2061327476531316,
+    "raw_input_delta": -301,
+    "interpretation": "Fewer raw input tokens did not reduce observed pair token cost. Single-pair measurement mixes stochastic output, provider/tool content and pre-existing cache warmth. No causal savings claim. Stable textual prefix did not prove provider cache reuse; provider-side cause remains unknown."
+  },
+  "final_state": {
+    "runtime": "RESTORED_BYTE_EXACT_TO_8f5487c",
+    "retained_candidate": "candidate_runtime.patch and candidate_test_m3.py are evidence only, not active implementation",
+    "docs": "README.md and VERIFICATION.md unchanged because M3 success gate failed",
+    "git": "No staging, commit, push, branch, tag, remote changes or deployment",
+    "future_if_needed": "Investigate why identical same-phase stable prefixes still miss provider cache before selecting another correction. No cache key/TTL/prewarm/breakpoint/reasoning/model/call-merge change implemented; no rerun authorized by this campaign.",
+    "restored_tests": {
+      "tests": 117,
+      "failures": 0,
+      "errors": 0,
+      "network": "socket.socket.connect blocked globally",
+      "log": "restored_local.txt"
+    }
+  }
+}

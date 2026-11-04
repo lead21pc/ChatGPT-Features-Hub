@@ -1,0 +1,140 @@
+test_payloads_and_history_in_all_modes (test_app.Stage2Tests.test_payloads_and_history_in_all_modes) ... ok
+test_runtime_technical_is_byte_exact_active_source (test_app.Stage2Tests.test_runtime_technical_is_byte_exact_active_source) ... ok
+test_t0_never_reads_ci (test_app.Stage2Tests.test_t0_never_reads_ci) ... ok
+test_t1_read_failures_do_not_send (test_app.Stage2Tests.test_t1_read_failures_do_not_send) ... ok
+test_t1_reads_ci_on_every_request_without_normalization (test_app.Stage2Tests.test_t1_reads_ci_on_every_request_without_normalization) ... ok
+test_t2_read_failures_do_not_send_or_fall_back (test_app.Stage2Tests.test_t2_read_failures_do_not_send_or_fall_back) ... ok
+test_t2_reads_both_each_request_without_normalization (test_app.Stage2Tests.test_t2_reads_both_each_request_without_normalization) ... ok
+test_ui_ci_error_keeps_history_and_prompt (test_app.Stage2Tests.test_ui_ci_error_keeps_history_and_prompt) ... 2026-11-05 00:51:47.746 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 00:51:48.112 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 00:51:48.234 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 00:51:48.372 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_ui_switch_preserves_history_and_response_labels (test_app.Stage2Tests.test_ui_switch_preserves_history_and_response_labels) ... 2026-11-05 00:51:48.492 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_active_semantics_exactly_match_live_tested_candidate (test_authoring_07.Authoring07Contracts.test_active_semantics_exactly_match_live_tested_candidate) ... ok
+test_archive_receipt_and_runtime_bindings (test_authoring_07.Authoring07Contracts.test_archive_receipt_and_runtime_bindings) ... ok
+test_exact_activation_and_malformed_forms_spec_only (test_authoring_07.Authoring07Contracts.test_exact_activation_and_malformed_forms_spec_only) ... ok
+test_minimum_catalog_router_delta_and_unchanged_other_packages (test_authoring_07.Authoring07Contracts.test_minimum_catalog_router_delta_and_unchanged_other_packages) ... ok
+test_ais_reuses_t9_contract_mock_evidence_only (test_m1.M1Tests.test_ais_reuses_t9_contract_mock_evidence_only) ... ok
+test_all_four_roots_ground_authoring_without_target_execution (test_m1.M1Tests.test_all_four_roots_ground_authoring_without_target_execution) ... ok
+test_authoring_contributor_uses_existing_owner_lifecycle (test_m1.M1Tests.test_authoring_contributor_uses_existing_owner_lifecycle) ... ok
+test_authoring_inactive_does_not_persist (test_m1.M1Tests.test_authoring_inactive_does_not_persist) ... ok
+test_authoring_receives_independently_selected_ais_evidence (test_m1.M1Tests.test_authoring_receives_independently_selected_ais_evidence) ... ok
+test_authoring_targets_do_not_execute (test_m1.M1Tests.test_authoring_targets_do_not_execute) ... ok
+test_baseline_one_root_no_package_reads (test_m1.M1Tests.test_baseline_one_root_no_package_reads) ... ok
+test_binding_and_selected_package_failures_explicit (test_m1.M1Tests.test_binding_and_selected_package_failures_explicit) ... ok
+test_concept_only_owner_selects_exact_leaf (test_m1.M1Tests.test_concept_only_owner_selects_exact_leaf) ... ok
+test_default_dispatch_and_old_diagnostic_dispatch (test_m1.M1Tests.test_default_dispatch_and_old_diagnostic_dispatch) ... ok
+test_imaget_root_blocks_without_body_read_or_fallback (test_m1.M1Tests.test_imaget_root_blocks_without_body_read_or_fallback) ... ok
+test_inactive_authoring_preserves_independent_technical_scope (test_m1.M1Tests.test_inactive_authoring_preserves_independent_technical_scope) ... ok
+test_isolated_authoring_top_level_preserves_ambient_history_without_target_execution (test_m1.M1Tests.test_isolated_authoring_top_level_preserves_ambient_history_without_target_execution) ... ok
+test_multi_root_technical_concept_ais (test_m1.M1Tests.test_multi_root_technical_concept_ais) ... ok
+test_root_pending_retrieval_instruction_and_brainstorm_handoff (test_m1.M1Tests.test_root_pending_retrieval_instruction_and_brainstorm_handoff) ... ok
+test_root_validation_and_blockers_no_execution (test_m1.M1Tests.test_root_validation_and_blockers_no_execution) ... ok
+test_technical_only (test_m1.M1Tests.test_technical_only) ... ok
+test_tool_missing_or_failed_stops_before_final (test_m1.M1Tests.test_tool_missing_or_failed_stops_before_final) ... ok
+test_ui_defaults_to_runtime_preserves_history_and_failure (test_m1.M1Tests.test_ui_defaults_to_runtime_preserves_history_and_failure) ... 2026-11-05 00:51:48.955 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_all_control_failures_before_client_without_fallback (test_t3.T3Tests.test_all_control_failures_before_client_without_fallback) ... ok
+test_exact_controls_payload_schema_and_no_package_reads (test_t3.T3Tests.test_exact_controls_payload_schema_and_no_package_reads) ... ok
+test_invalid_refused_incomplete_no_text_fail_clearly (test_t3.T3Tests.test_invalid_refused_incomplete_no_text_fail_clearly) ... ok
+test_ui_failures_keep_prior_state_and_prompt (test_t3.T3Tests.test_ui_failures_keep_prior_state_and_prompt) ... 2026-11-05 00:51:49.100 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_ui_renders_record_and_none_without_polluting_normal_history (test_t3.T3Tests.test_ui_renders_record_and_none_without_polluting_normal_history) ... 2026-11-05 00:51:49.820 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_exact_active_copies_and_runtime_inventory (test_t4.T4Tests.test_exact_active_copies_and_runtime_inventory) ... ok
+test_old_modes_do_not_read_concept (test_t4.T4Tests.test_old_modes_do_not_read_concept) ... ok
+test_payload_exact_order_reads_each_request_and_no_other_bodies (test_t4.T4Tests.test_payload_exact_order_reads_each_request_and_no_other_bodies) ... ok
+test_required_file_failures_before_client (test_t4.T4Tests.test_required_file_failures_before_client) ... ok
+test_ui_read_failures_preserve_history_prompt_and_routes (test_t4.T4Tests.test_ui_read_failures_preserve_history_prompt_and_routes) ... 2026-11-05 00:51:50.045 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_ui_shared_history_labels_and_t3_isolation (test_t4.T4Tests.test_ui_shared_history_labels_and_t3_isolation) ... 2026-11-05 00:51:50.213 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_all_file_failures_before_api_and_preserve_ui_state (test_t5.T5Tests.test_all_file_failures_before_api_and_preserve_ui_state) ... 2026-11-05 00:51:50.691 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 00:51:50.763 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_exact_active_leaf_copies (test_t5.T5Tests.test_exact_active_leaf_copies) ... ok
+test_payload_byte_order_exact_reads_no_cache_or_other_bodies (test_t5.T5Tests.test_payload_byte_order_exact_reads_no_cache_or_other_bodies) ... ok
+test_shared_history_visible_labels_and_t3_isolation (test_t5.T5Tests.test_shared_history_visible_labels_and_t3_isolation) ... 2026-11-05 00:51:51.436 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_t0_to_t4_never_read_new_leaves (test_t5.T5Tests.test_t0_to_t4_never_read_new_leaves) ... ok
+test_exact_payload_order_rereads_and_no_other_sources (test_t6.T6Tests.test_exact_payload_order_rereads_and_no_other_sources) ... ok
+test_required_file_failures_preserve_history_routes_and_prompt (test_t6.T6Tests.test_required_file_failures_preserve_history_routes_and_prompt) ... 2026-11-05 00:51:52.033 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 00:51:52.105 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_shared_history_labels_and_t3_round_trip (test_t6.T6Tests.test_shared_history_labels_and_t3_round_trip) ... 2026-11-05 00:51:52.869 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_t0_to_t5_read_sets_unchanged (test_t6.T6Tests.test_t0_to_t5_read_sets_unchanged) ... ok
+test_binding_inventory_errors_stop_before_api (test_t7.T7Tests.test_binding_inventory_errors_stop_before_api) ... ok
+test_coexistence_and_deterministic_body_order (test_t7.T7Tests.test_coexistence_and_deterministic_body_order) ... ok
+test_concept_core_and_each_leaf_selective (test_t7.T7Tests.test_concept_core_and_each_leaf_selective) ... ok
+test_controls_and_config_changes_are_seen_next_request (test_t7.T7Tests.test_controls_and_config_changes_are_seen_next_request) ... ok
+test_core_control_and_config_errors_stop_before_api (test_t7.T7Tests.test_core_control_and_config_errors_stop_before_api) ... ok
+test_leaf_hallucination_or_mismatch_blocks_only_leaf (test_t7.T7Tests.test_leaf_hallucination_or_mismatch_blocks_only_leaf) ... ok
+test_malformed_structured_result_stops_without_retry (test_t7.T7Tests.test_malformed_structured_result_stops_without_retry) ... ok
+test_manifest_inventory_paths_hashes_and_unchanged_runtime (test_t7.T7Tests.test_manifest_inventory_paths_hashes_and_unchanged_runtime) ... ok
+test_model_blockers_and_multiple_leaf_scopes_preserved (test_t7.T7Tests.test_model_blockers_and_multiple_leaf_scopes_preserved) ... ok
+test_path_escape_never_reads_target_and_utf8_after_hash (test_t7.T7Tests.test_path_escape_never_reads_target_and_utf8_after_hash) ... ok
+test_root_and_leaf_catalog_identity_changes_block_without_guess (test_t7.T7Tests.test_root_and_leaf_catalog_identity_changes_block_without_guess) ... ok
+test_root_hallucination_mismatch_and_duplicate (test_t7.T7Tests.test_root_hallucination_mismatch_and_duplicate) ... ok
+test_root_rereads_exact_controls_and_config_without_bodies (test_t7.T7Tests.test_root_rereads_exact_controls_and_config_without_bodies) ... ok
+test_selected_artifact_errors_block_portion_without_fallback (test_t7.T7Tests.test_selected_artifact_errors_block_portion_without_fallback) ... ok
+test_technical_only (test_t7.T7Tests.test_technical_only) ... ok
+test_ui_t7_history_mode_t3_isolation_and_total_failure (test_t7.T7Tests.test_ui_t7_history_mode_t3_isolation_and_total_failure) ... 2026-11-05 00:51:53.877 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_unsupported_packages_block_independently_without_reads (test_t7.T7Tests.test_unsupported_packages_block_independently_without_reads) ... ok
+test_upstream_unchanged_outside_authorized_m2_promotion (test_t7.T7Tests.test_upstream_unchanged_outside_authorized_m2_promotion) ... ok
+test_admission_blockers_preserved_no_authoring_execution (test_t8.T8Tests.test_admission_blockers_preserved_no_authoring_execution) ... ok
+test_admission_pending_contributor_is_next_stage_not_blocker (test_t8.T8Tests.test_admission_pending_contributor_is_next_stage_not_blocker) ... ok
+test_all_targets_and_presets_exact_body_no_target_execution (test_t8.T8Tests.test_all_targets_and_presets_exact_body_no_target_execution) ... ok
+test_binding_catalog_version_and_interface_mismatch_block (test_t8.T8Tests.test_binding_catalog_version_and_interface_mismatch_block) ... ok
+test_binding_inventory_exact_copy_and_t7_inventory (test_t8.T8Tests.test_binding_inventory_exact_copy_and_t7_inventory) ... ok
+test_both_contributor_paths_scoped_artifact_no_other_leaf_or_target (test_t8.T8Tests.test_both_contributor_paths_scoped_artifact_no_other_leaf_or_target) ... ok
+test_contributor_exact_catalog_role_contract (test_t8.T8Tests.test_contributor_exact_catalog_role_contract) ... ok
+test_contributor_identity_mismatch_debate_unknown_and_role_block (test_t8.T8Tests.test_contributor_identity_mismatch_debate_unknown_and_role_block) ... ok
+test_controls_and_manifest_failure_before_client (test_t8.T8Tests.test_controls_and_manifest_failure_before_client) ... ok
+test_impossible_and_malformed_admission_stops_no_retry (test_t8.T8Tests.test_impossible_and_malformed_admission_stops_no_retry) ... ok
+test_inactive_is_baseline_only_despite_prior_authoring (test_t8.T8Tests.test_inactive_is_baseline_only_despite_prior_authoring) ... ok
+test_interface_leaf_and_authoring_failures_block_without_fallback (test_t8.T8Tests.test_interface_leaf_and_authoring_failures_block_without_fallback) ... ok
+test_invalid_isolated_records_stop_before_final (test_t8.T8Tests.test_invalid_isolated_records_stop_before_final) ... ok
+test_invalid_manifest_inventory_identity_duplicate_and_shape (test_t8.T8Tests.test_invalid_manifest_inventory_identity_duplicate_and_shape) ... ok
+test_invalid_ordinary_concept_selection_fails_request (test_t8.T8Tests.test_invalid_ordinary_concept_selection_fails_request) ... ok
+test_invalid_root_and_contributor_shape_no_retry (test_t8.T8Tests.test_invalid_root_and_contributor_shape_no_retry) ... ok
+test_invalid_root_identity_and_duplicate_fail_current_request (test_t8.T8Tests.test_invalid_root_identity_and_duplicate_fail_current_request) ... ok
+test_isolated_genuine_blocker_remains_and_blocks_authoring (test_t8.T8Tests.test_isolated_genuine_blocker_remains_and_blocks_authoring) ... ok
+test_isolated_keeps_history_and_mandatory_source_boundary_controls (test_t8.T8Tests.test_isolated_keeps_history_and_mandatory_source_boundary_controls) ... ok
+test_isolated_no_persistence_clarification_and_normal_context (test_t8.T8Tests.test_isolated_no_persistence_clarification_and_normal_context) ... ok
+test_isolated_targets_presets_and_explicit_handoff_no_execution (test_t8.T8Tests.test_isolated_targets_presets_and_explicit_handoff_no_execution) ... ok
+test_malformed_isolation_model_inactive_is_not_repaired_by_host (test_t8.T8Tests.test_malformed_isolation_model_inactive_is_not_repaired_by_host) ... ok
+test_non_authoring_root_technical_and_concept_use_verified_interfaces (test_t8.T8Tests.test_non_authoring_root_technical_and_concept_use_verified_interfaces) ... ok
+test_owner_blockers_preserved_no_execution (test_t8.T8Tests.test_owner_blockers_preserved_no_execution) ... ok
+test_owner_malformed_fields_fail_instead_of_guessing (test_t8.T8Tests.test_owner_malformed_fields_fail_instead_of_guessing) ... ok
+test_reread_and_recompute_every_turn_no_activation_carryover (test_t8.T8Tests.test_reread_and_recompute_every_turn_no_activation_carryover) ... ok
+test_response_failure_each_phase_stops_without_retry_or_history_mutation (test_t8.T8Tests.test_response_failure_each_phase_stops_without_retry_or_history_mutation) ... ok
+test_root_has_exact_controls_no_manifest_no_leaf_inventory (test_t8.T8Tests.test_root_has_exact_controls_no_manifest_no_leaf_inventory) ... ok
+test_translated_contributor_role_rejected_without_retry (test_t8.T8Tests.test_translated_contributor_role_rejected_without_retry) ... ok
+test_ui_t8_history_t3_isolation_and_failure_preserves_state (test_t8.T8Tests.test_ui_t8_history_t3_isolation_and_failure_preserves_state) ... 2026-11-05 00:51:58.498 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_unbound_root_targets_block_but_authoring_target_is_independent (test_t8.T8Tests.test_unbound_root_targets_block_but_authoring_target_is_independent) ... ok
+test_utf8_failure_after_valid_hash_and_path_escape (test_t8.T8Tests.test_utf8_failure_after_valid_hash_and_path_escape) ... ok
+test_artifact_failures_block_before_search_without_fallback (test_t9.T9Tests.test_artifact_failures_block_before_search_without_fallback) ... ok
+test_bad_manifest_duplicate_inventory_version_and_path_fail (test_t9.T9Tests.test_bad_manifest_duplicate_inventory_version_and_path_fail) ... ok
+test_binding_inventory_and_runtime_pair (test_t9.T9Tests.test_binding_inventory_and_runtime_pair) ... ok
+test_controls_manifest_reread_and_mode_wiring (test_t9.T9Tests.test_controls_manifest_reread_and_mode_wiring) ... ok
+test_final_failure_preserves_call_boundary (test_t9.T9Tests.test_final_failure_preserves_call_boundary) ... ok
+test_hash_mismatch_blocks_after_root_before_search (test_t9.T9Tests.test_hash_mismatch_blocks_after_root_before_search) ... ok
+test_incomplete_empty_refusal_ais_fail_no_final (test_t9.T9Tests.test_incomplete_empty_refusal_ais_fail_no_final) ... ok
+test_missing_web_search_call_fails_even_if_model_claims_search (test_t9.T9Tests.test_missing_web_search_call_fails_even_if_model_claims_search) ... ok
+test_mixed_root_records_non_ais_without_loading_them (test_t9.T9Tests.test_mixed_root_records_non_ais_without_loading_them) ... ok
+test_native_web_search_payload_and_final_without_tools (test_t9.T9Tests.test_native_web_search_payload_and_final_without_tools) ... ok
+test_no_ais_path_reads_no_ais_and_exposes_no_tool (test_t9.T9Tests.test_no_ais_path_reads_no_ais_and_exposes_no_tool) ... ok
+test_noncompleted_search_action_is_blocker (test_t9.T9Tests.test_noncompleted_search_action_is_blocker) ... ok
+test_observable_trace_dedupes_sources_and_citations (test_t9.T9Tests.test_observable_trace_dedupes_sources_and_citations) ... ok
+test_root_identity_version_or_source_mismatch_fails_before_retrieval (test_t9.T9Tests.test_root_identity_version_or_source_mismatch_fails_before_retrieval) ... ok
+test_root_sees_controls_not_manifest_or_ais_bodies (test_t9.T9Tests.test_root_sees_controls_not_manifest_or_ais_bodies) ... ok
+
+----------------------------------------------------------------------
+Ran 117 tests in 11.533s
+
+OK

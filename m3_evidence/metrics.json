@@ -1,0 +1,509 @@
+{
+  "baseline_current_workload_1": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12816,
+        "ordinary": 3,
+        "cached": 12679,
+        "cache_write": 134,
+        "output": 462,
+        "total": 13278,
+        "token_cost_usd": 0.014993600000000001,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "hub_t8_admission",
+        "input": 8777,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8774,
+        "output": 312,
+        "total": 9089,
+        "token_cost_usd": 0.050122,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_contributor",
+        "input": 7997,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 7994,
+        "output": 535,
+        "total": 8532,
+        "token_cost_usd": 0.050682,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "contribution_execution",
+        "input": 8536,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8533,
+        "output": 1238,
+        "total": 9774,
+        "token_cost_usd": 0.067437,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 5,
+        "phase": "hub_t8_concept",
+        "input": 9331,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9328,
+        "output": 273,
+        "total": 9604,
+        "token_cost_usd": 0.052112,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 6,
+        "phase": "independent_scope_execution",
+        "input": 9796,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9793,
+        "output": 1023,
+        "total": 10819,
+        "token_cost_usd": 0.069437,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 7,
+        "phase": "final_authoring",
+        "input": 11454,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11451,
+        "output": 940,
+        "total": 12394,
+        "token_cost_usd": 0.076067,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 68707,
+      "ordinary": 21,
+      "cached": 12679,
+      "cache_write": 56007,
+      "output": 4783,
+      "total": 73490,
+      "token_cost_usd": 0.3808506,
+      "web_search_calls": 0,
+      "web_search_cost_usd": 0.0
+    },
+    "responses_api_calls": 7,
+    "error": null
+  },
+  "baseline_current_workload_2": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12843,
+        "ordinary": 3,
+        "cached": 12679,
+        "cache_write": 161,
+        "output": 715,
+        "total": 13558,
+        "token_cost_usd": 0.020188599999999998,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "ais",
+        "input": 51393,
+        "ordinary": 39775,
+        "cached": 0,
+        "cache_write": 11618,
+        "output": 2753,
+        "total": 54146,
+        "token_cost_usd": 0.27225,
+        "web_search_calls": 5,
+        "web_search_cost_usd": 0.05
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_concept",
+        "input": 10715,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 10712,
+        "output": 274,
+        "total": 10989,
+        "token_cost_usd": 0.059052,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "final_hub",
+        "input": 11581,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11578,
+        "output": 4052,
+        "total": 15633,
+        "token_cost_usd": 0.138942,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 86532,
+      "ordinary": 39784,
+      "cached": 12679,
+      "cache_write": 34069,
+      "output": 7794,
+      "total": 94326,
+      "token_cost_usd": 0.4904326,
+      "web_search_calls": 5,
+      "web_search_cost_usd": 0.05
+    },
+    "responses_api_calls": 4,
+    "error": null
+  },
+  "post_workload_1": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12816,
+        "ordinary": 3,
+        "cached": 12813,
+        "cache_write": 0,
+        "output": 463,
+        "total": 13279,
+        "token_cost_usd": 0.0143972,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "hub_t8_admission",
+        "input": 8307,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8304,
+        "output": 278,
+        "total": 8585,
+        "token_cost_usd": 0.047092,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_contributor",
+        "input": 7508,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 7505,
+        "output": 585,
+        "total": 8093,
+        "token_cost_usd": 0.049237,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "contribution_execution",
+        "input": 8119,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8116,
+        "output": 1277,
+        "total": 9396,
+        "token_cost_usd": 0.066132,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 5,
+        "phase": "hub_t8_concept",
+        "input": 9125,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9122,
+        "output": 293,
+        "total": 9418,
+        "token_cost_usd": 0.051482,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 6,
+        "phase": "independent_scope_execution",
+        "input": 9628,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9625,
+        "output": 1192,
+        "total": 10820,
+        "token_cost_usd": 0.071977,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 7,
+        "phase": "final_authoring",
+        "input": 11475,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11472,
+        "output": 1148,
+        "total": 12623,
+        "token_cost_usd": 0.080332,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 66978,
+      "ordinary": 21,
+      "cached": 12813,
+      "cache_write": 54144,
+      "output": 5236,
+      "total": 72214,
+      "token_cost_usd": 0.3806492,
+      "web_search_calls": 0,
+      "web_search_cost_usd": 0.0
+    },
+    "responses_api_calls": 7,
+    "error": null
+  },
+  "post_workload_2": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12843,
+        "ordinary": 3,
+        "cached": 12840,
+        "cache_write": 0,
+        "output": 701,
+        "total": 13544,
+        "token_cost_usd": 0.019168,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "ais",
+        "input": 53733,
+        "ordinary": 42117,
+        "cached": 0,
+        "cache_write": 11616,
+        "output": 2302,
+        "total": 56035,
+        "token_cost_usd": 0.272588,
+        "web_search_calls": 5,
+        "web_search_cost_usd": 0.05
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_concept",
+        "input": 10282,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 10279,
+        "output": 211,
+        "total": 10493,
+        "token_cost_usd": 0.055627,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "final_hub",
+        "input": 11102,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11099,
+        "output": 4477,
+        "total": 15579,
+        "token_cost_usd": 0.145047,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 87960,
+      "ordinary": 42126,
+      "cached": 12840,
+      "cache_write": 32994,
+      "output": 7691,
+      "total": 95651,
+      "token_cost_usd": 0.49243000000000003,
+      "web_search_calls": 5,
+      "web_search_cost_usd": 0.05
+    },
+    "responses_api_calls": 4,
+    "error": null
+  },
+  "baseline_current_pair": {
+    "input": 155239,
+    "ordinary": 39805,
+    "cached": 25358,
+    "cache_write": 90076,
+    "output": 12577,
+    "total": 167816,
+    "token_cost_usd": 0.8712831999999999,
+    "web_search_calls": 5,
+    "web_search_cost_usd": 0.05,
+    "responses_api_calls": 11
+  },
+  "post_pair": {
+    "input": 154938,
+    "ordinary": 42147,
+    "cached": 25653,
+    "cache_write": 87138,
+    "output": 12927,
+    "total": 167865,
+    "token_cost_usd": 0.8730792,
+    "web_search_calls": 5,
+    "web_search_cost_usd": 0.05,
+    "responses_api_calls": 11
+  },
+  "pair_delta_post_minus_baseline": {
+    "input": -301,
+    "ordinary": 2342,
+    "cached": 295,
+    "cache_write": -2938,
+    "output": 350,
+    "total": 49,
+    "token_cost_usd": 0.0017960000000001308,
+    "web_search_calls": 0,
+    "web_search_cost_usd": 0.0,
+    "responses_api_calls": 0
+  },
+  "observed_token_cost_savings_percent": -0.2061327476531316,
+  "phase_deltas": {
+    "workload_1": [
+      {
+        "phase": "hub_m1_root",
+        "input": 0,
+        "ordinary": 0,
+        "cached": 134,
+        "cache_write": -134,
+        "output": 1,
+        "token_cost_usd": -0.0005964000000000004,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "hub_t8_admission",
+        "input": -470,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -470,
+        "output": -34,
+        "token_cost_usd": -0.003029999999999998,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "hub_t8_contributor",
+        "input": -489,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -489,
+        "output": 50,
+        "token_cost_usd": -0.001444999999999995,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "contribution_execution",
+        "input": -417,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -417,
+        "output": 39,
+        "token_cost_usd": -0.0013050000000000006,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "hub_t8_concept",
+        "input": -206,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -206,
+        "output": 20,
+        "token_cost_usd": -0.0006299999999999986,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "independent_scope_execution",
+        "input": -168,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -168,
+        "output": 169,
+        "token_cost_usd": 0.0025400000000000006,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "final_authoring",
+        "input": 21,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": 21,
+        "output": 208,
+        "token_cost_usd": 0.004265000000000005,
+        "web_search_calls": 0
+      }
+    ],
+    "workload_2": [
+      {
+        "phase": "hub_m1_root",
+        "input": 0,
+        "ordinary": 0,
+        "cached": 161,
+        "cache_write": -161,
+        "output": -14,
+        "token_cost_usd": -0.0010205999999999965,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "ais",
+        "input": 2340,
+        "ordinary": 2342,
+        "cached": 0,
+        "cache_write": -2,
+        "output": -451,
+        "token_cost_usd": 0.00033800000000000496,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "hub_t8_concept",
+        "input": -433,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -433,
+        "output": -63,
+        "token_cost_usd": -0.0034249999999999975,
+        "web_search_calls": 0
+      },
+      {
+        "phase": "final_hub",
+        "input": -479,
+        "ordinary": 0,
+        "cached": 0,
+        "cache_write": -479,
+        "output": 425,
+        "token_cost_usd": 0.006104999999999999,
+        "web_search_calls": 0
+      }
+    ]
+  }
+}

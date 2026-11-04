@@ -1,0 +1,205 @@
+{
+  "baseline_current_workload_1": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12816,
+        "ordinary": 3,
+        "cached": 12679,
+        "cache_write": 134,
+        "output": 462,
+        "total": 13278,
+        "token_cost_usd": 0.014993600000000001,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "hub_t8_admission",
+        "input": 8777,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8774,
+        "output": 312,
+        "total": 9089,
+        "token_cost_usd": 0.050122,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_contributor",
+        "input": 7997,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 7994,
+        "output": 535,
+        "total": 8532,
+        "token_cost_usd": 0.050682,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "contribution_execution",
+        "input": 8536,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8533,
+        "output": 1238,
+        "total": 9774,
+        "token_cost_usd": 0.067437,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 5,
+        "phase": "hub_t8_concept",
+        "input": 9331,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9328,
+        "output": 273,
+        "total": 9604,
+        "token_cost_usd": 0.052112,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0,
+        "input_cost_usd": 0.046652
+      },
+      {
+        "number": 6,
+        "phase": "independent_scope_execution",
+        "input": 9796,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9793,
+        "output": 1023,
+        "total": 10819,
+        "token_cost_usd": 0.069437,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 7,
+        "phase": "final_authoring",
+        "input": 11454,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11451,
+        "output": 940,
+        "total": 12394,
+        "token_cost_usd": 0.076067,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 68707,
+      "ordinary": 21,
+      "cached": 12679,
+      "cache_write": 56007,
+      "output": 4783,
+      "total": 73490,
+      "token_cost_usd": 0.3808506,
+      "web_search_calls": 0,
+      "web_search_cost_usd": 0.0
+    },
+    "responses_api_calls": 7,
+    "error": null
+  },
+  "baseline_current_workload_2": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12843,
+        "ordinary": 3,
+        "cached": 12679,
+        "cache_write": 161,
+        "output": 715,
+        "total": 13558,
+        "token_cost_usd": 0.020188599999999998,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "ais",
+        "input": 51393,
+        "ordinary": 39775,
+        "cached": 0,
+        "cache_write": 11618,
+        "output": 2753,
+        "total": 54146,
+        "token_cost_usd": 0.27225,
+        "web_search_calls": 5,
+        "web_search_cost_usd": 0.05
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_concept",
+        "input": 10715,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 10712,
+        "output": 274,
+        "total": 10989,
+        "token_cost_usd": 0.059052,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0,
+        "input_cost_usd": 0.053572
+      },
+      {
+        "number": 4,
+        "phase": "final_hub",
+        "input": 11581,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11578,
+        "output": 4052,
+        "total": 15633,
+        "token_cost_usd": 0.138942,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "totals": {
+      "input": 86532,
+      "ordinary": 39784,
+      "cached": 12679,
+      "cache_write": 34069,
+      "output": 7794,
+      "total": 94326,
+      "token_cost_usd": 0.4904326,
+      "web_search_calls": 5,
+      "web_search_cost_usd": 0.05
+    },
+    "responses_api_calls": 4,
+    "error": null
+  },
+  "baseline_concept_combined_input_cost_usd": 0.100224,
+  "explicit_workload_1": {
+    "responses_attempts": 1,
+    "completed_responses": 0,
+    "concept_attempts": 0,
+    "usage": null,
+    "input_cost_usd": null,
+    "cached_tokens": null,
+    "cache_write_tokens": null,
+    "error_code": "project_spend_limit_exceeded"
+  },
+  "explicit_workload_2": {
+    "status": "NOT_RUN",
+    "usage": null
+  },
+  "optimization_success": false,
+  "m3_status": "NOT COMPLETE",
+  "baseline_pair": {
+    "token_cost_usd": 0.8712832,
+    "web_search_cost_usd": 0.05,
+    "combined_estimated_usd": 0.9212832,
+    "responses_calls": 11,
+    "web_search_calls": 5
+  }
+}

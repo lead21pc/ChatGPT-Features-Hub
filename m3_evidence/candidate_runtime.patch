@@ -1,0 +1,26 @@
+diff --git a/m1.py b/m1.py
+index dc13ecd..13b8277 100644
+--- a/m1.py
++++ b/m1.py
+@@ -95,7 +95,7 @@ def call_runtime(config, messages):
+             for s in route["selected_packages"] if s["package_id"] != t9.AIS]}
+         answer, package_trace = t8.call_t8(config, messages, root_route=local_route,
+             local_bindings={k: v for k, v in bindings.items() if k != t9.AIS},
+-            ais_evidence={"root_route": route, **trace})
++            ais_evidence={"root_route": route, **trace} if trace["ais_selected"] else None)
+         trace["packages"] = package_trace
+         return answer, trace
+     except (ValueError, KeyError, TypeError, AttributeError) as exc:
+diff --git a/t8.py b/t8.py
+index c90aa62..d885b85 100644
+--- a/t8.py
++++ b/t8.py
+@@ -345,7 +345,7 @@ def call_t8(config, messages, *, root_route=None, local_bindings=None, ais_evide
+                 work.extend(parts)
+                 if package_id == CONCEPT:
+                     result = host.t7_structured(client, config, messages, "\n\n".join([
+-                        controls[0], handoff(), host.t7_concept_binding_view(bindings), *parts,
++                        controls[0], host.t7_concept_binding_view(bindings), *parts, handoff(),
+                         "Select Concept leaves for current selected scopes only under exact core/Catalog. "
+                         "Pending post-selection retrieval is not a blocker."]), host.LEAF_SCHEMA, "hub_t8_concept")
+                     blockers.extend(result["unresolved_blockers"])

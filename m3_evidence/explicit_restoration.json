@@ -1,0 +1,29 @@
+{
+  "tracked_files": 270,
+  "byte_mismatches": [
+    "m2_acceptance.py",
+    "m2_evidence/baseline.json",
+    "m2_evidence/corrected_ab_acceptance_review.json",
+    "m2_evidence/corrected_ab_static_results.json",
+    "m2_evidence/corrected_task_baseline.json",
+    "m2_evidence/workload_1.json",
+    "m2_evidence/workload_1_aborted_trigger_mismatch.json",
+    "m2_evidence/workload_1_corrected_ab.json",
+    "m2_evidence/workload_1_first_live_failure.json",
+    "m2_evidence/workload_2_corrected_ab.json"
+  ],
+  "head": "8f5487ca8b124edb339192a9704b5d74157bcf00",
+  "origin_main_local_ref": "8f5487ca8b124edb339192a9704b5d74157bcf00",
+  "branch": "main",
+  "tracked_diff_empty": true,
+  "index_empty": true,
+  "remote_live_verification": "UNAVAILABLE: Schannel credentials failed; OpenSSL fallback could not read GitHub Username",
+  "live_attempts": 1,
+  "responses_attempts": 1,
+  "successful_responses": 0,
+  "retries": 0,
+  "workload_2": "NOT_RUN: workload 1 blocked by configured project spend limit",
+  "byte_mismatch_explanation": "Pre-existing working-tree CRLF conversion in ten protected M2 files; all match the preserved baseline_current_workload_1 source_hashes. No protected file was rewritten.",
+  "all_tracked_bytes_match_preserved_baseline": true,
+  "restored_runtime_exact_head": true
+}
