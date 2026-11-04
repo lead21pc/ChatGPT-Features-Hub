@@ -28,6 +28,7 @@ STR = {"type": "string"}
 STRINGS = {"type": "array", "items": STR}
 ADMISSION_SCHEMA = object_schema({
     "active": {"type": "boolean"},
+    "isolated": {"type": "boolean"},
     "target": {"type": "string", "enum": ["AIS", "IMAGET", "CODEX", "WORK", "GENERIC", "NONE"]},
     "preset": {"type": "string", "enum": ["P1", "P2", "P3", "NONE"]},
     "contributor": {"type": "string", "enum": ["CREATIVE", "BRAINSTORM", "NONE"]},
@@ -63,8 +64,8 @@ def load_bindings(text):
             or set(entry) != {"module_id", "runtime_role", "version", "path", "sha256"}
             or not all(isinstance(v, str) for v in entry.values())
             or (entry["module_id"], entry["runtime_role"], entry["version"]) !=
-               ("HUB-CAP-AUTHORING", "CAPABILITY", "0.6")
-            or entry["path"] != "runtime/packages/authoring/HUB-CAP-AUTHORING_v0.6.md"
+               ("HUB-CAP-AUTHORING", "CAPABILITY", "0.7")
+            or entry["path"] != "runtime/packages/authoring/HUB-CAP-AUTHORING_v0.7.md"
             or not re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])):
             raise ValueError()
         # Reuse T7's strict inventory/shape validator without reading or changing v0.1.
@@ -99,7 +100,8 @@ def structured(client, config, messages, instructions, schema, name):
         if schema is ADMISSION_SCHEMA:
             if (not record["active"] and any(record[k] != "NONE" for k in ("target", "preset", "contributor"))
                 or record["active"] and record["target"] == "NONE"
-                or record["preset"] != "NONE" and record["contributor"] != "NONE"):
+                or record["preset"] != "NONE" and record["contributor"] != "NONE"
+                or record["isolated"] and (not record["active"] or record["contributor"] != "NONE")):
                 raise ValueError()
         return record
     except (ValueError, TypeError, AttributeError):
@@ -152,7 +154,7 @@ def call_t8(config, messages, *, root_route=None, local_bindings=None, ais_evide
     catalog = host.t7_catalog_identities(controls[3], "packages", "package_id")
     trace = dict(root_selected_package_ids=[], locally_retrieved_package_ids=[],
                  authoring_retrieved=False, authoring_active=False, authoring_target="NONE",
-                 authoring_preset="NONE", authoring_contributor="NONE",
+                 authoring_preset="NONE", authoring_contributor="NONE", authoring_isolated=False,
                  contributor_retrieved_module_ids=[], unresolved_blockers=[])
     blockers = trace["unresolved_blockers"]
     bodies = {}
@@ -243,16 +245,20 @@ def call_t8(config, messages, *, root_route=None, local_bindings=None, ais_evide
                 admission = structured(client, config, messages, "\n\n".join([
                     controls[0], handoff(), authoring,
                     "Return Authoring admission only for the CURRENT user-authored turn under the exact supplied "
-                    "body, including first-nonempty-line, case/spacing, quote/fence/source provenance, preset and "
+                    "body, including first-nonempty-line, case/spacing, quote/fence/source provenance, preset, isolation and "
                     "composition rules. Never infer, normalize or repair a trigger. Prior activation does not "
-                    "persist; clarification/reauthor requires fresh exact activation. Inactive fields are NONE. "
+                    "persist; clarification/reauthor requires fresh exact activation. Inactive identity fields are NONE "
+                    "and isolated is false. Set isolated=true only for an exact final ISOLATED token in an admitted "
+                    "single-target or preset form; no suffix means false, and contributor + ISOLATED is non-activating. "
+                    "Isolation limits task-material admission only; mandatory controls and target limits still apply. "
                     "Do not execute Authoring yet. Contributor resolution is intentionally pending until after admission. "
                     "Pending contributor resolution is normal next-stage state, not an unresolved blocker. "
                     "Admission records the requested contributor only; the Concept owner next checks its existing "
                     "applicability, exact activation, scope and provenance requirements. Contributor presence does "
                     "not activate a leaf. Report genuine admission blockers unchanged."]), ADMISSION_SCHEMA, "hub_t8_admission")
                 trace.update(authoring_active=admission["active"], authoring_target=admission["target"],
-                             authoring_preset=admission["preset"], authoring_contributor=admission["contributor"])
+                             authoring_preset=admission["preset"], authoring_contributor=admission["contributor"],
+                             authoring_isolated=admission["isolated"])
                 blockers.extend(admission["unresolved_blockers"])
 
         active = admission is not None and admission["active"]

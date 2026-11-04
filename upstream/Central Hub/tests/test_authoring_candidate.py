@@ -7,9 +7,12 @@ import unittest
 
 from test_hub_contracts import ROOT, load
 
+# Historical 0.6/1.8 baseline; active 0.7 is checked in test_authoring_07.py.
+PROMOTION_06 = ROOT / 'Source_archive/Authoring 0.7 M2 2026-11-05'
+
 
 CANDIDATE = ROOT / 'candidates/authoring_v0'
-MODULE = ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
+MODULE = PROMOTION_06 / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
 CASES = CANDIDATE / 'AUTHORING_TEST_CASES.md'
 V03_CANDIDATE = ROOT / 'Source_archive/Authoring promotion 2026-10-28/candidates/authoring_v0/HUB-CAP-AUTHORING_v0.3-candidate.md'
 PROMOTION_ARCHIVE = ROOT / 'Source_archive/Authoring promotion 2026-10-28'
@@ -55,7 +58,7 @@ class AuthoringPromotionTests(unittest.TestCase):
                                  None if vector['expected'] == 'FTH' else vector['expected'])
 
     def test_exact_root_admission_and_unresolved_library_binding(self):
-        catalog = load(ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
+        catalog = load(PROMOTION_06 / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
         self.assertEqual(len(catalog['packages']), 5)
         entries = [p for p in catalog['packages'] if p['package_id'] == 'HUB-PKG-AUTHORING']
         self.assertEqual(len(entries), 1)
@@ -84,13 +87,13 @@ class AuthoringPromotionTests(unittest.TestCase):
             self.assertEqual(trigger_spec(f'/AUTHOR {target}'), target)
 
     def test_successor_stack_pins_and_router_algorithm_unchanged(self):
-        architecture = (ROOT / 'HUB_ARCHITECTURE_v1.8.md').read_text(encoding='utf-8')
+        architecture = (PROMOTION_06 / 'HUB_ARCHITECTURE_v1.8.md').read_text(encoding='utf-8')
         self.assertEqual(re.findall(r'^Version: (.+)$', architecture, re.M), ['1.8'])
-        catalog = load(ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
+        catalog = load(PROMOTION_06 / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
         self.assertEqual((catalog['module_id'], catalog['status'], catalog['version']),
                          ('HUB-CORE-PACKAGE-CATALOG', 'ACTIVE', '1.8'))
         prior = load(PROMOTION_ARCHIVE / 'HUB_ROUTER_v1.1.yaml')
-        active = load(ROOT / 'HUB_ROUTER_v1.1.yaml')
+        active = load(PROMOTION_06 / 'HUB_ROUTER_v1.1.yaml')
         expected = copy.deepcopy(prior)
         expected['contracts']['architecture'].update(file='HUB_ARCHITECTURE_v1.8.md', version='1.8')
         expected['contracts']['root_catalog'].update(file='HUB_PACKAGE_CATALOG_v1.8.yaml', version='1.8')

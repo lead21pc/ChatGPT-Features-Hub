@@ -22,7 +22,7 @@ class T8Tests(unittest.TestCase):
                          dict(role='assistant', content='prior prompt'),
                          dict(role='user', content='current turn, interpreted only by model')]
         self.route = dict(task_scope='current', selected_packages=[package(t8.AUTHORING)], unresolved_blockers=[])
-        self.admission = dict(active=True, target='GENERIC', preset='NONE', contributor='NONE',
+        self.admission = dict(active=True, isolated=False, target='GENERIC', preset='NONE', contributor='NONE',
                               application_scope='current request', reason='mock admission', unresolved_blockers=[])
         self.owner = dict(module_id='HUB-DOM-CREATIVE', runtime_role='DOMAIN_CONTROL',
                           application_scope='scoped contribution only', protected_constraints=['locked premise', 'unknown stays open'],
@@ -36,7 +36,7 @@ class T8Tests(unittest.TestCase):
         self.fail_phase = None
         self.failure = None
         self.manifest = json.loads(t8.BINDINGS_PATH.read_text(encoding='utf-8'))
-        self.author_path = t8.BINDINGS_PATH.parent / 'packages/authoring/HUB-CAP-AUTHORING_v0.6.md'
+        self.author_path = t8.BINDINGS_PATH.parent / 'packages/authoring/HUB-CAP-AUTHORING_v0.7.md'
         self.controls = [app.HUB_CI_PATH, app.HUB_ROUTER_PATH, app.HUB_ARCHITECTURE_PATH,
                          app.HUB_CATALOG_PATH, t8.BINDINGS_PATH]
 
@@ -318,7 +318,7 @@ class T8Tests(unittest.TestCase):
         for key, value in (('binding_version', '0.1'), ('retrieval_authority', 'LIBRARY_MODULE'), ('status', 'INACTIVE')):
             manifest = copy.deepcopy(self.manifest); manifest[key] = value
             invalid.append(json.dumps(manifest))
-        for key, value in (('module_id', 'FAKE'), ('runtime_role', 'DOMAIN_CONTROL'), ('version', '0.7'),
+        for key, value in (('module_id', 'FAKE'), ('runtime_role', 'DOMAIN_CONTROL'), ('version', '0.6'),
                            ('path', 'upstream/body.md'), ('sha256', 'invalid')):
             manifest = copy.deepcopy(self.manifest); manifest['packages'][t8.AUTHORING]['entrypoint'][key] = value
             invalid.append(json.dumps(manifest))
@@ -407,7 +407,7 @@ class T8Tests(unittest.TestCase):
     def test_binding_catalog_version_and_interface_mismatch_block(self):
         self.contributor('CREATIVE')
         for path, old, new in (
-            (app.HUB_CATALOG_PATH, b"version: '0.6'", b"version: '9.0'"),
+            (app.HUB_CATALOG_PATH, b"version: '0.7'", b"version: '9.0'"),
             (app.HUB_CATALOG_PATH, b'    module_id: HUB-CATALOG-CONCEPT-DEVELOPMENT', b'    module_id: FAKE'),
             (app.CONCEPT_CATALOG_PATH, b'- module_id: HUB-DOM-CREATIVE', b'- module_id: FAKE')):
             changed = self.original_read(path).replace(old, new, 1)
@@ -456,6 +456,92 @@ class T8Tests(unittest.TestCase):
             ui.button[0].click().run()
             self.assertTrue(ui.error)
             self.assertEqual(ui.session_state.messages, history)
+
+
+    def test_isolated_targets_presets_and_explicit_handoff_no_execution(self):
+        # Model records are mocked: this verifies host transport/invariants, not live lexical admission.
+        for target in ('AIS', 'IMAGET', 'CODEX', 'WORK', 'GENERIC'):
+            for preset in ('NONE', 'P1', 'P2', 'P3'):
+                with self.subTest(target=target, preset=preset):
+                    self.payloads.clear(); self.reads.clear()
+                    suffix = '' if preset == 'NONE' else f' {preset}'
+                    self.messages[-1]['content'] = f'/AUTHOR {target}{suffix} ISOLATED\nCreate a prompt only.'
+                    self.admission.update(target=target, preset=preset, isolated=True)
+                    _, trace = self.run_t8()
+                    self.assertTrue(trace['authoring_isolated'])
+                    handoff = json.JSONDecoder().raw_decode(self.final().split('[T8 VERIFIED HANDOFF]\n')[1])[0]
+                    self.assertTrue(handoff['admission']['isolated'])
+                    self.assertEqual(handoff['admission']['preset'], preset)
+                    self.assertEqual(len(self.payloads), 3)
+                    self.assertTrue(all('tools' not in p for p in self.payloads))
+                    self.assertEqual(self.reads, self.controls + [self.author_path])
+
+    def test_invalid_isolated_records_stop_before_final(self):
+        base = self.admission.copy()
+        invalid = [dict(base, isolated=True, active=False, target='NONE'),
+                   dict(base, isolated=True, contributor='CREATIVE'),
+                   dict(base, isolated=True, contributor='BRAINSTORM'),
+                   dict(base, isolated='true'), dict(base, isolated=1),
+                   {k: v for k, v in base.items() if k != 'isolated'}]
+        for record in invalid:
+            with self.subTest(record=record):
+                self.payloads.clear(); self.reads.clear()
+                self.admission = record
+                with self.assertRaisesRegex(ValueError, 'structured'):
+                    self.run_t8()
+                self.assertEqual(len(self.payloads), 2)
+
+    def test_isolated_no_persistence_clarification_and_normal_context(self):
+        self.messages[-1]['content'] = '/AUTHOR GENERIC ISOLATED\nCreate a prompt.'
+        self.admission['isolated'] = True
+        self.assertTrue(self.run_t8()[1]['authoring_isolated'])
+        for content, active in [('Clarification without fresh trigger', False),
+                                ('Reauthor it without fresh trigger', False),
+                                ('/AUTHOR GENERIC\nUse the earlier source.', True)]:
+            self.payloads.clear(); self.reads.clear()
+            self.messages[-1]['content'] = content
+            self.admission.update(active=active, target='GENERIC' if active else 'NONE', isolated=False)
+            _, trace = self.run_t8()
+            self.assertFalse(trace['authoring_isolated'])
+            self.assertEqual(trace['authoring_active'], active)
+            self.assertEqual(self.payloads[-1]['input'], self.messages)
+
+    def test_isolated_keeps_history_and_mandatory_source_boundary_controls(self):
+        self.messages[1]['content'] = 'CANARY_AMBIENT is an accepted decision.'
+        self.messages[-1]['content'] = '/AUTHOR GENERIC ISOLATED\nCompare only current options.'
+        self.admission['isolated'] = True
+        self.run_t8()
+        for payload in self.payloads:
+            self.assertEqual(payload['input'], self.messages)
+        for boundary in ('SOURCE ISOLATION != CONTROL ISOLATION',
+                         'accessible material explicitly referenced there with sufficient identification',
+                         'Exclude unreferenced prior conversation, prior assistant conclusions',
+                         'not a channel for importing excluded task objectives',
+                         'do not inherit an isolation mode or source selection automatically'):
+            self.assertIn(boundary, self.final())
+        self.assertIn(self.original_read(app.HUB_CI_PATH).decode('utf-8'), self.final())
+
+    def test_isolated_genuine_blocker_remains_and_blocks_authoring(self):
+        self.admission.update(isolated=True, unresolved_blockers=['Decisive source is ambiguous.'])
+        _, trace = self.run_t8()
+        self.assertIn('Decisive source is ambiguous.', trace['unresolved_blockers'])
+        self.assertIn('Do not execute Authoring.', self.final())
+        self.assertNotIn('# Prompt Authoring', self.final())
+
+    def test_malformed_isolation_model_inactive_is_not_repaired_by_host(self):
+        fixtures = app.HUB_CI_PATH.parent / 'candidates/authoring_v0_7/ISOLATION_TEST_CASES.json'
+        cases = json.loads(fixtures.read_text(encoding='utf-8'))['cases']
+        invalid = next(case['invalid'] for case in cases if case['id'] == 'I8')
+        self.admission.update(active=False, target='NONE', isolated=False)
+        for text in invalid:
+            with self.subTest(text=text):
+                self.payloads.clear(); self.reads.clear()
+                self.messages[-1]['content'] = text
+                _, trace = self.run_t8()
+                self.assertFalse(trace['authoring_active'])
+                self.assertFalse(trace['authoring_isolated'])
+                self.assertNotIn('# Prompt Authoring', self.final())
+                self.assertEqual(self.payloads[1]['input'][-1]['content'], text)
 
 
 if __name__ == '__main__':

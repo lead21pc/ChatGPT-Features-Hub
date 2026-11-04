@@ -120,13 +120,13 @@ class AuthoringM4Tests(unittest.TestCase):
         for phrase in ('/AUTHOR <OUTPUT_TARGET> P<n>', 'P1, P2 or P3 only',
                        'preset + contributor combination', 'first-nonempty-user-authored-line'):
             self.assertIn(phrase, entry['applicability'])
-        router = load(ROOT / 'HUB_ROUTER_v1.1.yaml')
+        router = load(PREDECESSOR / 'HUB_ROUTER_v1.1.yaml')
         for key in ('architecture', 'root_catalog'):
             pin = router['contracts'][key]
             self.assertEqual((pin['version'], pin['status']), ('1.8', 'ACTIVE'))
-            self.assertTrue((ROOT / pin['file']).is_file())
-        self.assertEqual(list((ROOT / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')),
-                         [ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'])
+            self.assertTrue((PREDECESSOR / pin['file']).is_file())
+        self.assertEqual(list((PREDECESSOR / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')),
+                         [PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'])
 
     def test_T0_no_preset_reference_regression(self):
         request, output = blocks('T0')
@@ -188,9 +188,12 @@ class AuthoringM4Tests(unittest.TestCase):
         self.assertIn('not active Central Hub admission', packet)
 
 
-class Authoring06PromotionTests(unittest.TestCase):
+# M2 0.7 supersedes active 0.6; these tests preserve the 0.6 promotion evidence.
+PREDECESSOR = ROOT / 'Source_archive/Authoring 0.7 M2 2026-11-05'
+
+class Authoring06HistoricalPromotionTests(unittest.TestCase):
     def test_active_identity_admission_and_exact_candidate_behavior(self):
-        active_path = ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
+        active_path = PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
         active = active_path.read_text(encoding='utf-8')
         candidate = MODULE.read_text(encoding='utf-8')
         self.assertEqual(active.split('For the current turn only,', 1)[1],
@@ -198,9 +201,9 @@ class Authoring06PromotionTests(unittest.TestCase):
         for key, value in [('Module ID', 'HUB-CAP-AUTHORING'), ('Package ID', 'HUB-PKG-AUTHORING'),
                            ('Runtime role', 'CAPABILITY'), ('Status', 'ACTIVE'), ('Version', '0.6')]:
             self.assertEqual(re.findall(rf'^{key}: (.+)$', active, re.M), [value])
-        self.assertEqual(list((ROOT / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')), [active_path])
-        self.assertEqual(list(ROOT.glob('HUB_PACKAGE_CATALOG_v*.yaml')), [ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml'])
-        catalog = load(ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
+        self.assertEqual(list((PREDECESSOR / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')), [active_path])
+        self.assertEqual(list(PREDECESSOR.glob('HUB_PACKAGE_CATALOG_v*.yaml')), [PREDECESSOR / 'HUB_PACKAGE_CATALOG_v1.8.yaml'])
+        catalog = load(PREDECESSOR / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
         self.assertEqual((catalog['version'], catalog['status'], catalog['active']), ('1.8', 'ACTIVE', True))
         entry = next(p for p in catalog['packages'] if p['package_id'] == 'HUB-PKG-AUTHORING')
         prior = next(p for p in load(CATALOG)['packages'] if p['package_id'] == 'HUB-PKG-AUTHORING')
@@ -234,7 +237,7 @@ class Authoring06PromotionTests(unittest.TestCase):
         self.assertEqual(receipt['candidates/authoring_m4/HUB_PACKAGE_CATALOG_v1.7-candidate.yaml'],
                          'd237ade0c234781d00c277ab708fa215782d4d2096c36bace1118d7e60b15181')
         old_router = (ARCHIVE / 'HUB_ROUTER_v1.1.yaml').read_text(encoding='utf-8')
-        router = (ROOT / 'HUB_ROUTER_v1.1.yaml').read_text(encoding='utf-8')
+        router = (PREDECESSOR / 'HUB_ROUTER_v1.1.yaml').read_text(encoding='utf-8')
         self.assertEqual(router, old_router.replace('1.6', '1.8'))
         old_arch = (ARCHIVE / 'HUB_ARCHITECTURE_v1.6.md').read_text(encoding='utf-8')
         expected = old_arch.replace('1.6', '1.7').replace('0.5', '0.6').replace(
@@ -242,9 +245,9 @@ class Authoring06PromotionTests(unittest.TestCase):
             'This revision binds Authoring 0.6 optional single-target P1/P2/P3 strategies alongside unchanged bounded two-part composition; preset, target and contributor roles remain distinct.')
         self.assertEqual((ROOT / 'Source_archive/Concept explicit leaf controls 2026-11-02/HUB_ARCHITECTURE_v1.7.md').read_text(encoding='utf-8'), expected)
         for key in ('architecture', 'root_catalog'):
-            pin = load(ROOT / 'HUB_ROUTER_v1.1.yaml')['contracts'][key]
+            pin = load(PREDECESSOR / 'HUB_ROUTER_v1.1.yaml')['contracts'][key]
             self.assertEqual((pin['version'], pin['status']), ('1.8', 'ACTIVE'))
-            self.assertTrue((ROOT / pin['file']).is_file())
+            self.assertTrue((PREDECESSOR / pin['file']).is_file())
 
     def test_candidate_smoke_provenance_is_not_active_runtime_evidence(self):
         changelog = (ROOT / 'RUNTIME_EVIDENCE_CHANGELOG.md').read_text(encoding='utf-8')

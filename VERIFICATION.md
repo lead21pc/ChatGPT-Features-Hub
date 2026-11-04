@@ -1,5 +1,46 @@
 # Kết quả kiểm chứng Giai đoạn 1
 
+## M2 — Authoring 0.7 source isolation, 2026-11-05
+
+Checkpoint trước mutation: repo `<LOCAL_REPO>`, branch `main`, worktree/index sạch, `HEAD=origin/main=c619a5a6895cf0d9aa67a92ebb46f36a8bb9e228` (`Complete local runtime M1 and M2 acceptance`). Người dùng đã cho phép candidate live, promotion có điều kiện, stage, commit và push trong M2. Không tạo branch/tag; không bắt đầu M3/M4.
+
+### CANDIDATE LIVE PASS
+
+Chạy trước mọi active mutation, đúng I1 và I3 từ `ISOLATION_TEST_CASES.json`; mỗi ca một Responses API call, `max_retries=0`, không tools. Controls gồm nguyên Hub CI 1.1, candidate Catalog 1.9-candidate và Authoring 0.7-candidate. Prior chat/project context nằm trong lịch sử nền; current request giữ nguyên và không chứa canary. Không gửi reference_output, required, forbidden hoặc expected checks cho model.
+
+- I1: prompt so sánh cedar/ash chỉ dùng số đo được cung cấp, giữ chưa chọn phương án, không bịa số đo; không GOLD/CANARY_LEDGER/CANARY_PROJECT.
+- I3: một yêu cầu làm rõ nguồn quyết định kiến trúc bằng cách cung cấp hoặc định danh duy nhất tài liệu truy cập được, đặc biệt giao diện lưu trữ; không CANARY_POSTGRES/CANARY_FILES và không đoán quyết định.
+
+Bằng chứng đầy đủ: [candidate_I1.json](m2_evidence/authoring_0_7/candidate_I1.json), [candidate_I3.json](m2_evidence/authoring_0_7/candidate_I3.json). Có toàn payload/response, hash controls/input/output, model, SDK, versions, thời gian và semantic review; không dùng khớp câu chữ đáp án mẫu để chấm output tiếng Việt.
+
+### Promotion và STATIC/SPEC PASS
+
+Authoring ACTIVE/0.7 giữ nguyên module/package/runtime role. Body giống candidate đã thử live; bỏ mục source isolation mới thì phần hành vi kế thừa giống nguyên 0.6. Catalog 1.9 thêm đúng cú pháp isolated; Architecture 1.9 và pin Router cần cập nhật vì hợp đồng yêu cầu exact stack pins. CI và thuật toán Router không đổi. Không thêm context engine, registry, parser hoặc Router axis.
+
+Binding v0.2 (T8 diagnostic) và v0.3 (M1 runtime) cùng đổi sang module 0.7 byte-exact; hash shared-package pin của T9 được cập nhật. Không đổi AIS entries. `ADMISSION_SCHEMA` có `isolated:boolean`; model sở hữu lexical admission, Python chỉ kiểm tra kiểu/tổ hợp và truyền trace/handoff. inactive hoặc contributor != NONE buộc isolated=false; preset P1/P2/P3 được đi cùng isolated. Không strip history ở Python.
+
+- Full Central-Hub-Local: **117/117 PASS**, `socket.socket.connect` bị chặn toàn cục.
+- Focused upstream candidate + m1 + m2 + m4 + isolation: **33/33 PASS**, gồm isolation **8/8**. Tests lịch sử 0.6/1.8 dùng snapshot archive; active equivalents nằm trong `test_authoring_07.py`. Candidate source/fixtures không sửa.
+- Compile toàn bộ **59 file Python**: PASS. `git diff --check`: PASS.
+- Static/mock phủ exact activation, preset+isolated, malformed/unsupported forms, no-suffix false, no persistence sau clarification/reauthor, impossible combinations, genuine blockers, giữ history, source-boundary handoff và no-target execution. Các ca này không chứng minh model tuân thủ mọi dạng cú pháp trong live.
+- Đối chiếu toàn bộ 208 file upstream tại checkpoint với allowlist promotion cụ thể: PASS; ImageT, candidate và package ngoài Authoring không đổi. Các predecessor bị thay thế được archive byte-exact, có receipt/hash. Test cũ “mọi upstream file giống HEAD” được thay bằng kiểm tra baseline cố định để cho phép đúng promotion đã duyệt, vẫn kiểm mọi file ngoài scope.
+
+Chi tiết: [static_summary.json](m2_evidence/authoring_0_7/static_summary.json), [local_static.txt](m2_evidence/authoring_0_7/local_static.txt), [focused_upstream.txt](m2_evidence/authoring_0_7/focused_upstream.txt). Các mismatch static ban đầu do kỳ vọng revision cũ đã được sửa trong phạm vi; log ban đầu giữ riêng, không phải kết quả nghiệm thu cuối.
+
+Giới hạn mirror-wide upstream được người dùng cung cấp trước: thiếu original git-history objects và Project Feather files. Đây là giới hạn môi trường mirror, tách khỏi Authoring 0.7. Không chạy lại toàn suite upstream trong lượt promotion; không suy full upstream PASS từ focused PASS.
+
+### ACTIVE LOCAL RUNTIME LIVE PASS
+
+Chỉ chạy sau static gate PASS, dùng đúng current turn do người dùng chỉ định. Lịch sử nền chứa `CANARY_ACTIVE_PRIOR` và quyết định giả định đã chấp nhận cloud notebooks, loại giấy. Không xóa lịch sử ở bất kỳ pha nào.
+
+Đúng **một top-level request**, **3 Responses API calls**, tất cả completed, `max_retries=0`, không tools và không target execution. Root chỉ chọn HUB-PKG-AUTHORING; admission/handoff ghi `isolated=true`; trace `authoring_isolated=true`, target GENERIC, preset/contributor NONE; blocker rỗng. Module runtime được đọc và SHA-256 verified. Prompt cuối chỉ so sánh giấy/văn bản thuần túy, giữ cả hai chưa quyết định, không nhập canary hoặc quyết định cũ. Không thực thi so sánh thay cho việc tạo prompt.
+
+Bằng chứng: [active_runtime.json](m2_evidence/authoring_0_7/active_runtime.json), có đầy đủ inputs/outputs của cả ba pha, hashes, versions và trace. Tổng phần Authoring 0.7 trong lượt này: **5 Responses API calls**, gồm hai candidate cases và một active top-level request; **0 retry**, không live attempt bổ sung.
+
+`STATIC/SPEC PASS != CANDIDATE LIVE PASS != ACTIVE LOCAL RUNTIME LIVE PASS`. Kết quả chỉ xác minh phạm vi đã chạy, không chứng minh ChatGPT Library installation/retrieval hoặc Project deployment. Các bằng chứng M1/M2 trước đây được giữ nguyên. Commit/push promotion được thực hiện sau khi kiểm tra staged snapshot; hash commit và trạng thái remote được báo ở kết quả tác vụ.
+
+---
+
 Ngày kiểm chứng: 2026-11-03 (Asia/Bangkok).
 
 `STATIC / LOCAL APP VERIFIED`

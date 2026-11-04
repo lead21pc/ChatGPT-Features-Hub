@@ -56,9 +56,9 @@
       "entrypoint": {
         "module_id": "HUB-CAP-AUTHORING",
         "runtime_role": "CAPABILITY",
-        "version": "0.6",
-        "path": "runtime/packages/authoring/HUB-CAP-AUTHORING_v0.6.md",
-        "sha256": "3a3c067a4eabccc4355d9c8a33dd96bef063ec8654d758aa6a3827862ffd6328"
+        "version": "0.7",
+        "path": "runtime/packages/authoring/HUB-CAP-AUTHORING_v0.7.md",
+        "sha256": "cde642613d7f33bc3ff42417e757ee592ac3353318111df391d0fe552111b5b1"
       }
     }
   }

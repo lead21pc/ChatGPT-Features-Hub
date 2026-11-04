@@ -10,7 +10,7 @@ import t8
 AIS = "HUB-PKG-AIS"
 BINDINGS_PATH = host.T7_BINDINGS_PATH.with_name("HUB_LOCAL_BINDINGS_v0.3.json")
 SOURCE = "tool_pipelines/AIS/AIS_PIPELINE_v1.1.md"
-BASE_PACKAGES_SHA = "ad98963c428fd92f3fabc60bbe67cfa1ca005a0e681a4259f5eb59986582bb3f"
+BASE_PACKAGES_SHA = "23bc330f8452631d5ef4384a1fee6d865444cc77bc893553af0126eb9fae4176"
 ROUTE_SCHEMA = copy.deepcopy(host.ROUTE_SCHEMA)
 ROOT_FIELDS = ROUTE_SCHEMA["properties"]["selected_packages"]["items"]
 for field in ("version", "declared_source_path"):
@@ -47,7 +47,7 @@ def load_bindings(text):
         if set(packages) != {t8.TECHNICAL, t8.CONCEPT, t8.AUTHORING, AIS}:
             raise ValueError()
         base = {k: v for k, v in packages.items() if k != AIS}
-        # Pin exact v0.2 entries, without reading an old manifest on every T9 request.
+        # Pin the current shared v0.2 package entries, including the M2 Authoring 0.7 promotion.
         digest = hashlib.sha256(json.dumps(base, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         if digest != BASE_PACKAGES_SHA:
             raise ValueError()

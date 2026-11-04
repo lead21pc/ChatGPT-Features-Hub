@@ -413,14 +413,36 @@ class T7Tests(unittest.TestCase):
         self.assertIn('root scoped unresolved input', self.payloads[-1]['instructions'])
         self.assertIn('leaf scoped ambiguity', self.payloads[-1]['instructions'])
 
-    def test_upstream_byte_identical_to_head(self):
-        paths = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', 'HEAD', '--', 'upstream']).decode('utf-8').rstrip('\0').split('\0')
+    def test_upstream_unchanged_outside_authorized_m2_promotion(self):
+        baseline = 'c619a5a6895cf0d9aa67a92ebb46f36a8bb9e228'
+        prefix = 'upstream/Central Hub/'
+        changed = {
+            prefix + p for p in (
+                'HUB_ROUTER_v1.1.yaml', 'AUTHORING_PROMOTION.md', 'README.md',
+                'RUNTIME_EVIDENCE_CHANGELOG.md', 'tests/test_authoring_candidate.py',
+                'tests/test_authoring_m1.py', 'tests/test_authoring_m2.py',
+                'tests/test_authoring_m4.py', 'tests/test_authoring_isolation.py')}
+        archived = {prefix + p for p in ('HUB_ARCHITECTURE_v1.8.md',
+                    'HUB_PACKAGE_CATALOG_v1.8.yaml', 'library_modules/HUB-CAP-AUTHORING_v0.6.md')}
+        added = {prefix + p for p in ('HUB_ARCHITECTURE_v1.9.md', 'HUB_PACKAGE_CATALOG_v1.9.yaml',
+                                     'library_modules/HUB-CAP-AUTHORING_v0.7.md')}
+        archive_prefix = prefix + 'Source_archive/Authoring 0.7 M2 2026-11-05/'
+        archive_files = {archive_prefix + p for p in ('HUB_ARCHITECTURE_v1.8.md',
+            'HUB_PACKAGE_CATALOG_v1.8.yaml', 'library_modules/HUB-CAP-AUTHORING_v0.6.md',
+            'HUB_ROUTER_v1.1.yaml', 'AUTHORING_PROMOTION.md', 'ARCHIVE_RECEIPT.json')}
+        paths = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', baseline, '--', 'upstream']).decode('utf-8').rstrip('\0').split('\0')
         self.assertEqual(len(paths), 208)
         for path in paths:
             with self.subTest(path=path):
-                committed = subprocess.check_output(['git', 'show', 'HEAD:'+path])
-                self.assertEqual(Path(path).read_bytes(), committed)
-        self.assertEqual(subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', 'upstream']), b'')
+                committed = subprocess.check_output(['git', 'show', baseline+':'+path])
+                if path in archived:
+                    self.assertFalse(Path(path).exists())
+                    self.assertEqual(Path(archive_prefix + path[len(prefix):]).read_bytes(), committed)
+                elif path not in changed:
+                    self.assertEqual(Path(path).read_bytes(), committed)
+        actual = {p.as_posix() for p in Path('upstream').rglob('*') if p.is_file()
+                  and '__pycache__' not in p.parts and '.pytest_cache' not in p.parts}
+        self.assertEqual(actual - set(paths), added | archive_files)
 
 
 if __name__ == '__main__':

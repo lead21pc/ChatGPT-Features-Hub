@@ -1,5 +1,7 @@
 # Central Hub Local — M1 Unified Local Runtime
 
+Checkpoint M2 ngày 2026-11-05: Authoring **0.7 ACTIVE trong runtime local**, Architecture/Catalog 1.9; CI/Router 1.1. Binding v0.2/v0.3 dùng bản 0.7 byte-exact. Exact `/AUTHOR <OUTPUT_TARGET> ISOLATED` hoặc `/AUTHOR <OUTPUT_TARGET> P<n> ISOLATED` giới hạn nguồn task material cho lượt hiện tại; không có suffix thì giữ hành vi 0.6. Không xóa lịch sử, không lưu chế độ và không cấp quyền chạy target. Contributor + ISOLATED không kích hoạt. Các mô tả phiên bản trong hồ sơ T0–T9 bên dưới giữ bối cảnh kiểm chứng lịch sử; xem [VERIFICATION.md](VERIFICATION.md) và [bằng chứng 0.7](m2_evidence/authoring_0_7/) cho kết quả hiện tại. Không bắt đầu M3/M4.
+
 Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa README này.
 
 1. Cài dependency:

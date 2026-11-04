@@ -24,8 +24,8 @@ T2_BINDING_BRIDGE = (
     "it does not simulate Router behavior or change TECHNICAL semantics.\n\n"
 )
 HUB_ROUTER_PATH = HUB_CI_PATH.with_name("HUB_ROUTER_v1.1.yaml")
-HUB_ARCHITECTURE_PATH = HUB_CI_PATH.with_name("HUB_ARCHITECTURE_v1.8.md")
-HUB_CATALOG_PATH = HUB_CI_PATH.with_name("HUB_PACKAGE_CATALOG_v1.8.yaml")
+HUB_ARCHITECTURE_PATH = HUB_CI_PATH.with_name("HUB_ARCHITECTURE_v1.9.md")
+HUB_CATALOG_PATH = HUB_CI_PATH.with_name("HUB_PACKAGE_CATALOG_v1.9.yaml")
 CONCEPT_CORE_PATH = Path(__file__).resolve().parent / "runtime" / "packages" / "concept-development" / "HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md"
 CONCEPT_CATALOG_PATH = CONCEPT_CORE_PATH.with_name("HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml")
 CREATIVE_PATH = CONCEPT_CORE_PATH.with_name("HUB-DOM-CREATIVE_v1.1.md")

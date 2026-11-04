@@ -18,7 +18,7 @@ def root_package(package_id):
     identities = {
         "HUB-PKG-TECHNICAL": ("HUB-DOM-TECHNICAL", "REASONING_PROFILE", "1.0", ""),
         "HUB-PKG-CONCEPT-DEVELOPMENT": ("HUB-DOM-CONCEPT-DEVELOPMENT", "DOMAIN_CONTROL", "1.1", ""),
-        "HUB-PKG-AUTHORING": ("HUB-CAP-AUTHORING", "CAPABILITY", "0.6", ""),
+        "HUB-PKG-AUTHORING": ("HUB-CAP-AUTHORING", "CAPABILITY", "0.7", ""),
         "HUB-PKG-AIS": ("HUB-PIPE-AIS", "TOOL_PIPELINE", "1.1", "tool_pipelines/AIS/AIS_PIPELINE_v1.1.md"),
     }
     module, role, version, source = identities[package_id]

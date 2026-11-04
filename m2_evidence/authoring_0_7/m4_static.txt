@@ -1,0 +1,55 @@
+python : test_active_identity_admission_and_exact_candidate_behavior
+(test_authoring_m4.Authoring06HistoricalPromotionTests.test_active_identity_admission_and_exact_candidate_behavior)
+... ok
+At line:4 char:1
++ python -X utf8 -m unittest discover -s 'upstream/Central Hub/tests' - ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_active_ide...ehavior) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+test_archive_receipt_and_minimum_architecture_router_delta
+(test_authoring_m4.Authoring06HistoricalPromotionTests.test_archive_receipt_and_minimum_architecture_router_delta) ...
+ok
+test_candidate_smoke_provenance_is_not_active_runtime_evidence
+(test_authoring_m4.Authoring06HistoricalPromotionTests.test_candidate_smoke_provenance_is_not_active_runtime_evidence)
+... ok
+test_T0_no_preset_reference_regression (test_authoring_m4.AuthoringM4Tests.test_T0_no_preset_reference_regression) ...
+ok
+test_T1_clean_reference_semantics (test_authoring_m4.AuthoringM4Tests.test_T1_clean_reference_semantics) ... ok
+test_T2_contract_relations_and_flattening_counterexample
+(test_authoring_m4.AuthoringM4Tests.test_T2_contract_relations_and_flattening_counterexample) ... ok
+test_T3_rebuild_reference_semantics (test_authoring_m4.AuthoringM4Tests.test_T3_rebuild_reference_semantics) ... ok
+test_candidate_identity_admission_and_inherited_contract
+(test_authoring_m4.AuthoringM4Tests.test_candidate_identity_admission_and_inherited_contract) ... ok
+test_pre_promotion_byte_integrity_and_original_live_packet
+(test_authoring_m4.AuthoringM4Tests.test_pre_promotion_byte_integrity_and_original_live_packet) ... ok
+test_strict_preset_syntax_and_existing_forms
+(test_authoring_m4.AuthoringM4Tests.test_strict_preset_syntax_and_existing_forms) ... ok
+test_test_catalog_binding_and_production_pins
+(test_authoring_m4.AuthoringM4Tests.test_test_catalog_binding_and_production_pins) ... FAIL
+
+======================================================================
+FAIL: test_test_catalog_binding_and_production_pins
+(test_authoring_m4.AuthoringM4Tests.test_test_catalog_binding_and_production_pins)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<LOCAL_REPO>/upstream\Central Hub\tests\test_authoring_m4.py", line 126, in
+test_test_catalog_binding_and_production_pins
+    self.assertEqual((pin['version'], pin['status']), ('1.8', 'ACTIVE'))
+AssertionError: Tuples differ: ('1.9', 'ACTIVE') != ('1.8', 'ACTIVE')
+
+First differing element 0:
+'1.9'
+'1.8'
+
+- ('1.9', 'ACTIVE')
+?     ^
+
++ ('1.8', 'ACTIVE')
+?     ^
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.199s
+
+FAILED (failures=1)

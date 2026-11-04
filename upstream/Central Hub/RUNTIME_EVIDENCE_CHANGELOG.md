@@ -23,6 +23,15 @@ NO NEW EVIDENCE != STATUS RESET
 
 ## Current verified runtime status
 
+### AUTHORING_0_7_M2_LOCAL_RUNTIME
+
+- Ngày ghi nhận: 2026-11-05 (Asia/Bangkok). Phạm vi chỉ Central-Hub-Local; baseline main `c619a5a6895cf0d9aa67a92ebb46f36a8bb9e228`. Authoring ACTIVE/0.7, Architecture/Catalog 1.9, CI/Router 1.1; binding local v0.2/v0.3. Không bắt đầu M3/M4.
+- CANDIDATE LIVE PASS: I1 và I3 trước active mutation, nguyên Hub CI + candidate Catalog/module, một Responses API call mỗi ca, max_retries=0, không tools. I1 loại prior/project canaries; I3 hỏi một câu làm rõ nguồn quyết định, không nhập CANARY_POSTGRES/CANARY_FILES. Không gửi đáp án mẫu hoặc tiêu chí chấm cho model.
+- STATIC/SPEC PASS: 117/117 local với socket.connect bị chặn; 33/33 focused upstream, gồm isolation 8/8; compile 59 Python files; git diff --check PASS. Candidate, ImageT và package ngoài phạm vi không đổi so với checkpoint. Tests lịch sử 0.6 dùng predecessor snapshot; active 0.7 có kiểm tra riêng.
+- ACTIVE LOCAL RUNTIME LIVE PASS: một top-level request, ba Responses API calls completed, không retry. Root chỉ chọn Authoring; admission/handoff và trace isolated=true, blocker rỗng. Prompt cuối chỉ so sánh paper notes/plain-text notes, giữ cả hai chưa quyết định; không CANARY_ACTIVE_PRIOR hoặc quyết định cũ; không tool/target execution. History vẫn được gửi nguyên ở mọi pha.
+- Bằng chứng đầy đủ, hashes, versions, raw inputs/outputs và trace: `m2_evidence/authoring_0_7/` tại root Central-Hub-Local; chi tiết `VERIFICATION.md`. STATIC/SPEC PASS != CANDIDATE LIVE PASS != ACTIVE LOCAL RUNTIME LIVE PASS. Không xác minh ChatGPT Library installation/identity/retrieval hoặc Project deployment. Các record 0.6 bên dưới giữ phạm vi lịch sử, không bị chuyển thành bằng chứng 0.7.
+- Giới hạn mirror-wide upstream do thiếu original historical Git objects và Project Feather files là thông tin người dùng cung cấp trước; không chạy lại full upstream suite và không coi focused PASS là full upstream PASS.
+
 ### AUTHORING_0_6_REPOSITORY_PROMOTION
 
 - Deployment update 2026-11-02: USER_REPORTED_DEPLOYMENT. The user explicitly confirms Authoring 0.6 deployment. This supersedes pre-deployment planning status for that reported deployment, not production identity or routing evidence. Codex did not perform or independently inspect deployment; exact Library identity/FULL_FILE binding remains NOT_VERIFIED / UNRESOLVED and active 0.6 routing remains NOT_RUN pending a separate result. Supplied-candidate L1/L2 USER_CONFIRMED_LIVE_PASS is unchanged.
@@ -109,6 +118,10 @@ NO NEW EVIDENCE != STATUS RESET
 - Related log entry: `2026-10-27 - Integrated concept-development runtime smoke`.
 
 ## Verification log
+
+### 2026-11-05 — Authoring 0.7 trong M2 Central-Hub-Local
+
+Đã tái hiện hai candidate live cases và một active local runtime live request theo đúng thứ tự gate; tổng 5 Responses API calls, không retry, không tools. Cả ba ca đạt trong phạm vi đã chạy. Runtime mang `isolated:boolean` tường minh, không thêm parser hoặc xóa history. Xem `AUTHORING_0_7_M2_LOCAL_RUNTIME` và bằng chứng tại repo root; không mở rộng kết luận sang ChatGPT Library/Project deployment hoặc M3/M4.
 
 ### 2026-11-02 - User confirms Authoring 0.6 deployment
 

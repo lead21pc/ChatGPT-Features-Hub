@@ -5,6 +5,9 @@ import re
 import unittest
 
 from test_hub_contracts import ROOT, load
+
+# Historical 0.6/1.8 baseline; active 0.7 is checked in test_authoring_07.py.
+PREDECESSOR = ROOT / 'Source_archive/Authoring 0.7 M2 2026-11-05'
 from test_authoring_candidate import TARGETS, trigger_spec
 from test_authoring_m2 import composite_spec
 from test_authoring_m4 import preset_spec
@@ -35,7 +38,7 @@ def reference_violations(case, output):
 
 class AuthoringIsolationTests(unittest.TestCase):
     def test_candidate_identity_and_complete_06_body_preservation(self):
-        active = (ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md').read_text(encoding='utf-8')
+        active = (PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md').read_text(encoding='utf-8')
         candidate = MODULE.read_text(encoding='utf-8')
         for key, value in [('Module ID', 'HUB-CAP-AUTHORING'), ('Package ID', 'HUB-PKG-AUTHORING'),
                            ('Runtime role', 'CAPABILITY'), ('Status', 'CANDIDATE'), ('Version', '0.7-candidate')]:
@@ -62,7 +65,7 @@ class AuthoringIsolationTests(unittest.TestCase):
             self.assertIn(protection, section)
 
     def test_candidate_catalog_admits_only_local_delta(self):
-        active = load(ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
+        active = load(ROOT / 'Source_archive/Authoring 0.7 M2 2026-11-05/HUB_PACKAGE_CATALOG_v1.8.yaml')
         candidate = load(CATALOG)
         self.assertEqual((candidate['version'], candidate['status'], candidate['active'], candidate['runtime_ready']),
                          ('1.9-candidate', 'CANDIDATE', False, False))
@@ -145,7 +148,7 @@ class AuthoringIsolationTests(unittest.TestCase):
         self.assertEqual(reference_violations(case, case['reference_output']), [])
         flattened = "Respect player choices and DM authority. NPCs are autonomous. State persists. Rules change."
         self.assertTrue(reference_violations(case, flattened))
-        active = (ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md').read_text(encoding='utf-8')
+        active = (PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md').read_text(encoding='utf-8')
         candidate = MODULE.read_text(encoding='utf-8')
         self.assertEqual(active.split('## Optional preset strategies\n')[1].split('## Context sources')[0],
                          candidate.split('## Optional preset strategies\n')[1].split('## Optional explicit source isolation')[0])
@@ -160,11 +163,11 @@ class AuthoringIsolationTests(unittest.TestCase):
         }
         for path, digest in expected.items():
             # Canonical LF avoids tying a repository check to Git checkout conversion.
-            canonical = (ROOT / path).read_bytes().replace(b'\r\n', b'\n')
+            canonical = ((ROOT if path == 'HUB_CI_v1.1.md' else PREDECESSOR) / path).read_bytes().replace(b'\r\n', b'\n')
             self.assertEqual(hashlib.sha256(canonical).hexdigest(), digest, path)
-        self.assertEqual(list((ROOT / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')),
-                         [ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'])
-        router = load(ROOT / 'HUB_ROUTER_v1.1.yaml')
+        self.assertEqual(list((PREDECESSOR / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')),
+                         [PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'])
+        router = load(PREDECESSOR / 'HUB_ROUTER_v1.1.yaml')
         self.assertEqual(router['contracts']['root_catalog']['file'], 'HUB_PACKAGE_CATALOG_v1.8.yaml')
         self.assertEqual(router['contracts']['architecture']['version'], '1.8')
         self.assertEqual(list(CASES), [f'I{i}' for i in range(1, 11)])

@@ -4,10 +4,13 @@ import re
 import unittest
 
 from test_hub_contracts import ROOT, load
+
+# Historical 0.6/1.8 baseline; active 0.7 is checked in test_authoring_07.py.
+PREDECESSOR = ROOT / 'Source_archive/Authoring 0.7 M2 2026-11-05'
 from test_authoring_candidate import trigger_spec
 
 ARCHIVE = ROOT / 'Source_archive/Authoring 0.5 M2 2026-11-01'
-MODULE = ROOT / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
+MODULE = PREDECESSOR / 'library_modules/HUB-CAP-AUTHORING_v0.6.md'
 
 
 def composite_spec(message, *, user_instruction=True):
@@ -31,7 +34,7 @@ class AuthoringM2Tests(unittest.TestCase):
                        'Missing, mismatched, unavailable or unresolved requested contribution blocks'):
             self.assertIn(phrase, text)
         old = load(ARCHIVE / 'HUB_PACKAGE_CATALOG_v1.5.yaml')
-        new = load(ROOT / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
+        new = load(PREDECESSOR / 'HUB_PACKAGE_CATALOG_v1.8.yaml')
         self.assertEqual([p for p in old['packages'] if p['package_id'] not in {'HUB-PKG-AUTHORING', 'HUB-PKG-CONCEPT-DEVELOPMENT'}],
                          [p for p in new['packages'] if p['package_id'] not in {'HUB-PKG-AUTHORING', 'HUB-PKG-CONCEPT-DEVELOPMENT'}])
         entry = next(p for p in new['packages'] if p['package_id'] == 'HUB-PKG-AUTHORING')
@@ -66,11 +69,11 @@ class AuthoringM2Tests(unittest.TestCase):
                             '', text, flags=re.S)
         normalized = normalized.replace('v0.6', 'v0.4.1').replace('Version: 0.6', 'Version: 0.4.1')
         self.assertEqual(normalized, old.read_text(encoding='utf-8'))
-        self.assertEqual(list((ROOT / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')), [MODULE])
-        router = load(ROOT / 'HUB_ROUTER_v1.1.yaml')
+        self.assertEqual(list((PREDECESSOR / 'library_modules').glob('HUB-CAP-AUTHORING_v*.md')), [MODULE])
+        router = load(PREDECESSOR / 'HUB_ROUTER_v1.1.yaml')
         prior = load(ARCHIVE / 'HUB_ROUTER_v1.1.yaml')
         for key in ('architecture', 'root_catalog'):
-            self.assertTrue((ROOT / router['contracts'][key]['file']).is_file())
+            self.assertTrue((PREDECESSOR / router['contracts'][key]['file']).is_file())
             self.assertEqual(router['contracts'][key]['version'], '1.8')
         router.pop('contracts')
         prior.pop('contracts')

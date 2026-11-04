@@ -10,16 +10,16 @@ activation_notice: Normal runtime contract after manual installation with exact 
 kind: Behavioral contract, not executable routing or Library storage implementation.
 contracts:
   architecture:
-    file: HUB_ARCHITECTURE_v1.8.md
+    file: HUB_ARCHITECTURE_v1.9.md
     module_id: HUB-CORE-ARCH
-    version: '1.8'
+    version: '1.9'
     status: ACTIVE
   root_catalog:
-    file: HUB_PACKAGE_CATALOG_v1.8.yaml
+    file: HUB_PACKAGE_CATALOG_v1.9.yaml
     module_id: HUB-CORE-PACKAGE-CATALOG
-    version: '1.8'
+    version: '1.9'
     status: ACTIVE
-  binding_scope: Exact manually installed Hub CI/Router v1.1 with Architecture/Catalog v1.8 Project Sources. Never
+  binding_scope: Exact manually installed Hub CI/Router v1.1 with Architecture/Catalog v1.9 Project Sources. Never
     discover earlier design or trial controls as substitutes.
   role_boundary: CORE_ROUTER identifies the existing scoped selector/composer responsibility; no new behavior owner.
 ownership:

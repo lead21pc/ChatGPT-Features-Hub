@@ -22,7 +22,7 @@ class M1Tests(unittest.TestCase):
         self.config = dict(openai_api_key="mock-only", model="mock-model")
         self.messages = [dict(role="user", content="Current scoped request")]
         self.route = dict(task_scope="current", selected_packages=[], unresolved_blockers=[])
-        self.admission = dict(active=True, target="AIS", preset="NONE", contributor="NONE",
+        self.admission = dict(active=True, isolated=False, target="AIS", preset="NONE", contributor="NONE",
                               application_scope="prompt only", reason="fixture", unresolved_blockers=[])
         self.local = dict(selected_leaves=[], unresolved_blockers=[])
         self.owner = dict(module_id="HUB-DOM-CREATIVE", runtime_role="DOMAIN_CONTROL",
@@ -296,6 +296,24 @@ class M1Tests(unittest.TestCase):
             with self.subTest(mode=mode), patch(target, return_value=("diagnostic", {})) as run:
                 self.assertEqual(app.call_model(self.config, self.messages, mode), "diagnostic")
                 run.assert_called_once_with(self.config, self.messages)
+
+
+    def test_isolated_authoring_top_level_preserves_ambient_history_without_target_execution(self):
+        self.select(t8.AUTHORING)
+        self.admission.update(target='GENERIC', isolated=True)
+        self.messages = [dict(role='assistant', content='CANARY_MOCK_PRIOR accepted decision'),
+                         dict(role='user', content='/AUTHOR GENERIC ISOLATED\nCompare only supplied options.')]
+        _, trace = self.run_runtime()
+        self.assertTrue(trace['packages']['authoring_isolated'])
+        self.assertEqual(trace['root_selected_package_ids'], [t8.AUTHORING])
+        self.assertFalse(trace['ais_selected'])
+        self.assertFalse(trace['ais_web_search_executed'])
+        self.assertEqual(len(self.payloads), 3)
+        self.assertTrue(all('tools' not in p for p in self.payloads))
+        self.assertTrue(all(p['input'] == self.messages for p in self.payloads))
+        final = self.payloads[-1]['instructions']
+        handoff = json.JSONDecoder().raw_decode(final.split('[T8 VERIFIED HANDOFF]\n')[1])[0]
+        self.assertTrue(handoff['admission']['isolated'])
 
 
 if __name__ == "__main__":

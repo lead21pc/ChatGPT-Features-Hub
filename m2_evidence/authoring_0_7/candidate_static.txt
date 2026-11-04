@@ -1,0 +1,40 @@
+python : test_I1_I2_I3_I4_reference_admission_and_exclusion
+(test_authoring_isolation.AuthoringIsolationTests.test_I1_I2_I3_I4_reference_admission_and_exclusion) ... ok
+At line:2 char:1
++ python -X utf8 -m unittest discover -s 'upstream/Central Hub/tests' - ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_I1_I2_I3_I...clusion) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+test_I5_I9_I10_target_and_source_authority
+(test_authoring_isolation.AuthoringIsolationTests.test_I5_I9_I10_target_and_source_authority) ... ok
+test_I6_no_suffix_regression (test_authoring_isolation.AuthoringIsolationTests.test_I6_no_suffix_regression) ... ok
+test_I7_preset_semantics_and_relations_survive
+(test_authoring_isolation.AuthoringIsolationTests.test_I7_preset_semantics_and_relations_survive) ... ok
+test_I8_exact_syntax_and_provenance
+(test_authoring_isolation.AuthoringIsolationTests.test_I8_exact_syntax_and_provenance) ... ok
+test_active_stack_integrity_and_fixture_evidence_limits
+(test_authoring_isolation.AuthoringIsolationTests.test_active_stack_integrity_and_fixture_evidence_limits) ... FAIL
+test_candidate_catalog_admits_only_local_delta
+(test_authoring_isolation.AuthoringIsolationTests.test_candidate_catalog_admits_only_local_delta) ... ok
+test_candidate_identity_and_complete_06_body_preservation
+(test_authoring_isolation.AuthoringIsolationTests.test_candidate_identity_and_complete_06_body_preservation) ... ok
+
+======================================================================
+FAIL: test_active_stack_integrity_and_fixture_evidence_limits
+(test_authoring_isolation.AuthoringIsolationTests.test_active_stack_integrity_and_fixture_evidence_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<LOCAL_REPO>/upstream\Central Hub\tests\test_authoring_isolation.py", line
+164, in test_active_stack_integrity_and_fixture_evidence_limits
+    self.assertEqual(hashlib.sha256(canonical).hexdigest(), digest, path)
+AssertionError: '7084b1b45df0677722597d2158aa18d6f5b6844db1ce78af04230c5210e441ea' !=
+'93318547108e0779a1812e5cd6c916302a52dda2a628334bdb75e07ccaae283c'
+- 7084b1b45df0677722597d2158aa18d6f5b6844db1ce78af04230c5210e441ea
++ 93318547108e0779a1812e5cd6c916302a52dda2a628334bdb75e07ccaae283c
+ : HUB_ROUTER_v1.1.yaml
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.040s
+
+FAILED (failures=1)
