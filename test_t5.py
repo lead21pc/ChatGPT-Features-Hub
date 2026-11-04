@@ -56,6 +56,7 @@ class T5Tests(unittest.TestCase):
         original = Path.read_bytes
         with self.ui_context(), patch('openai.OpenAI', self.client):
             ui = AppTest.from_file('app.py').run()
+            ui.radio[0].set_value(app.MODES[0]).run()
             ui.text_area[0].set_value('T0 trước')
             ui.button[0].click().run()
             history = list(ui.session_state.messages)

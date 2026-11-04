@@ -1,4 +1,4 @@
-# Central Hub Local — T7
+# Central Hub Local — M1 Unified Local Runtime
 
 Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa README này.
 
@@ -25,13 +25,14 @@ Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa READM
    python -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
    ```
 
-4. Mở [giao diện local](http://127.0.0.1:8501), nhập prompt rồi bấm **Send**. Response hiện bên dưới. Để kiểm chứng live, gửi `Chỉ trả lời: T0 OK`, xác nhận có phản hồi hiển thị; gửi tiếp `Tôi vừa yêu cầu bạn trả lời gì?` để kiểm tra lịch sử.
+4. Mở [giao diện local](http://127.0.0.1:8501), nhập prompt rồi bấm **Send**. Mặc định là **Central Hub - Local Runtime**: Hub → Root Router → tập package được chọn → phản hồi. Chỉ gửi khi muốn chạy API thật; M1 được kiểm chứng bằng static/mock, không tự chạy chiến dịch live.
 
 Lịch sử chỉ giữ trong Streamlit session, không ghi xuống `sessions/`. Khi tải lại trang hoặc khởi động lại app, lịch sử có thể mất. Lượt lỗi không được thêm vào lịch sử; prompt vẫn còn để gửi lại. Nếu thiếu key, hết quota, mất mạng hoặc không có quyền truy cập model, giao diện hiển thị lỗi; đó chưa phải live PASS.
 
 Chọn **Chế độ** trước khi gửi:
 
-- **T0 - Raw API** (mặc định): API thuần như Giai đoạn 1, không nạp CI, không gửi `instructions`.
+- **Central Hub - Local Runtime** (mặc định): `m1.call_runtime(config, messages)` chọn root một lần bằng chính CI/Router/Architecture/Catalog hiện hành, kiểm tra identity/version/source rồi dùng inventory binding v0.3 sẵn có. Không chọn package thì dùng Hub baseline. Technical/Concept dùng lại truy xuất/hash và chọn leaf của T7 qua T8; Authoring dùng nguyên admission, contributor và quy tắc kết thúc ở prompt artifact của T8. AIS dùng lại kiểm tra Catalog, truy xuất cặp pipeline/router và kiểm tra bằng chứng `web_search_call` của T9, với native Responses `web_search`. Hub nhận bằng chứng AIS và giữ quyền diễn đạt kết luận/trạng thái. Khi Technical/Concept được root chọn độc lập cùng Authoring, kết quả theo phạm vi được chuyển cho Authoring để làm căn cứ; thân control không được đưa vào pha Authoring cuối. Việc soạn prompt cho AIS/ImageT không tự chạy target. Chọn root ImageT gây lỗi `local-runtime unavailable`, không đọc body, không mô phỏng hoặc fallback. Lỗi root/package/binding/tool chặn lượt, giữ history và prompt; M1 hiện dừng cả lượt khi có blocker. Hàm trả `(answer, trace)`; UI chỉ hiện phản hồi hoặc lỗi. Các chế độ T0–T9 bên dưới vẫn là đường chẩn đoán/hiệu chuẩn.
+- **T0 - Raw API**: API thuần như Giai đoạn 1, không nạp CI, không gửi `instructions`.
 - **T1 - Hub CI**: cùng model, tham số và lịch sử như T0; mỗi request đọc nguyên nội dung UTF-8 của `upstream/Central Hub/HUB_CI_v1.1.md` vào trường `instructions` của Responses API. Không sửa CI, không nạp Router hoặc module nào khác. Nếu không đọc được CI, ứng dụng báo lỗi và không gửi request, không chuyển sang T0.
 - **T2 - Hub CI + Technical**: mỗi request đọc nguyên CI trên và `runtime/packages/technical/HUB-DOM-TECHNICAL_v1.0.md`, ghép vào `instructions` theo thứ tự CI → ghi chú liên kết kiểm thử cục bộ → Technical. Ghi chú chỉ xác định Technical được chọn thủ công cho phần yêu cầu/nhiệm vụ hiện tại vì Router vắng mặt; không thay đổi ngữ nghĩa Technical. Bản runtime sao chép byte-exact từ nguồn ACTIVE v1.0 tại `upstream/Central Hub/candidates/promotion/HUB-DOM-TECHNICAL_v1.0.md`. Thiếu hoặc không đọc được một trong hai control sẽ báo lỗi trước API, không chuyển sang T1/T0. Đây là phép thử một module chọn thủ công; không nạp Router, Architecture, Root Catalog hay package khác.
 
@@ -49,7 +50,7 @@ Chọn **Chế độ** trước khi gửi:
 
 T3 chỉ gửi prompt hiện tại, không gửi lịch sử T0/T1/T2/T4/T5/T6/T7 hoặc các bản ghi T3 trước đó. Các bản ghi T3 được giữ riêng trong session, không đưa vào lịch sử trả lời thông thường. Phản hồi lỗi, bị từ chối, chưa hoàn tất, thiếu văn bản hoặc JSON sai cấu trúc không tạo bản ghi mới; prompt và bản ghi thành công trước đó vẫn còn. Dùng **session mới cho mỗi ca so sánh T3 sạch**. Khi kiểm tra thủ công, chọn T3, gửi `Giải thích RAM và SSD khác nhau thế nào.` rồi xác nhận bản ghi có nhãn T3 và NONE; dùng session mới cho yêu cầu chẩn đoán nguyên nhân máy khựng để kiểm tra lựa chọn Technical.
 
-Với T0/T1/T2/T4/T5/T6/T7/T8, chế độ hiện ở phía trên và cạnh từng phản hồi. Đổi chế độ giữ nguyên lịch sử chung giữa tám chế độ này, kể cả phản hồi từ chế độ trước; nhãn chế độ không gửi vào API. Để so sánh A/B T0/T1/T2/T4/T5/T6/T7 với lịch sử trống, mở session mới cho mỗi phép thử. Kiểm tra T1 bằng hai prompt tương tự bước 4, thay `T0 OK` bằng `T1 OK`. Với T2, dùng session mới, chọn T2 và hỏi chẩn đoán máy khựng khi mở nhiều tab nhưng chưa có log; hỏi tiếp nguyên nhân nào chắc chắn nhất. Kiểm tra phản hồi có giữ nguyên nhân chưa xác định, phân biệt triệu chứng/giả thuyết và đưa phép kiểm tra phân biệt có giới hạn.
+Với T0/T1/T2/T4/T5/T6/T7/T8/T9, chế độ hiện ở phía trên và cạnh từng phản hồi. Đổi chế độ giữ nguyên lịch sử chung giữa chín chế độ này, kể cả phản hồi từ chế độ trước; nhãn chế độ không gửi vào API. Để so sánh A/B T0/T1/T2/T4/T5/T6/T7 với lịch sử trống, mở session mới cho mỗi phép thử. Kiểm tra T1 bằng hai prompt tương tự bước 4, thay `T0 OK` bằng `T1 OK`. Với T2, dùng session mới, chọn T2 và hỏi chẩn đoán máy khựng khi mở nhiều tab nhưng chưa có log; hỏi tiếp nguyên nhân nào chắc chắn nhất. Kiểm tra phản hồi có giữ nguyên nhân chưa xác định, phân biệt triệu chứng/giả thuyết và đưa phép kiểm tra phân biệt có giới hạn.
 
 `upstream/Central Hub/` là bản sao tham chiếu nguyên trạng từ `<WORKSHOPS_REPO>\Central Hub`, repo nguồn tại HEAD `b3f470a46c87c4bfad68d74bf031f78d7abc87b4`, working tree sạch khi sao chép. T0 không đọc thư mục này; T1 và T2 chỉ đọc đúng `HUB_CI_v1.1.md` từ upstream khi chạy. Technical trong T2 được đọc từ bản runtime riêng, không đọc nguồn promotion. Ứng dụng không ghi vào bản sao.
 
@@ -63,4 +64,12 @@ T8 active tạo một prompt rồi dừng; target AIS/IMAGET/CODEX/WORK/GENERIC 
 
 T8 static/mock sau correction đạt 23/23; full T0–T8 đạt 70/70. Live campaign dùng 3/4 user requests rồi dừng đúng cost policy: single-target/preset và no-persistence PASS; contributor path lộ sequencing failure, đã sửa cục bộ và kiểm static/mock nhưng chưa live-reverify. Không chạy request thứ 4. Xem VERIFICATION.md.
 
-**STOP: T9 NOT STARTED.**
+- **T9 - AIS Local Execution**: mỗi lượt đọc lại Hub CI 1.1, Router 1.1, Architecture/Catalog 1.8 và manifest v0.3. Root model chọn scope bằng Structured Outputs; chỉ AIS được chọn mới được đọc cặp pipeline 1.1/router 1.2 và xác minh SHA-256. Không chọn AIS thì không đọc AIS, không có web_search và trả lời bằng Hub CI baseline. Các package khác chỉ được giữ scope, không được thực thi trong T9.
+
+Executor là [native OpenAI Responses API web_search](https://developers.openai.com/api/docs/guides/tools-web-search), với `tool_choice="required"` và `include=["web_search_call.action.sources"]`. AIS trả evidence artifact về pha Hub cuối không có tools; Hub giữ câu trả lời và claim/state. `from t9 import call_t9`; hàm trả `(answer, trace)`, UI chỉ hiện câu trả lời và nhãn chế độ.
+
+v0.3 giữ nguyên các entries v0.2, chỉ thêm AIS. v0.1/v0.2 và metadata Project Sources cũ giữ nguyên; local binding không tuyên bố Project deployment. ImageT: **OUT OF SCOPE / REMOVED FROM THIS MIGRATION** theo quyết định người dùng.
+
+T9 hiện đã qua 15/15 kiểm thử tập trung và 85/85 full suite. Live dùng đúng **1 user request** có lực phân biệt cao: Root chọn AIS, local pipeline/router được SHA-256 verify, native `web_search` tạo `web_search_call` hoàn tất, source/citation URL được capture và evidence quay về Hub với blocker rỗng. Negative-control live không chạy vì static đã phủ đường no-AIS và không tạo thêm bằng chứng đáng kể.
+
+ImageT đã được loại khỏi migration này theo quyết định người dùng; không có T10/ImageT trong kế hoạch hiện tại. Xem `VERIFICATION.md` để phân biệt checkpoint tĩnh cũ, incident mock/concurrent-write và PASS live cuối.

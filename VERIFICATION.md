@@ -1065,3 +1065,203 @@ REQUEST 4 = NOT RUN
 T9 = NOT STARTED
 
 Không được nâng contributor path thành live PASS cho đến khi có live evidence mới. Failure trước correction được giữ làm bằng chứng lịch sử; correction không xóa nó.
+
+# T9 — AIS Local Execution: kiểm chứng tĩnh
+
+Ngày: 2026-11-04. Baseline: `main`, HEAD `3f827471ae127dcefb8067e65b4a3c3b0b519b44`, working tree sạch. Chỉ sửa T9 local; không stage/commit/push/tag/branch hoặc đổi remotes.
+
+## Binding và trạng thái host cũ
+
+`runtime/HUB_LOCAL_BINDINGS_v0.3.json` giữ nguyên ba entries Technical + Concept + Authoring của v0.2, chỉ thêm HUB-PKG-AIS, alias HUB-PIPE-AIS, TOOL_PIPELINE 1.1. Runtime pair sao chép byte-exact từ đúng upstream active pair:
+
+- `runtime/packages/ais/AIS_PIPELINE_v1.1.md`: SHA-256 `68763c5bc3a19dbfae17535daebcc5e95e6279368153583470285334d6e2ffd6`.
+- `runtime/packages/ais/AIS_ROUTER_v1.2.yaml`: SHA-256 `c977b5adb74436e066192d240304e5e898b320d086cf3352ce5a59c542d03dbf`.
+
+Không thêm Module ID header; HUB-PIPE-AIS vẫn là Catalog routing alias. Path phải ở trong runtime, SHA-256 được kiểm trước UTF-8; cần đủ cả hai artifact. Không fallback upstream/repository/archive. Manifest kiểm shape/inventory, duplicate keys, identities/version/path/hash; entries cũ được pin theo canonical package digest v0.2.
+
+PROJECT_SOURCES / LEGACY_PROJECT_SOURCE, LEGACY_EXISTING, OFFICIAL_ACTIVE và project_deployment NOT_PERFORMED trong upstream giữ nguyên và là metadata host cũ. v0.3 chỉ là successor binding local; không chứng minh hay tuyên bố Project deployment cũ. v0.1/v0.2 vẫn dành riêng cho T7/T8.
+
+## Executor và ranh giới pha
+
+Executor là [native OpenAI Responses API web_search](https://developers.openai.com/api/docs/guides/tools-web-search) qua SDK `openai==2.38.0` đã cài; không có custom search engine, HTTP provider, scraping, browser automation, RAG hoặc research engine thứ hai.
+
+Root nhận đúng bốn controls, không nhận manifest thô hay AIS bodies. Root Structured Outputs bổ sung version và declared_source_path để kiểm Catalog identity; không có Python keyword routing. No-AIS chỉ đọc controls + v0.3 rồi gọi Hub-CI baseline không tools. Non-AIS selections giữ scope và ghi rõ chưa thực thi.
+
+AIS selected mới đọc/hash-verify cặp AIS. AIS call dùng model cấu hình, cùng conversation input, exact Hub CI + handoff + exact pipeline/router; `tools=[{"type":"web_search"}]`, `tool_choice="required"`, `include=["web_search_call.action.sources"]`, `store=False`. Model và exact AIS controls giữ VERIFY/RESEARCH/EXPLORE, scope lock, source authority, inference/unknown và stop condition; không có Python planner mới hoặc background mode/location payload.
+
+Trace phân biệt web_search_call với tool success, source read và claim support. Giữ action/query/queries/url khi có, call ID/status, nguồn consulted và citations riêng; dedupe theo thứ tự xuất hiện. Call item thiếu, incomplete/refusal/empty hoặc tool status không completed làm lượt thất bại, không đoán thành công và không retry. Bằng chứng đã quan sát được giữ trên ValueError.trace. Khi chưa xác lập phần độc lập an toàn, host fail lượt AIS thay vì trả lời phần cần bằng chứng từ model memory.
+
+Pha Hub cuối nhận scope, path/SHA retrieval evidence, actions/status, source/citation URLs và nguyên văn AIS output; không tools. Hub giữ unresolved/conflict/read limits, evidence artifact != accepted state và URL attribution. Package khác không được retrieve/emulate/claim executed. Lỗi không thêm history; T3 tiếp tục tách riêng.
+
+## Kết quả và giới hạn kiểm chứng
+
+Một bản gồm 21 tests T9 đã qua cùng 70 tests cũ: 91/91 PASS khi socket.connect bị chặn toàn cục. Sau lượt đó, test_t9.py bị thay thế ngoài các lệnh sửa đang thực hiện bằng bản gồm 15 tests. Bản hiện trên đĩa đã được chạy lại với socket.connect bị chặn toàn cục: 85/85 PASS. Không dùng kết quả 91/91 để chứng nhận bản 15 tests hiện tại.
+
+Compileall các module app/T8/T9 và tests local: PASS. `git diff --check`: PASS. `git diff --exit-code -- upstream`: PASS. Chưa chốt nghiệm thu coverage đầy đủ T9 vì file test bị thay đổi đồng thời; đã hỏi người dùng phân định quyền sửa và giữ nguyên file test đang có. Không chạy tests upstream hoặc package ImageT.
+
+Static/mock PASS không chứng minh live routing, model compliance, source reads hoặc chất lượng evidence thật.
+
+## Sự cố mock UI
+
+Một lần chạy ca UI T3 mới đã timeout vì mock chỉ bọc module app đã import, chưa bọc script do Streamlit chạy lại. Ca đó có thể đã thử kết nối OpenAI API; không có response/API trace xác nhận request có tới máy chủ hoặc được thực thi hay không. Vì vậy không khẳng định ZERO live API calls cho toàn phiên; execution của lần thử ngoài ý muốn này là UNKNOWN. Không có live T9 campaign hay kết quả live PASS được ghi nhận.
+
+Bản 21 tests đã sửa mock bằng config giả + openai.OpenAI MockTransport cho script chạy lại và chặn socket trong setUp. Bản đó sau đó bị thay thế; hai lượt full suite cuối đều dùng chặn socket.connect toàn cục, không dùng kết nối mạng thật. Không tiếp tục thử request thật.
+
+## Live campaign dành cho ChatGPT giám sát
+
+Ngân sách tối đa **2 user requests tổng cộng**, không phải số API calls nội bộ:
+
+1. A — session mới, chọn T9, yêu cầu sửa câu chữ từ nội dung tự chứa. Kỳ vọng không chọn AIS, không đọc AIS, không web_search; chỉ root + baseline Hub.
+2. B — session mới, chọn T9, yêu cầu kiểm chứng một thông tin bên ngoài hiện hành. Kỳ vọng chọn AIS, cặp runtime verified, có web_search_call và actions/sources/citations quan sát được; Hub final trích URL đúng mức support.
+
+Có thể gọi `call_t9(config, messages)` để xem trace; UI không dump trace mặc định. Dừng khi có lỗi material, không tự rerun. Codex không chạy hai ca live này. T9 LIVE CAMPAIGN = NOT RUN.
+
+ImageT: **OUT OF SCOPE / REMOVED FROM THIS MIGRATION** theo quyết định người dùng. Không binding, inspect body, test, migrate hoặc triển khai ImageT trong T9. Không bắt đầu T10.
+
+## T9 current verified status — supersedes earlier checkpoint labels
+
+Các mục T9 phía trên ghi lại quá trình triển khai, gồm checkpoint tĩnh trước live, một incident mock UI có execution không xác định và một concurrent-write incident khi Codex còn ghi t9.py. Các incident đó được giữ làm lịch sử; chúng không còn là current status sau khi file hiện tại được kiểm lại.
+
+Current local revision:
+- focused test_t9: 15/15 PASS
+- full T0–T9 suite: 85/85 PASS
+- compileall: PASS
+- git diff --check: PASS
+- upstream byte state: unchanged
+- T9 positive live request: PASS
+- observable web_search_call: completed
+- AIS local pipeline/router retrieval: SHA-256 verified
+- source/citation capture: observed
+- final Hub return: completed
+- unresolved blockers: none
+- ImageT: excluded from this migration
+
+T9 LIVE = SCOPED PASS for the current VERIFY-like external claim path.
+Earlier labels saying LIVE NOT RUN or waiting for test-file arbitration are historical checkpoints and are superseded by this later direct evidence for the current local T9 files.
+
+## M1 — Unified Local Runtime (2026-11-04)
+
+Mặc định UI và `app.call_model(config, messages)` nay chạy `m1.call_runtime`; T0–T9 vẫn giữ tên, chỉ số và entry point chẩn đoán. Root Router hiện hành chọn một tập root theo ngữ nghĩa qua một structured response; Python chỉ kiểm tra identity/version/source, thực hiện retrieval và ghép các đường đã có. Không có Router, registry, executor framework, persistence hay dependency mới.
+
+M1 dùng inventory v0.3 hiện có, kiểm tra bằng `t9.load_bindings`; Technical/Concept/Authoring chuyển sang `t8.call_t8` bằng kết quả root đã kiểm tra và các binding hiện có. Các keyword tùy chọn trên `call_t8` cho phép tránh chọn root lần hai và nhận bằng chứng AIS; gọi chẩn đoán T8 không truyền keyword vẫn dùng đường cũ. T7 tiếp tục sở hữu các hàm kiểm tra Catalog, retrieval/SHA-256, structured selection và binding view. AIS tái dùng `validate_ais_catalog`, `retrieve_pair`, `search_evidence` của T9 với cùng hợp đồng native Responses `web_search`, `tool_choice=required`, `include=web_search_call.action.sources`. `t9.py`, `test_t9.py`, binding v0.3 và các body AIS không bị sửa trong M1.
+
+Không chọn root thì dùng Hub baseline. Leaf vẫn do Concept chọn; Python không phân tích trigger. Authoring vẫn dùng admission/contributor của T8 và dừng ở prompt artifact; `/AUTHOR AIS` hoặc `/AUTHOR IMAGET` không tự chọn/chạy target. AIS chỉ chạy khi được root chọn độc lập theo yêu cầu hiện tại. Khi Technical/Concept cùng được chọn với Authoring, đường resolution cũ tạo kết quả theo phạm vi cho Hub làm căn cứ trước pha Authoring cuối; không đưa các control đó vào pha Authoring cuối. Bằng chứng AIS giữ giới hạn nguồn/support và được coi là dữ liệu không đáng tin về mặt chỉ dẫn. Hub giữ quyền kết luận/trạng thái.
+
+Root chọn ImageT gây blocker `local-runtime unavailable`, không đọc body, không fallback hoặc emulation. M1 dừng cả lượt khi root/package/binding/tool bị lỗi hoặc có blocker; không lưu lượt lỗi và không tự thử lại. Đây là cách xử lý bảo thủ hiện tại, chưa thực hiện trả kết quả từng phần cho các phạm vi độc lập trong lượt có lỗi.
+
+Kiểm chứng M1:
+
+- Focused `test_m1`: **17/17 PASS**. Bao gồm baseline, Technical, Concept/leaf, Authoring active/inactive/contributor, AIS mock contract, phối hợp nhiều root và cả bốn root, ImageT chỉ kiểm tra blocker ở root, lỗi root/binding/package/tool, default dispatch, history/UI và entry point T7/T8/T9.
+- Toàn bộ tests local T0–T9+M1: **102/102 PASS**, gồm 85 tests cũ và 17 tests M1. Test giao diện cũ cần T0 ban đầu được đổi sang chọn T0 tường minh; assertion danh sách UI bao gồm runtime mặc định mới. Không sửa kỳ vọng về nội dung/hành vi chuyên biệt T7/T8/T9.
+- Các lượt chạy dùng `socket.socket.connect` bị chặn toàn cục và OpenAI client giả hoặc `httpx.MockTransport`. `ais_web_search_executed=True` trong fixture chỉ phản ánh response công cụ giả, không phải bằng chứng công cụ thật đã chạy.
+- `compileall` cho app/T8/T9/M1 và toàn bộ test local: PASS. UTF-8/BOM/EOF/whitespace: PASS. `git diff --check`: PASS. `git diff --exit-code -- upstream`: PASS; đối chiếu SHA-256 và inventory toàn bộ file upstream với baseline đầu M1 cũng không đổi. Các file T9/AIS được bảo vệ khớp hash baseline. HEAD vẫn `3f827471ae127dcefb8067e65b4a3c3b0b519b44`, index rỗng; giữ nguyên phần T9 chưa commit.
+- Không chạy test upstream hoặc body ImageT. M1 không mở T10, M2, M3 hay M4.
+
+M1 **STATIC/MOCK PASS != LIVE PASS**. PASS live T9 đã ghi ở trên giữ nguyên phạm vi; không chứng nhận tự động luồng M1 mới. Chưa kiểm chứng live semantic routing/compliance, chất lượng evidence hay phối hợp toàn luồng M1; không có blocker static/mock còn mở. Không gọi API thật, stage, commit, push hoặc thao tác remote trong M1.
+
+## M2 — failure live, sửa root M1 và một lượt chạy lại (2026-11-04)
+
+**Kết luận: M2 FAIL.** Lượt chạy lại workload 1 vẫn thất bại ở đường contributor sau khi qua root; dừng campaign, không chạy workload 2, không tinh chỉnh hay gọi lại. Không bắt đầu M3/M4. Các bằng chứng T9/M1/T8 trước đó giữ nguyên phạm vi, không được nâng thành PASS cho M2.
+
+### Bằng chứng trước sửa
+
+- `m2_evidence/workload_1_aborted_trigger_mismatch.json`: lần harness bị hủy vì dòng đầu là `/AUTHOR GENERIC`, thiếu `+ BRAINSTORM`. **Không tính là workload M2 hợp lệ.** File giữ nguyên byte; có 2 lần vào `Responses.create` được ghi, chỉ call root có response `completed`; call admission chưa có response/error hoặc bản ghi kết thúc. Không suy ra call thứ hai đã hoàn tất hay được máy chủ thực thi.
+- `m2_evidence/workload_1_first_live_failure.json`: workload 1 hợp lệ đầu tiên, dòng đầu chính xác `/AUTHOR GENERIC + BRAINSTORM`. Đúng **1 Responses API call**, root trả `completed`, chọn `HUB-PKG-AUTHORING` và `HUB-PKG-CONCEPT-DEVELOPMENT`, rồi M1 dừng trước retrieval/execution vì hai blocker:
+  - `Chưa truy xuất nội dung đầy đủ của HUB-CAP-AUTHORING 0.6.`
+  - `Chưa truy xuất đầy đủ HUB-DOM-CONCEPT-DEVELOPMENT 1.1 và catalog cục bộ của gói; vì vậy chưa thể phân giải hoặc áp dụng mô-đun BRAINSTORM.`
+- Không AIS/web search trong workload hợp lệ đầu tiên. File này được đổi tên từ `workload_1.json` trước lượt chạy lại, giữ nguyên SHA-256 `6237a05b5fa684013e7390c702e4541ec8044d9ffacc081198b3336e2e85dc15`.
+
+### Chẩn đoán và sửa cục bộ
+
+Root instruction cũ trong `m1.call_runtime` yêu cầu chọn scope trước retrieval và không bỏ qua package chưa đọc body, nhưng chưa phân biệt việc chờ retrieval bình thường với blocker. Response live biểu diễn bước retrieval kế tiếp thành `unresolved_blockers`; M1 giữ nguyên chúng và dừng tại kiểm tra fatal blocker. Đây là lỗi tích hợp đã tái hiện, không phải lỗi thiếu local binding được xác nhận.
+
+Chỉ thêm đoạn sau vào instruction của request `hub_m1_root` trong `m1.py`:
+
+> Expected pending post-selection retrieval of selected package bodies and local catalogs is not an unresolved blocker. The host retrieves them after root selection. Report unresolved_blockers only for genuine unresolved conditions, not this normal next retrieval stage.
+
+Không sửa Router/Hub upstream, T8, T9, bindings, package bodies hoặc payload workload. Không lọc blocker, không thêm bộ phân tích ngữ nghĩa hay viết lại quyết định model; cơ chế dừng với blocker thật giữ nguyên.
+
+Thêm `test_root_pending_retrieval_instruction_and_brainstorm_handoff` trong `test_m1.py`: assertion chính xác hợp đồng instruction tại payload root; mock hai root Authoring + Concept với contributor Brainstorm hợp lệ kiểm tra handoff, blocker rỗng và không tools. Ca này thất bại trước sửa vì thiếu instruction, đạt sau sửa. Mock được cấp lựa chọn owner hợp lệ nên không chứng minh model live sẽ chọn owner hợp lệ với prompt này.
+
+Focused `test_m1` + `test_t8`: **41/41 PASS**, chặn `socket.socket.connect` toàn cục, dùng mock; gồm kiểm tra blocker thật, binding/identity sai, contributor và UI/history. Đây là kiểm chứng tĩnh/mock, không chứng minh live compliance. Không chạy thêm API trong các tests.
+
+### Lượt chạy lại workload 1 duy nhất
+
+Chạy đúng `python -X utf8 -B m2_acceptance.py 1`; không đổi prompt, dòng đầu `/AUTHOR GENERIC + BRAINSTORM`. Bằng chứng mới: `m2_evidence/workload_1.json`. Đúng **4 Responses API calls**, cả bốn response `completed`:
+
+1. `hub_m1_root`: chọn Authoring + Concept đúng identity/version/source; `unresolved_blockers=[]`. Lỗi chờ retrieval ở root không tái hiện trong lượt này.
+2. `hub_t8_admission`: `active=true`, `target=GENERIC`, `preset=NONE`, `contributor=BRAINSTORM`; báo blocker vì chưa có contribution đã phân giải.
+3. `hub_t8_contributor`: yêu cầu span chính xác `/BRAINSTORM <chỉ dẫn không rỗng> #` do người dùng viết; báo thiếu điều kiện kích hoạt, body và contribution. Response còn trả `runtime_role="NĂNG LỰC"` thay vì identity `CAPABILITY`, khiến kiểm tra hiện hữu thêm `requested contributor identity/role/binding mismatch`.
+4. `hub_t8_concept`: `selected_leaves=[]`; báo `+ BRAINSTORM` chỉ nêu contributor, không kích hoạt leaf nếu thiếu span `/BRAINSTORM … #`.
+
+Trace xác nhận đã retrieve hai package Authoring + Concept; `contributor_retrieved_module_ids=[]`, không AIS/web search, không contribution execution, không prompt cuối (`final_output=null`). M1 trả `ValueError`, không fallback/thử lại. Chưa kết luận các blocker mới đều là lỗi local hoặc điều kiện upstream cần sửa; không mở rộng sửa ngoài allowance. Root correction có bằng chứng live cục bộ nhưng toàn workload vẫn FAIL.
+
+### Số calls và giới hạn nghiệm thu
+
+| Lần chạy | Lần gọi Responses được ghi | Response `completed` | Nghiệm thu |
+| --- | ---: | ---: | --- |
+| Harness sai trigger, bị hủy | 2 | 1 | Không tính workload hợp lệ; trạng thái máy chủ của call 2 chưa xác định |
+| Workload 1 hợp lệ đầu tiên | 1 | 1 | FAIL tại root |
+| Workload 1 chạy lại duy nhất | 4 | 4 | FAIL sau root |
+| Workload 2 | 0 | 0 | Không chạy |
+| Tổng bằng chứng M2 hiện có | 7 | 6 | Gồm lần harness bị hủy |
+
+Chỉ các workload hợp lệ dùng **5 calls / 5 response completed**; lượt sửa này phát sinh **4 calls**, không thêm lần live nào khác. `completed` của response không đồng nghĩa workload thành công. Không có bằng chứng M2 về phối hợp Technical + Concept + AIS, chất lượng nguồn hay Hub synthesis của workload 2.
+
+Không stage/commit/push/remote mutation; index vẫn rỗng. Giữ nguyên `upstream/**`, ImageT và mọi file T9/M1/M2 cũ ngoài ba file sửa được nêu cùng việc đổi tên bằng chứng thất bại; thêm duy nhất bằng chứng chạy lại. Baseline M2 cũ không bị ghi đè.
+
+
+## M2 ? hai l?i A/B v? hai workload c? span t??ng minh (2026-11-04)
+
+**Tr?ng th?i hi?n t?i: M2 SCOPED LIVE PASS.** M?c n?y c?p nh?t tr?ng th?i hi?n t?i sau hai s?a c?c b?; c?c m?c FAIL ph?a tr?n v? file b?ng ch?ng c? ???c gi? nguy?n l?ch s?. STATIC/MOCK PASS != LIVE PASS.
+
+### ??nh ch?nh workload l?ch s?
+
+Workload 1 tr??c ??y thi?u `/BRAINSTORM <content> #`, n?n kh?ng h?p l? cho nghi?m thu k?ch ho?t leaf Brainstorm theo h?p ??ng hi?n h?nh. `CONTRIBUTOR PRESENCE != MODULE ACTIVATION`: nh?n `+ BRAINSTORM` ch? y?u c?u contribution; owner v?n ki?m tra applicability v? activation. Blocker thi?u span kh?ng ch?ng minh l?i tri?n khai. Hai l?i th?t ???c s?a ri?ng b?n d??i; kh?ng ??i Authoring 0.6, Concept 1.1, Brainstorm 1.1, Catalog, Router, Architecture hay body package.
+
+### S?a c?c b?
+
+- **A ? admission sequencing:** ch? b? sung instruction t?i `hub_t8_admission` trong `t8.py`: ph?n gi?i contributor ???c th?c hi?n sau admission; ch? ph?n gi?i l? tr?ng th?i b??c k? ti?p, kh?ng ph?i unresolved blocker. Admission ch? ghi y?u c?u contributor, kh?ng k?ch ho?t leaf; Concept ti?p t?c ki?m tra activation/scope/provenance hi?n c?. Blocker th?t v?n ???c tr? v? x? l? nguy?n tr?ng. Kh?ng l?c text, kh?ng th?m parser ho?c c? ch? ?o?n ng? ngh?a.
+- **B ? runtime_role:** `CONTRIBUTOR_SCHEMA.runtime_role` nay c? enum ch?nh x?c `DOMAIN_CONTROL` ho?c `CAPABILITY`. Instruction owner y?u c?u identifier nguy?n d?ng t? Catalog, tuy?t ??i kh?ng d?ch. Validator structured hi?n c? t? ch?i gi? tr? ngo?i enum; ki?m tra identity/role/binding hi?n h?u v?n ch?n t? h?p sai d? role thu?c enum.
+- `test_t8.py`: th?m ba ca h?i quy v? instruction ph?n k? admission, h?p ??ng role g?i l?n API cho c? hai contributor, v? t? ch?i role d?ch/sai tr??c retrieval, kh?ng retry. Ca blocker admission th?t v? identity mismatch gi? nguy?n.
+- `test_m1.py`: ch? b? sung span h?p l? v?o fixture Brainstorm c?a ca root/handoff; gi? nguy?n root fix trong `m1.py`.
+- `m2_acceptance.py`: thay ??ng hai top-level prompt ???c ng??i d?ng cung c?p; gi? newline cu?i W1; d?ng t?n `workload_N_corrected_ab.json`. T?o file b?ng ch? ?? exclusive tr??c API ?? l??t b? ng?t v?n ?? l?i d?u v?t ng?n ch?y l?i. Kh?ng ghi ?? file l?ch s?; API client v?n max_retries=0.
+
+### Ki?m ch?ng tr??c live
+
+Ba ca h?i quy m?i FAIL tr?n m? tr??c s?a (7 assertion/subtest failures), PASS sau s?a. Focused `test_t8` + `test_m1`: **44/44 PASS**. Full suite local: **106/106 PASS**. C? hai l??t d?ng `socket.socket.connect` b? ch?n to?n c?c v? mock/MockTransport. Ki?m tra regression g?m activation kh?ng l?u qua l??t, blocker th?t, role/identity mismatch, retrieval/binding l?i, no-target boundary, UI/history v? dispatch c?. Compile to?n b? **54 file Python**: PASS (d?ng `compile` tr?n source, kh?ng th?c thi test upstream). `git diff --check`: PASS. Hash upstream v? evidence l?ch s? kh?ng ??i; index r?ng tr??c live.
+
+### Live workload 1 ?? s?a ? PASS
+
+B?ng ch?ng: `m2_evidence/workload_1_corrected_ab.json`. ??ng m?t l?n ch?y top-level, **7 Responses API calls**, 7 response completed, kh?ng retry:
+
+1. Root ch?n Authoring + Concept v?i blocker r?ng.
+2. Admission active=true, target=GENERIC, contributor=BRAINSTORM, blocker r?ng.
+3. Owner ch?n HUB-CAP-BRAINSTORM / CAPABILITY t? span hi?n t?i h?p l?, blocker r?ng.
+4. Brainstorm body 1.1 ???c ??c v? x?c minh SHA-256; t?o contribution g?m s?u ph??ng ?n ch?a ???c ch?p nh?n.
+5. Concept scope ??c l?p ch?n ??ng Brainstorm, kh?ng leaf kh?c.
+6. Pha k?t qu? scope ??c l?p ho?n t?t. K?t qu? trung gian ? ??y c? d?ng prompt; kh?ng coi tu?n th? ri?ng c?a pha trung gian ngo?i ti?u ch? M2 l? ?? ???c ch?ng minh.
+7. Authoring tr? prompt cu?i t? ch?a, gi? s?u ph??ng ?n song song, kh?ng x?p h?ng/ch?p nh?n/tri?n khai.
+
+Handoff cu?i gi? `GENERATED_CONTRIBUTION_NOT_ACCEPTED_STATE`. Kh?ng AIS/web_search, kh?ng ImageT, kh?ng tools ho?c target execution. Kho?ng tr?ng live contributor T8 ???c ??ng **cho ???ng explicit span h?p l? n?y**. Kh?ng ch?y th?m l??t live ki?m persistence; ch? d?a tr?n static/mock hi?n c? cho gi?i h?n ??.
+
+### Live workload 2 ?? s?a ? PASS
+
+Ch? ch?y sau khi W1 ??t ?? ti?u ch?. B?ng ch?ng: `m2_evidence/workload_2_corrected_ab.json`. ??ng m?t l?n ch?y top-level, **4 Responses API calls**, 4 response completed, kh?ng retry:
+
+1. Root ch?n Technical + Concept + AIS cho ba ph?m vi ??c l?p, kh?ng ch?n Authoring.
+2. AIS pipeline/router ???c ??c v? ki?m SHA-256; native `web_search` th?c thi v?i **3 web_search_call completed**: search, open_page, find_in_page.
+3. Concept ch? ch?n Brainstorm / CAPABILITY t? span t??ng minh; body ?? ???c ??c v? ki?m SHA-256.
+4. Hub final t?ch b?ng ch?ng t?i li?u c? URL, ch?n ?o?n Technical, **b?n ?ng vi?n Concept song song**, v? kho?ng tr?ng ch?a bi?t. Kh?ng x?p h?ng/ch?n/ch?p nh?n ?ng vi?n; kh?ng n?ng tr?ng th?i d? ?n.
+
+To?n b? source_urls v? citation_urls thu?c `v2.tauri.app`, kh?ng c? ngo?i l? ngu?n. Ch? request AIS ???c c?p tools web_search. Kh?ng ImageT, kh?ng th?c thi m?/target, kh?ng b?t ??u tri?n khai UI ho?c runtime Tauri/Python.
+
+Gi?i h?n ngu?n: trace ch?ng minh ?? m?/t?m trong trang `https://v2.tauri.app/develop/sidecar/`; `https://v2.tauri.app/reference/javascript/shell/` c? trong k?t qu? search v? citations nh?ng kh?ng c? open_page ri?ng ???c ghi. Kh?ng n?ng URL ???c t?m/tr?ch th?nh b?ng ch?ng ?? ??c to?n trang, v? kh?ng tuy?n b? ?? ki?m ch?ng ??c l?p m?i claim t?i li?u. Final v?n n?u c?c gi?i h?n v? k? m?, antivirus, c?p nh?t, d?n ti?n tr?nh v? k?ch th??c/kh?i ??ng Python ch?a ki?m ch?ng. M2 nghi?m thu ph?i h?p v? bi?n quy?n, kh?ng ch?ng nh?n m?t ki?n tr?c Tauri ?? ???c tri?n khai.
+
+### Ph?m vi, s? calls v? tr?ng th?i Git
+
+T?c v? n?y ph?t sinh **11 Responses API calls**, hai top-level workload h?p l?, **0 retry**, kh?ng exploratory prompt; t?ch ho?n to?n kh?i 7 l?n v?o Responses.create trong l?ch s? tr??c ?? (trong ?? c? m?t call ch?a r? ho?n t?t). Kh?ng c? l?i transport/service trong hai l??t m?i. Kh?ng c?n l?i material ???c x?c nh?n theo ti?u ch? nghi?m thu M2; gi?i h?n quan s?t n?u tr?n v?n gi? nguy?n.
+
+C?c file hi?n h?u ???c t?c v? n?y s?a: `t8.py`, `test_t8.py`, `test_m1.py`, `m2_acceptance.py`, `VERIFICATION.md`. File m?i: `m2_evidence/corrected_task_baseline.json`, `m2_evidence/corrected_ab_static_results.json`, `m2_evidence/corrected_ab_acceptance_review.json`, `m2_evidence/workload_1_corrected_ab.json`, `m2_evidence/workload_2_corrected_ab.json`. Baseline hash cho ph?p ph?n bi?t thay ??i t?c v? n?y v?i dirty work T9/M1/M2 c? s?n.
+
+HEAD/origin/main v?n `3f827471ae127dcefb8067e65b4a3c3b0b519b44`, branch main. Gi? nguy?n `m1.py`, m?i dirty work ngo?i c?c s?a ???c li?t k? v? to?n b? b?ng ch?ng l?ch s?. `upstream/**` kh?ng ??i, package bodies kh?ng ??i, ImageT kh?ng b? ch?nh s?a. Index r?ng; kh?ng stage, commit, push, branch, tag ho?c s?a remotes. Kh?ng b?t ??u M3/M4.

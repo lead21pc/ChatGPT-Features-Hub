@@ -1,0 +1,80 @@
+{
+  "binding_version": "0.3",
+  "status": "ACTIVE",
+  "host_purpose": "T9 bounded AIS local execution successor only",
+  "retrieval_authority": "LOCAL_RUNTIME_FILE",
+  "packages": {
+    "HUB-PKG-TECHNICAL": {
+      "entrypoint": {
+        "module_id": "HUB-DOM-TECHNICAL",
+        "runtime_role": "REASONING_PROFILE",
+        "version": "1.0",
+        "path": "runtime/packages/technical/HUB-DOM-TECHNICAL_v1.0.md",
+        "sha256": "fb42257b74597d5b680e5334cf1a132f04f17eb708a507444da0f3fe4a9f73d4"
+      }
+    },
+    "HUB-PKG-CONCEPT-DEVELOPMENT": {
+      "entrypoint": {
+        "module_id": "HUB-DOM-CONCEPT-DEVELOPMENT",
+        "runtime_role": "DOMAIN_CONTROL",
+        "version": "1.1",
+        "path": "runtime/packages/concept-development/HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md",
+        "sha256": "b93c4b3045c5ce980fdc3157d01728f3bd650e0cc4e908c8f89fda3f8346a4b0"
+      },
+      "local_catalog": {
+        "module_id": "HUB-CATALOG-CONCEPT-DEVELOPMENT",
+        "runtime_role": "PACKAGE_CATALOG",
+        "version": "1.1",
+        "path": "runtime/packages/concept-development/HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.1.yaml",
+        "sha256": "eaf480160e055ac7afc12ee4f8d511d09b6828abd14063d85ca571f5e6f03c07"
+      },
+      "leaves": [
+        {
+          "module_id": "HUB-DOM-CREATIVE",
+          "runtime_role": "DOMAIN_CONTROL",
+          "version": "1.1",
+          "path": "runtime/packages/concept-development/HUB-DOM-CREATIVE_v1.1.md",
+          "sha256": "0430934d81b57743854543c52d9b78100d6209d8415a59c890e89f19296b4052"
+        },
+        {
+          "module_id": "HUB-CAP-BRAINSTORM",
+          "runtime_role": "CAPABILITY",
+          "version": "1.1",
+          "path": "runtime/packages/concept-development/HUB-CAP-BRAINSTORM_v1.1.md",
+          "sha256": "3758bf748ab11886656f0ea2a73472323301d14e7bf93bca5767079fea824843"
+        },
+        {
+          "module_id": "HUB-CAP-DEBATE",
+          "runtime_role": "CAPABILITY",
+          "version": "1.0",
+          "path": "runtime/packages/concept-development/HUB-CAP-DEBATE_v1.0.md",
+          "sha256": "430d1c01892c510e3d0c605654626b69202065a113e1fe4bf4c60da332ab0ddc"
+        }
+      ]
+    },
+    "HUB-PKG-AUTHORING": {
+      "entrypoint": {
+        "module_id": "HUB-CAP-AUTHORING",
+        "runtime_role": "CAPABILITY",
+        "version": "0.6",
+        "path": "runtime/packages/authoring/HUB-CAP-AUTHORING_v0.6.md",
+        "sha256": "3a3c067a4eabccc4355d9c8a33dd96bef063ec8654d758aa6a3827862ffd6328"
+      }
+    },
+    "HUB-PKG-AIS": {
+      "package_id": "HUB-PKG-AIS",
+      "entrypoint_module_id": "HUB-PIPE-AIS",
+      "runtime_role": "TOOL_PIPELINE",
+      "version": "1.1",
+      "pipeline": {
+        "path": "runtime/packages/ais/AIS_PIPELINE_v1.1.md",
+        "sha256": "68763c5bc3a19dbfae17535daebcc5e95e6279368153583470285334d6e2ffd6"
+      },
+      "router": {
+        "path": "runtime/packages/ais/AIS_ROUTER_v1.2.yaml",
+        "sha256": "c977b5adb74436e066192d240304e5e898b320d086cf3352ce5a59c542d03dbf",
+        "version": "1.2"
+      }
+    }
+  }
+}

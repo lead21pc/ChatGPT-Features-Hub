@@ -99,7 +99,8 @@ ROUTE_SCHEMA = {
     "required": ["task_scope", "selected_packages", "unresolved_blockers"],
     "additionalProperties": False,
 }
-MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect", "T4 - Hub CI + Concept Core", "T5 - Concept Scoped Leaves", "T6 - Concept + Technical Composition", "T7 - Router Local Retrieval", "T8 - Authoring Lifecycle")
+MODES = ("T0 - Raw API", "T1 - Hub CI", "T2 - Hub CI + Technical", "T3 - Hub Routing Inspect", "T4 - Hub CI + Concept Core", "T5 - Concept Scoped Leaves", "T6 - Concept + Technical Composition", "T7 - Router Local Retrieval", "T8 - Authoring Lifecycle", "T9 - AIS Local Execution")
+RUNTIME_MODE = "Central Hub - Local Runtime"
 
 
 def read_config():
@@ -119,7 +120,13 @@ def read_config():
     return {field: config[field].strip() for field in ("openai_api_key", "model")}
 
 
-def call_model(config, messages, mode=MODES[0]):
+def call_model(config, messages, mode=RUNTIME_MODE):
+    if mode == RUNTIME_MODE:
+        from m1 import call_runtime
+        return call_runtime(config, messages)[0]
+    if mode == MODES[9]:
+        from t9 import call_t9
+        return call_t9(config, messages)[0]
     if mode == MODES[8]:
         from t8 import call_t8
         return call_t8(config, messages)[0]
@@ -556,7 +563,7 @@ def main():
         st.error(str(exc))
         st.stop()
     st.caption(f"Model: {config['model']}")
-    mode = st.radio("Chế độ", MODES)
+    mode = st.radio("Chế độ", (RUNTIME_MODE, *MODES))
     st.caption(f"Chế độ đang dùng: {mode}")
     if "messages" not in st.session_state:
         st.session_state.messages = []

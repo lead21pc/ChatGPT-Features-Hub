@@ -271,6 +271,39 @@ class T8Tests(unittest.TestCase):
         self.assertIn('missing decisive source', trace['unresolved_blockers'])
         self.assertNotIn(self.original_read(self.author_path).decode('utf-8'), self.final())
 
+    def test_admission_pending_contributor_is_next_stage_not_blocker(self):
+        self.contributor('BRAINSTORM')
+        _, trace = self.run_t8()
+        admission = self.payloads[1]['instructions']
+        self.assertIn('Contributor resolution is intentionally pending until after admission.', admission)
+        self.assertIn('Pending contributor resolution is normal next-stage state, not an unresolved blocker.', admission)
+        self.assertIn('Report genuine admission blockers unchanged.', admission)
+        self.assertEqual(trace['unresolved_blockers'], [])
+        self.assertEqual(trace['contributor_retrieved_module_ids'], ['HUB-CAP-BRAINSTORM'])
+
+    def test_contributor_exact_catalog_role_contract(self):
+        for name in ('CREATIVE', 'BRAINSTORM'):
+            with self.subTest(name=name):
+                self.contributor(name)
+                self.payloads.clear()
+                self.run_t8()
+                owner = self.payloads[2]
+                self.assertEqual(owner['text']['format']['schema']['properties']['runtime_role'],
+                                 dict(type='string', enum=['DOMAIN_CONTROL', 'CAPABILITY']))
+                self.assertIn('runtime_role must be the exact Catalog identifier; never translate it.',
+                              owner['instructions'])
+
+    def test_translated_contributor_role_rejected_without_retry(self):
+        self.contributor('BRAINSTORM')
+        for role in ('NĂNG LỰC', 'NANG LUC', 'capability', 'UNKNOWN'):
+            with self.subTest(role=role):
+                self.owner['runtime_role'] = role
+                self.payloads.clear(); self.reads.clear()
+                with self.assertRaisesRegex(ValueError, 'structured'):
+                    self.run_t8()
+                self.assertEqual(len(self.payloads), 3)
+                self.assertNotIn(app.BRAINSTORM_PATH, self.reads)
+
     def test_controls_and_manifest_failure_before_client(self):
         for path in self.controls:
             for failure in (FileNotFoundError(), PermissionError(), OSError(), b'\xff', b'', b'\x00'):

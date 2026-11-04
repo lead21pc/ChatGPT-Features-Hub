@@ -1,0 +1,47 @@
+{
+  "status": "SCOPED_LIVE_PASS",
+  "workload_1": {
+    "result": "PASS",
+    "responses_api_calls": 7,
+    "acceptance": [
+      "Root ch?n Authoring v? Concept v?i ph?m vi ph? h?p.",
+      "Admission active=true, target=GENERIC, contributor=BRAINSTORM, unresolved_blockers r?ng.",
+      "Owner ch?n ch?nh x?c HUB-CAP-BRAINSTORM / CAPABILITY, kh?ng d?ch identity.",
+      "Body Brainstorm 1.1 ?? ???c ??c v? ki?m SHA-256; call 4 t?o contribution.",
+      "Contribution gi? GENERATED_CONTRIBUTION_NOT_ACCEPTED_STATE trong handoff cu?i.",
+      "??u ra cu?i l? prompt Authoring t? ch?a ?? m? h?nh kh?c t?o s?u ph??ng ?n.",
+      "Kh?ng th?c thi target: kh?ng request n?o c?p tools; n?i dung cu?i l? prompt.",
+      "Kh?ng ch?n AIS, kh?ng web_search.",
+      "Kh?ng ch?n ho?c truy xu?t ImageT.",
+      "Kh?ng x?p h?ng, ch?n hay ch?p nh?n ph??ng ?n; gi?i h?n ???c gi? trong contribution v? final.",
+      "Kh?ng ki?m th? live l??t m?i; ch? d?a tr?n static/mock hi?n c? cho t?nh kh?ng l?u activation."
+    ]
+  },
+  "workload_2": {
+    "result": "PASS",
+    "responses_api_calls": 4,
+    "acceptance": [
+      "Root ch?n ??c l?p Technical, Concept, AIS; kh?ng ch?n Authoring.",
+      "Concept ch? ch?n HUB-CAP-BRAINSTORM / CAPABILITY t? span; body ???c ki?m SHA-256; final c? b?n ?ng vi?n song song.",
+      "Technical cung c?p ph?n t?ch giao th?c, tr?ng th?i, v?ng ??i ti?n tr?nh, ??ng g?i, phi?n b?n v? b?o m?t; kh?ng n?ng tr?ng th?i d? ?n.",
+      "AIS ch?y native web_search; quan s?t ba web_search_call completed: search, open_page, find_in_page.",
+      "T?t c? source_urls v? citation_urls thu?c v2.tauri.app; kh?ng c? ngo?i l? ngu?n.",
+      "Final t?ch b?ng ch?ng b?n ngo?i c? URL, ch?n ?o?n Technical, ?ng vi?n Concept v? kho?ng tr?ng ch?a ki?m ch?ng.",
+      "B?ng ch?ng AIS kh?ng ch?p nh?n ho?c ch?n ?ng vi?n.",
+      "Kh?ng ch?n ho?c truy xu?t ImageT.",
+      "Tham gia package kh?ng m? r?ng quy?n: ?ng vi?n v?n ch?a ch?p nh?n, Hub gi? t?ng h?p.",
+      "Ch? request AIS c? tools web_search; kh?ng ch?y m?, build UI, target ho?c ti?n tr?nh Python/Tauri."
+    ]
+  },
+  "total_responses_api_calls": 11,
+  "retries": 0,
+  "t8_contributor_live_gap": "CLOSED_FOR_EXPLICIT_VALID_SPAN",
+  "remaining_demonstrated_defects": [],
+  "limits": [
+    "STATIC/MOCK PASS != LIVE PASS; k?t lu?n live ch? ?p d?ng hai workload n?y.",
+    "Kh?ng ki?m th? persistence b?ng l??t live m?i.",
+    "Trace x?c nh?n search v? m?/t?m trong trang sidecar. Kh?ng c? open_page ri?ng cho reference/javascript/shell; URL ?? xu?t hi?n trong search v? citations. Kh?ng kh?ng ??nh m?i URL ???c ??c ??y ?? ho?c ki?m ch?ng ??c l?p m?i claim t?i li?u.",
+    "W1 c? th?m pha Concept ??c l?p v? k?t qu? trung gian d?ng prompt ? call 6; final call 7 v?n l? prompt Authoring, kh?ng c? target/tool execution. Kh?ng coi ?? tu?n th? ri?ng c?a pha trung gian l? ?? ???c ch?ng minh ngo?i ti?u ch? M2."
+  ],
+  "historical_workload_1": "Prompt c? thi?u span /BRAINSTORM <content> # n?n kh?ng h?p l? ?? ch?ng minh Brainstorm activation; blocker thi?u span kh?ng ph?i l?i tri?n khai. Gi? nguy?n c?c th?t b?i l?ch s?; hai l?i admission sequencing v? role identity ???c ??nh gi? ri?ng."
+}

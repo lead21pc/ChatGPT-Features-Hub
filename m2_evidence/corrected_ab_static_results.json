@@ -1,0 +1,25 @@
+{
+  "pre_fix_regressions": {
+    "tests": 3,
+    "result": "FAIL as expected",
+    "subtest_failures": 7
+  },
+  "focused": {
+    "tests": 44,
+    "result": "PASS"
+  },
+  "full": {
+    "tests": 106,
+    "result": "PASS"
+  },
+  "network": "socket.socket.connect blocked globally in both suites",
+  "python_compile": {
+    "files": 54,
+    "result": "PASS"
+  },
+  "diff_check": "PASS",
+  "upstream_hash_check": "UNCHANGED",
+  "historical_evidence_hash_check": "UNCHANGED",
+  "index": "EMPTY",
+  "live": "separate evidence; static/mock does not establish live pass"
+}

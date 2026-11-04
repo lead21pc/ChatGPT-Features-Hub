@@ -48,7 +48,7 @@ class Stage2Tests(unittest.TestCase):
 
     def test_t0_never_reads_ci(self):
         with patch.object(app, "HUB_CI_PATH") as path, patch.object(app, "TECHNICAL_PATH") as technical, patch.object(app, "OpenAI", self.client):
-            app.call_model(self.config, [{"role": "user", "content": "T0"}])
+            app.call_model(self.config, [{"role": "user", "content": "T0"}], app.MODES[0])
             path.read_bytes.assert_not_called()
             technical.read_bytes.assert_not_called()
             self.assertNotIn("instructions", self.payloads[-1])
@@ -115,7 +115,7 @@ class Stage2Tests(unittest.TestCase):
         with self.ui_context(), patch("openai.OpenAI", self.client):
             ui = AppTest.from_file("app.py").run()
             self.assertFalse(ui.exception)
-            self.assertEqual(list(ui.radio[0].options), list(app.MODES))
+            self.assertEqual(list(ui.radio[0].options), [app.RUNTIME_MODE, *app.MODES])
             modes = [app.MODES[0], app.MODES[1], app.MODES[2], app.MODES[1], app.MODES[0], app.MODES[2]]
             for index, mode in enumerate(modes):
                 prompt = f"Lượt {index + 1}"
@@ -149,6 +149,7 @@ class Stage2Tests(unittest.TestCase):
                 return original(path)
             with self.subTest(mode=mode, error=type(error).__name__), self.ui_context(), patch("openai.OpenAI", self.client):
                 ui = AppTest.from_file("app.py").run()
+                ui.radio[0].set_value(app.MODES[0]).run()
                 ui.text_area[0].set_value("T0")
                 ui.button[0].click().run()
                 history = list(ui.session_state.messages)
