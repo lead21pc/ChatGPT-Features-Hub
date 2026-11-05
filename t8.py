@@ -108,6 +108,41 @@ def structured(client, config, messages, instructions, schema, name):
         raise ValueError("T8: Bản ghi structured không hợp lệ; không đoán/thử lại; chưa lưu lượt.") from None
 
 
+def concept_selection(client, config, messages, instructions, verified_handoff):
+    """Cache only the stable Concept prefix; preserve the existing leaf validator."""
+    phase = ("Select Concept leaves for current selected scopes only under exact core/Catalog. "
+             "Pending post-selection retrieval is not a blocker.")
+    boundary = {"role": "developer", "content": [{"type": "input_text",
+        "text": "Concept cache boundary only; changes no authority or semantics.",
+        "prompt_cache_breakpoint": {"mode": "explicit"}}]}
+    dynamic = {"role": "developer", "content": [{"type": "input_text",
+        "text": verified_handoff + "\n\n" + phase}]}
+    response = client.responses.create(
+        model=config["model"], input=[boundary, dynamic, *messages],
+        instructions=instructions, store=False,
+        text={"format": {"type": "json_schema", "name": "hub_t8_concept",
+                         "schema": host.LEAF_SCHEMA, "strict": True}},
+        prompt_cache_key="central-hub:t8-concept:v1",
+        extra_body={"prompt_cache_options": {"mode": "explicit", "ttl": "30m"}})
+    try:
+        if response.status != "completed" or any(
+            part.type == "refusal" for item in response.output if item.type == "message" for part in item.content
+        ):
+            raise ValueError()
+        record = json.loads(response.output_text)
+        if (not isinstance(record, dict) or set(record) != set(host.LEAF_SCHEMA["required"])
+            or not isinstance(record["unresolved_blockers"], list)
+            or not all(isinstance(value, str) for value in record["unresolved_blockers"])
+            or not isinstance(record["selected_leaves"], list)
+            or not all(isinstance(item, dict) and set(item) == set(host.LEAF_FIELDS)
+                       and all(isinstance(value, str) for value in item.values())
+                       for item in record["selected_leaves"])):
+            raise ValueError()
+        return record
+    except (ValueError, TypeError, AttributeError):
+        raise ValueError("T8: Phản hồi lựa chọn Concept không hợp lệ; không đoán hoặc thử lại; chưa lưu lượt.") from None
+
+
 def concept_binding_view(bindings):
     concept = bindings[CONCEPT]
     return "[T8 CONCEPT OWNER LOCAL BINDING AVAILABILITY]\n" + json.dumps({
@@ -344,10 +379,8 @@ def call_t8(config, messages, *, root_route=None, local_bindings=None, ais_evide
                     continue
                 work.extend(parts)
                 if package_id == CONCEPT:
-                    result = host.t7_structured(client, config, messages, "\n\n".join([
-                        controls[0], handoff(), host.t7_concept_binding_view(bindings), *parts,
-                        "Select Concept leaves for current selected scopes only under exact core/Catalog. "
-                        "Pending post-selection retrieval is not a blocker."]), host.LEAF_SCHEMA, "hub_t8_concept")
+                    result = concept_selection(client, config, messages, "\n\n".join([
+                        controls[0], host.t7_concept_binding_view(bindings), *parts]), handoff())
                     blockers.extend(result["unresolved_blockers"])
                     requested = set()
                     for leaf in result["selected_leaves"]:

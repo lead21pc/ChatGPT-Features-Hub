@@ -1,0 +1,156 @@
+{
+  "status": "PASS",
+  "w1": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12816,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 12813,
+        "output": 510,
+        "token_cost_usd": 0.074277,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "hub_t8_admission",
+        "input": 8772,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8769,
+        "output": 240,
+        "token_cost_usd": 0.048657,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_contributor",
+        "input": 7982,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 7979,
+        "output": 433,
+        "token_cost_usd": 0.048567,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "text",
+        "input": 8506,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 8503,
+        "output": 1516,
+        "token_cost_usd": 0.072847,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 5,
+        "phase": "hub_t8_concept",
+        "input": 9374,
+        "ordinary": 3213,
+        "cached": 0,
+        "cache_write": 6161,
+        "output": 303,
+        "token_cost_usd": 0.049717,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 6,
+        "phase": "text",
+        "input": 9895,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 9892,
+        "output": 1258,
+        "token_cost_usd": 0.074632,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 7,
+        "phase": "text",
+        "input": 11627,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 11624,
+        "output": 1161,
+        "token_cost_usd": 0.081352,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "token_cost_usd": 0.4500489999999999,
+    "web_search_cost_usd": 0.0
+  },
+  "w2": {
+    "calls": [
+      {
+        "number": 1,
+        "phase": "hub_m1_root",
+        "input": 12843,
+        "ordinary": 3,
+        "cached": 12679,
+        "cache_write": 161,
+        "output": 732,
+        "token_cost_usd": 0.020528599999999998,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 2,
+        "phase": "ais",
+        "input": 43035,
+        "ordinary": 31400,
+        "cached": 0,
+        "cache_write": 11635,
+        "output": 2125,
+        "token_cost_usd": 0.226275,
+        "web_search_calls": 4,
+        "web_search_cost_usd": 0.04
+      },
+      {
+        "number": 3,
+        "phase": "hub_t8_concept",
+        "input": 10129,
+        "ordinary": 3968,
+        "cached": 6161,
+        "cache_write": 0,
+        "output": 285,
+        "token_cost_usd": 0.024036400000000003,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      },
+      {
+        "number": 4,
+        "phase": "text",
+        "input": 11000,
+        "ordinary": 3,
+        "cached": 0,
+        "cache_write": 10997,
+        "output": 4930,
+        "token_cost_usd": 0.153597,
+        "web_search_calls": 0,
+        "web_search_cost_usd": 0.0
+      }
+    ],
+    "token_cost_usd": 0.42443700000000006,
+    "web_search_cost_usd": 0.04
+  },
+  "pair_token_cost_usd": 0.874486,
+  "pair_web_search_cost_usd": 0.04,
+  "pair_combined_estimated_usd": 0.914486,
+  "w2_concept_cached_tokens": 6161,
+  "concept_input_cost_baseline_usd": 0.100224,
+  "concept_input_cost_retry_usd": 0.061993400000000004,
+  "concept_input_savings_usd": 0.03823059999999999,
+  "concept_input_savings_percent": 38.14515485312898,
+  "criterion": "W2 Concept cached_tokens > 0 and lower Concept combined input billing; semantic acceptance checked separately"
+}

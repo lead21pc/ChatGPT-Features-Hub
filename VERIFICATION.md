@@ -1,18 +1,22 @@
 # Kết quả kiểm chứng Giai đoạn 1
 
-## Quyết định cuối workstream — 2026-11-05
+## M3 explicit-cache completion — 2026-11-05
 
-- **CENTRAL HUB LOCAL/API: BACKUP — VERIFIED + LIVE VERIFIED.** Static verification, live API verification M1/M2 và các workload đã chạy đủ xác lập backup path trong phạm vi đã kiểm chứng. Quyết định này không nâng mọi diagnostic path hoặc experiment thành live PASS.
-- **M3: CLOSED. M3 TOKEN/CACHE OPTIMIZATION: CLOSED / NO FURTHER WORK PLANNED.** Không còn yêu cầu API cost thấp hơn subscription; backup hoạt động và đã kiểm chứng là mục tiêu hoàn tất. Không retry mặc định, không tạo experiment mới; chỉ mở lại M3 khi người dùng yêu cầu rõ ràng.
-- Experiment 1: đã live-run, **FAILED TARGET** vì không có Concept W2 cache reuse như mục tiêu. Giữ nguyên usage, chi phí ước tính và báo cáo [REPORT.md](m3_evidence/REPORT.md).
-- Experiment 2 explicit cache: **STATIC VERIFIED / LIVE NOT ESTABLISHED / CLOSED WITHOUT PROMOTION**. Đúng một live attempt bị chặn ở root W1 bởi `429 project_spend_limit_exceeded`, chưa tới Concept call; không có usage để kết luận cache hit/write hay savings. Xem [EXPERIMENT_2_REVIEW.md](m3_evidence/EXPERIMENT_2_REVIEW.md). Không tuyên bố explicit caching đã live-pass.
-- Runtime giữ nguyên baseline đã restore `8f5487ca8b124edb339192a9704b5d74157bcf00`, branch `main`; không áp lại `explicit_candidate_runtime.patch`. **M4: NOT STARTED.**
+- **CENTRAL HUB LOCAL/API: BACKUP — VERIFIED + LIVE VERIFIED.**
+- Người dùng mở lại M3 sau khi tăng project spend limit; không mở M4.
+- Experiment 1 giữ nguyên **FAILED TARGET**.
+- Experiment 2 explicit Concept cache: **STATIC VERIFIED + LIVE VERIFIED / TARGET ACHIEVED**. Retry W1 hoàn tất 7/7 Responses calls; W2 hoàn tất 4/4; không retry.
+- W1 Concept ghi 6.161 cache-write tokens cho stable prefix; W2 Concept đọc lại 6.161 cached tokens.
+- Concept combined input billing giảm từ **$0.100224** baseline xuống **$0.0619934**, tiết kiệm **$0.0382306 / 38.145%** tại đúng bucket được tối ưu.
+- Retry pair token cost là **$0.874486**; 4 web-search actions thêm **$0.04**, tổng ước tính **$0.914486**. Không dùng whole-pair delta làm causal savings vì W1 cache warmth, output và AIS/search thay đổi giữa các lần chạy.
+- Scoped M2 semantics giữ nguyên trong live retry: W1 Authoring GENERIC + BRAINSTORM, W2 Technical + Concept + AIS; Concept chỉ chọn Brainstorm, blocker rỗng, không target execution.
+- Candidate explicit 30m Concept breakpoint/key được promote local. Không thêm prewarm, retry, call merge, model/reasoning/verbosity change hoặc experiment thứ ba.
+- Candidate lịch sử có chuỗi lỗi T7 sai ở nhánh Concept validation; promotion sửa wording này thành lỗi T8/Concept phù hợp mà không đổi validation/failure behavior.
+- **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE. M4: NOT STARTED.**
 
-Trạng thái/handoff cuối: [M3_FINAL_STATUS.md](m3_evidence/M3_FINAL_STATUS.md). Các hồ sơ M1/M2 và M3 bên dưới/được liên kết giữ phạm vi bằng chứng lịch sử; quyết định đóng mục tiêu tối ưu không thay đổi kết quả các experiment. Lượt wrap-up này chỉ cập nhật tài liệu/trạng thái và kiểm chứng local/static, không gọi API live.
+Bằng chứng: [M3_FINAL_STATUS.md](m3_evidence/M3_FINAL_STATUS.md), [EXPERIMENT_2_RETRY_REVIEW.md](m3_evidence/EXPERIMENT_2_RETRY_REVIEW.md), [explicit_retry_metrics.json](m3_evidence/explicit_retry_metrics.json), [explicit_retry_workload_1.json](m3_evidence/explicit_retry_workload_1.json), [explicit_retry_workload_2.json](m3_evidence/explicit_retry_workload_2.json).
 
-Kiểm chứng wrap-up: full local suite **117/117 PASS**, focused upstream Authoring **33/33 PASS**, chặn toàn cục `socket.socket.connect`; `compileall` **65 file PASS**, bytecode đặt trong thư mục tạm. `git diff --check` PASS. So sánh SHA-256 trước/sau xác nhận mọi tracked file ngoài README/VERIFICATION giữ nguyên byte; cả 30 evidence files ngoài status/handoff giữ nguyên, không thêm/xóa evidence. Không chuẩn hóa lại line endings. Quét exact configured API key và mẫu credential trong tài liệu cập nhật cùng toàn bộ M3 evidence không phát hiện secret; chuỗi trùng mẫu bên trong `encrypted_content` của response lịch sử được phân biệt với credential.
-
-Chỉ sửa `README.md`, `VERIFICATION.md` và `m3_evidence/M3_FINAL_STATUS.md`. Index giữ nguyên và không có staged diff; `m3_evidence/` vẫn untracked như baseline. Không stage/commit/push trong wrap-up.
+Các file review trước retry vẫn là bằng chứng lịch sử của checkpoint quota-blocked; các claim `M3 NOT COMPLETE` / `LIVE NOT ESTABLISHED` trong chúng không phải trạng thái hiện hành sau retry.
 
 ## M2 — Authoring 0.7 source isolation, 2026-11-05
 

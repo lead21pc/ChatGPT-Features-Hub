@@ -78,7 +78,11 @@ class M1Tests(unittest.TestCase):
             result = m1.call_runtime(self.config, self.messages)
         self.assertEqual(self.messages, before)
         for payload in self.payloads:
-            self.assertEqual(payload["input"], self.messages)
+            if payload.get("text", {}).get("format", {}).get("name") == "hub_t8_concept":
+                self.assertEqual(payload["input"][2:], self.messages)
+                self.assertEqual([m["role"] for m in payload["input"][:2]], ["developer", "developer"])
+            else:
+                self.assertEqual(payload["input"], self.messages)
             self.assertFalse(payload["store"])
         return result
 
