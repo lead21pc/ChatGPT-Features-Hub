@@ -1,5 +1,18 @@
 # Kết quả kiểm chứng Giai đoạn 1
 
+## Closeout GPT-6.1 Sol — 2026-11-05
+
+**GPT-6.1 Sol = LIVE VERIFIED CANDIDATE FOR TESTED CENTRAL HUB W1/W2 SCOPE**; không phải replacement đã kiểm chứng toàn cục cho mọi đường Central Hub.
+
+- Review lại evidence local đã có: W1 **7/7 completed, semantic PASS** trong phạm vi Authoring + Concept; W2 **4/4 completed, semantic PASS** trong phạm vi Technical + Concept + AIS. Không chạy lại live trong closeout.
+- Explicit Concept cache: W1 write **6161**, W2 cached **6161**; blocker rỗng, không target execution trong phạm vi thử.
+- Config local được ignore và toàn bộ response xác nhận `gpt-6.1-sol`: đây là model hiện cấu hình/ưu tiên cho thử nghiệm và runtime local, không phải quyết định kiến trúc MCP/kênh tương lai.
+- Theo snapshot giá lưu cùng phép thử: tổng pair **$0.5063505 ≈ $0.506351**, gồm web search; so với GPT-5.6 Sol M3 retry **$0.914486**, thấp hơn **44,63% trên đúng hai workload**. Không suy rộng tiết kiệm hoặc quy toàn bộ chênh lệch cho model/cache.
+- AIS **evidence-source compliance PASS**, **search-discovery boundary PARTIAL**: discovery có nguồn ngoài Tauri; evidence/citations sử dụng nguồn Tauri chính thức. Không kết luận AIS thất bại toàn cục.
+- Tương thích model trong phạm vi đã thử không chứng minh khả năng chuyển model cho toàn hệ thống. Giữ nguyên mọi provenance GPT-5.6 Sol lịch sử, gồm hồ sơ M3 bên dưới. **M4 NOT STARTED**; không triển khai MCP.
+
+Review, hash raw evidence, phép tính và kiểm chứng closeout: [GPT61_W1_W2_REVIEW.md](m3_evidence/GPT61_W1_W2_REVIEW.md). Raw sessions/config giữ local và được ignore, không commit key.
+
 ## M3 explicit-cache completion — 2026-11-05
 
 - **CENTRAL HUB LOCAL/API: BACKUP — VERIFIED + LIVE VERIFIED.**

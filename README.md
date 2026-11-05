@@ -2,6 +2,8 @@
 
 Central Hub local/API được giữ làm **BACKUP**, functional status **VERIFIED + LIVE VERIFIED**. Ngày 2026-11-05, người dùng mở lại M3 sau khi tăng project spend limit để hoàn tất đúng thí nghiệm explicit cache đã bị quota chặn trước đó. **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE**; **M4 NOT STARTED**.
 
+**Model hiện cấu hình/ưu tiên cho thử nghiệm và runtime local: `gpt-6.1-sol`**, xác nhận từ `config.json` local được ignore và model trong cả 11 response W1/W2. **GPT-6.1 Sol = LIVE VERIFIED CANDIDATE FOR TESTED CENTRAL HUB W1/W2 SCOPE**, không phải replacement đã kiểm chứng toàn cục cho mọi đường Central Hub. W1 **7/7 semantic PASS** trong phạm vi Authoring + Concept; W2 **4/4 semantic PASS** trong phạm vi Technical + Concept + AIS. Explicit Concept cache: W1 write **6161**, W2 cached **6161**. AIS **evidence-source compliance PASS**, **search-discovery boundary PARTIAL** vì discovery có nguồn ngoài Tauri, còn evidence/citations dùng nguồn Tauri chính thức. Tổng pair ước tính khoảng **$0.506351**, thấp hơn khoảng **44,63%** so với GPT-5.6 Sol M3 retry **$0.914486** trên đúng hai workload, theo bảng giá lưu trong phép thử; không phải mức tiết kiệm phổ quát. Xem [review GPT-6.1 Sol](m3_evidence/GPT61_W1_W2_REVIEW.md). Hồ sơ GPT-5.6 Sol bên dưới giữ nguyên giá trị lịch sử. Tương thích model đã thử không chứng minh khả năng chuyển model cho toàn hệ thống; ưu tiên model hiện tại không quyết định kiến trúc MCP/kênh tương lai. **M4 NOT STARTED**; không triển khai MCP.
+
 Experiment 1 giữ nguyên **FAILED TARGET**. Experiment 2 explicit Concept cache đã **STATIC VERIFIED + LIVE VERIFIED / TARGET ACHIEVED**: W1 7/7 và W2 4/4 Responses calls hoàn tất, W2 Concept đọc lại 6.161 cached tokens từ prefix đã ghi ở W1. Concept combined input billing giảm từ baseline $0.100224 xuống $0.0619934, khoảng 38.145% tại đúng bucket được tối ưu. Tổng retry pair ước tính $0.914486 nhưng không dùng whole-pair delta làm causal savings vì cache warmth/output/AIS/search biến thiên. Candidate được promote local; không thêm prewarm/retry/call merge hoặc experiment thứ ba. Xem [trạng thái M3 cuối](m3_evidence/M3_FINAL_STATUS.md), [review retry](m3_evidence/EXPERIMENT_2_RETRY_REVIEW.md) và [VERIFICATION.md](VERIFICATION.md).
 
 Checkpoint M2 ngày 2026-11-05: Authoring **0.7 ACTIVE trong runtime local**, Architecture/Catalog 1.9; CI/Router 1.1. Binding v0.2/v0.3 dùng bản 0.7 byte-exact. Exact `/AUTHOR <OUTPUT_TARGET> ISOLATED` hoặc `/AUTHOR <OUTPUT_TARGET> P<n> ISOLATED` giới hạn nguồn task material cho lượt hiện tại; không có suffix thì giữ hành vi 0.6. Không xóa lịch sử, không lưu chế độ và không cấp quyền chạy target. Contributor + ISOLATED không kích hoạt. Các mô tả phiên bản trong hồ sơ T0–T9 bên dưới giữ bối cảnh kiểm chứng lịch sử; xem [VERIFICATION.md](VERIFICATION.md) và [bằng chứng 0.7](m2_evidence/authoring_0_7/) cho kết quả hiện tại. Tại checkpoint M2 này M3/M4 chưa bắt đầu; trạng thái M3 hiện hành sau retry nằm ở đầu tài liệu.
@@ -19,7 +21,7 @@ Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa READM
    ```json
    {
      "openai_api_key": "",
-     "model": "gpt-5.6-sol"
+     "model": "gpt-6.1-sol"
    }
    ```
 
