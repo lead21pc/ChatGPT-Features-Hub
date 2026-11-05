@@ -46,12 +46,22 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
 
     def test_exact_surface_annotations_and_capabilities(self):
         tools = asyncio.run(hub.list_tools())
-        self.assertEqual({t.name for t in tools}, {"hub_status", "hub_runtime_inventory"})
-        self.assertEqual(len(tools), 2)
+        self.assertEqual({t.name for t in tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection"})
+        self.assertEqual(len(tools), 5)
         for tool in tools:
             self.assertTrue(tool.annotations.readOnlyHint)
             self.assertFalse(tool.annotations.destructiveHint)
             self.assertFalse(tool.annotations.openWorldHint)
+            if tool.name == "hub_read_root_control":
+                self.assertEqual(tool.inputSchema["properties"]["control_id"]["enum"], list(hub.ROOT_CONTROL_IDS))
+                self.assertEqual(tool.inputSchema["required"], ["control_id", "offset"])
+                self.assertFalse(tool.inputSchema["additionalProperties"])
+                continue
+            if tool.name == "hub_validate_root_selection":
+                self.assertEqual(tool.inputSchema["properties"], {"route_record": hub.t9.ROUTE_SCHEMA})
+                self.assertEqual(tool.inputSchema["required"], ["route_record"])
+                self.assertFalse(tool.inputSchema["additionalProperties"])
+                continue
             self.assertEqual(tool.inputSchema,
                              {"type": "object", "properties": {}, "additionalProperties": False})
         capabilities = hub.server.create_initialization_options().capabilities
@@ -133,7 +143,7 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
                     initialized = await session.initialize()
                     self.assertEqual(initialized.serverInfo.name, "central-hub")
                     tools = await session.list_tools()
-                    self.assertEqual({t.name for t in tools.tools}, {"hub_status", "hub_runtime_inventory"})
+                    self.assertEqual({t.name for t in tools.tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection"})
                     status = await session.call_tool("hub_status", {})
                     self.assertFalse(status.isError)
                     inventory = await session.call_tool("hub_runtime_inventory", {})

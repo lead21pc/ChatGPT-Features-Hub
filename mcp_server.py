@@ -1,5 +1,7 @@
 """Read-only Central Hub inspection over MCP stdio; no package execution."""
 import asyncio
+import copy
+import hashlib
 import json
 import secrets
 
@@ -92,9 +94,151 @@ def hub_runtime_inventory():
     }
 
 
+ROOT_TASK = (
+    "Perform semantic TASK_SCOPE and ROOT_PACKAGE_SELECTION only for the current user request "
+    "and relevant history, after reading every listed control fully with hub_read_root_control "
+    "from offset 0 until has_more=false, checking consistent sha256 and total_length. "
+    "Offsets and lengths count Unicode code points; sha256 hashes the full UTF-8 file bytes. "
+    "Each call reads the current file, not a retained snapshot. The host model makes the selection; "
+    "Python does not interpret applicability. Return the supplied t9 root contract with exact Catalog "
+    "identities, version and declared_source_path (empty string when absent). Empty selection is valid. "
+    "Do not inspect leaf inventories. Do not suppress applicable packages due to local unavailability. "
+    "Pending post-selection retrieval is not an unresolved blocker. Report only genuine unresolved "
+    "conditions. Stop after root selection: selection != retrieval != execution. No fallback or retry."
+)
+LOCAL_ROOT_BOUNDARY = (
+    "LOCAL_RUNTIME_FILE v0.3 supplies the existing Technical, Concept, Authoring and AIS storage "
+    "bindings only; historical Library/Project storage metadata does not block these local bindings. "
+    "All non-storage semantics remain unchanged. ImageT has no local binding; select it if applicable "
+    "and expose unavailability. Availability never activates a package. This milestone executes no "
+    "package, resolves no leaves and grants no tool execution or state promotion."
+)
+ROOT_CONTROL_IDS = ("hub_ci", "hub_router", "hub_architecture", "hub_catalog")
+ROOT_CONTROL_DEFAULT_CHARS = 2000
+ROOT_CONTROL_MAX_CHARS = 4000
+
+
+def _root_control_paths():
+    return (host.HUB_CI_PATH, host.HUB_ROUTER_PATH,
+            host.HUB_ARCHITECTURE_PATH, host.HUB_CATALOG_PATH)
+
+
+def _control_identity(control_id, path, text):
+    return {"control_id": control_id, "path": str(path), "total_length": len(text),
+            "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()}
+
+
+def hub_read_root_control(control_id, offset, max_chars=ROOT_CONTROL_DEFAULT_CHARS):
+    """Return an exact slice from one fresh full-file UTF-8 read; retain no snapshot."""
+    if not isinstance(control_id, str) or control_id not in ROOT_CONTROL_IDS:
+        raise ValueError("Invalid root control_id")
+    if type(offset) is not int or offset < 0:
+        raise ValueError("offset must be an integer >= 0")
+    if type(max_chars) is not int or not 1 <= max_chars <= ROOT_CONTROL_MAX_CHARS:
+        raise ValueError("max_chars must be an integer from 1 to 4000")
+    path = _root_control_paths()[ROOT_CONTROL_IDS.index(control_id)]
+    text = host.t7_read(path)
+    if offset > len(text):
+        raise ValueError("offset exceeds current total_length")
+    chunk = text[offset:offset + max_chars]
+    next_offset = offset + len(chunk)
+    return {**_control_identity(control_id, path, text), "text": chunk,
+            "offset": offset, "next_offset": next_offset, "has_more": next_offset < len(text)}
+
+
+def _root_context():
+    paths = _root_control_paths()
+    texts = [host.t7_read(path) for path in paths]
+    if any(not text.strip() or "\x00" in text for text in texts):
+        raise ValueError("Root control is empty or contains NUL; no fallback/retry")
+    catalog = host.t7_catalog_identities(texts[3], "packages", "package_id")
+    sources = t9.catalog_sources(texts[3])
+    binding_text = host.t7_read(t9.BINDINGS_PATH)
+    ais = t9.load_bindings(binding_text)
+    packages = json.loads(binding_text, object_pairs_hook=t9.unique_object)["packages"]
+    if set(packages) - set(catalog):
+        raise ValueError("Local binding package absent from root Catalog")
+    return paths, texts, catalog, sources, packages, ais
+
+
+def hub_prepare_root_selection():
+    """Supply authoritative root inputs, never semantic decisions or leaf inventories."""
+    paths, texts, catalog, _, packages, _ = _root_context()
+    return {
+        "semantic_task": ROOT_TASK,
+        "local_binding_boundary": LOCAL_ROOT_BOUNDARY,
+        "controls": [_control_identity(cid, path, text)
+                     for cid, path, text in zip(ROOT_CONTROL_IDS, paths, texts)],
+        "result_schema": copy.deepcopy(t9.ROUTE_SCHEMA),
+        "local_binding_context": [
+            {"package_id": pid, "binding_declared": pid in packages} for pid in catalog],
+        "availability_scope": "Binding declarations only; package artifacts have not been read or verified",
+    }
+
+
+def hub_validate_root_selection(route_record):
+    """Check a host decision against current sources; do not judge semantic applicability."""
+    _, texts, catalog, sources, packages, ais = _root_context()
+    route = copy.deepcopy(route_record)
+    if (not isinstance(route, dict) or set(route) != set(t9.ROUTE_SCHEMA["required"])
+        or not isinstance(route["task_scope"], str)
+        or not isinstance(route["selected_packages"], list)
+        or not isinstance(route["unresolved_blockers"], list)
+        or not all(isinstance(v, str) for v in route["unresolved_blockers"])):
+        raise ValueError("Invalid root structured record; no fallback/retry")
+    selected_ids = []
+    # Validate the complete record before any selected-artifact reads.
+    for selection in route["selected_packages"]:
+        if (not isinstance(selection, dict) or set(selection) != set(t9.ROOT_FIELDS["required"])
+            or not all(isinstance(v, str) for v in selection.values())):
+            raise ValueError("Invalid root selected identity")
+        pid = selection["package_id"]
+        identity = catalog.get(pid)
+        if (identity is None or pid in selected_ids
+            or any(selection[k] != identity[k] for k in ("entrypoint_module_id", "runtime_role", "version"))
+            or selection["declared_source_path"] != sources.get(pid, "")):
+            raise ValueError("Root identity/version/source mismatch or duplicate selection")
+        selected_ids.append(pid)
+    availability = []
+    blockers = list(route["unresolved_blockers"])
+    for pid in selected_ids:
+        item = {"package_id": pid, "available": False}
+        try:
+            if pid not in packages:
+                raise ValueError("local-runtime unavailable; no local binding; no fallback/emulation")
+            if pid == t9.AIS:
+                t9.validate_ais_catalog(texts[3], catalog[pid], sources.get(pid))
+                t9.retrieve_pair(ais)
+            else:
+                entry = packages[pid]["entrypoint"]
+                identity = catalog[pid]
+                if identity["status"] != "ACTIVE" or any(
+                    entry[k] != identity[root_key] for k, root_key in (
+                        ("module_id", "entrypoint_module_id"), ("runtime_role", "runtime_role"),
+                        ("version", "version"))
+                ):
+                    raise ValueError("Local binding/Catalog identity mismatch")
+                host.t7_retrieve(entry)
+            item.update(available=True, reason="Selected entrypoint (AIS pair if selected) read and SHA-256 verified")
+        except (ValueError, KeyError, IndexError) as exc:
+            item["reason"] = str(exc)
+            blockers.append(f"{pid}: {exc}")
+        availability.append(item)
+    return {
+        "record_valid": True,
+        "validation_scope": "Shape and current Catalog identity/binding only; semantic applicability is host-owned",
+        "route_record": route,
+        "selected_package_ids": selected_ids,
+        "selected_package_availability": availability,
+        "unresolved_blockers": blockers,
+        "availability_scope": "Selected root entrypoints only; no local catalogs/leaves, closure or execution verified",
+        "runtime_execution_enabled": False,
+    }
+
+
 @server.list_tools()
 async def list_tools():
-    return [types.Tool(
+    tools = [types.Tool(
         name=name, description=description,
         inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
         annotations=types.ToolAnnotations(
@@ -103,16 +247,46 @@ async def list_tools():
         ("hub_status", "Inspect local Central Hub runtime mode and read-only MCP process status."),
         ("hub_runtime_inventory", "Inspect current local package availability; never activate or execute packages."),
     )]
+    tools.extend(types.Tool(
+        name=name, description=description, inputSchema=schema,
+        annotations=types.ToolAnnotations(
+            readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False),
+    ) for name, description, schema in (
+        ("hub_prepare_root_selection", "Get current root control manifest and t9 contract; read all controls via hub_read_root_control before selecting.",
+         {"type": "object", "properties": {}, "additionalProperties": False}),
+        ("hub_read_root_control", "Read an exact current UTF-8 root control chunk. Repeat from next_offset until has_more=false; compare full-file sha256/length. No retained snapshot.",
+         {"type": "object", "properties": {
+             "control_id": {"type": "string", "enum": list(ROOT_CONTROL_IDS)},
+             "offset": {"type": "integer", "minimum": 0},
+             "max_chars": {"type": "integer", "minimum": 1, "maximum": ROOT_CONTROL_MAX_CHARS,
+                           "default": ROOT_CONTROL_DEFAULT_CHARS}},
+          "required": ["control_id", "offset"], "additionalProperties": False}),
+        ("hub_validate_root_selection", "Validate a host-produced root record and selected local bindings; no execution.",
+         {"type": "object", "properties": {"route_record": copy.deepcopy(t9.ROUTE_SCHEMA)},
+          "required": ["route_record"], "additionalProperties": False}),
+    ))
+    return tools
 
 
 @server.call_tool()
 async def call_tool(name, arguments):
+    if name == "hub_read_root_control":
+        if (not isinstance(arguments, dict) or not {"control_id", "offset"} <= set(arguments)
+            or set(arguments) - {"control_id", "offset", "max_chars"}):
+            raise ValueError("Expected control_id, offset and optional max_chars")
+        return hub_read_root_control(**arguments)
+    if name == "hub_validate_root_selection":
+        if not isinstance(arguments, dict) or set(arguments) != {"route_record"}:
+            raise ValueError("Expected exactly route_record")
+        return hub_validate_root_selection(arguments["route_record"])
     if arguments:
         raise ValueError("These read-only tools accept no arguments")
     if name == "hub_status":
         return hub_status()
     if name == "hub_runtime_inventory":
         return hub_runtime_inventory()
+    if name == "hub_prepare_root_selection":
+        return hub_prepare_root_selection()
     raise ValueError("Unknown tool")
 
 
