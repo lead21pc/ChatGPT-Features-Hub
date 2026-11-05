@@ -1,4 +1,4 @@
-"""Read-only Central Hub inspection over MCP stdio; no package execution."""
+"""Read-only Central Hub controls/retrieval over MCP; semantic execution is host-owned."""
 import asyncio
 import copy
 import hashlib
@@ -236,6 +236,132 @@ def hub_validate_root_selection(route_record):
     }
 
 
+def _selected_binding(route_record, package_id, allowed=(t9.t8.TECHNICAL,)):
+    # Revalidate explicit host identity on every call; no saved selection or bearer receipt.
+    receipt = hub_validate_root_selection(route_record)
+    if package_id not in receipt["selected_package_ids"]:
+        raise ValueError("Package was not selected in the supplied root record")
+    if receipt["unresolved_blockers"]:
+        raise ValueError("Root selection blocked: " + "; ".join(receipt["unresolved_blockers"]))
+    if package_id not in allowed:
+        raise ValueError("Package retrieval outside the bounded MCP proof")
+    _, _, catalog, sources, packages, _ = _root_context()
+    selection = next(s for s in route_record["selected_packages"] if s["package_id"] == package_id)
+    identity = catalog.get(package_id)
+    entry = packages[package_id]["entrypoint"]
+    if (identity is None or identity["status"] != "ACTIVE"
+        or selection["declared_source_path"] != sources.get(package_id, "")
+        or any(selection[k] != identity[k] for k in ("entrypoint_module_id", "runtime_role", "version"))
+        or any(entry[k] != identity[root_key] for k, root_key in (
+            ("module_id", "entrypoint_module_id"), ("runtime_role", "runtime_role"), ("version", "version")))):
+        raise ValueError("Current selected binding/Catalog identity mismatch")
+    return packages[package_id]
+
+
+def _artifact_chunk(binding, offset, max_chars):
+    if type(offset) is not int or offset < 0:
+        raise ValueError("offset must be an integer >= 0")
+    if type(max_chars) is not int or not 1 <= max_chars <= ROOT_CONTROL_MAX_CHARS:
+        raise ValueError("max_chars must be an integer from 1 to 4000")
+    body = host.t7_retrieve(binding)
+    if offset > len(body):
+        raise ValueError("offset exceeds current total_length")
+    text = body[offset:offset + max_chars]
+    return {**binding, "verified": True, "total_length": len(body), "text": text,
+            "offset": offset, "next_offset": offset + len(text),
+            "has_more": offset + len(text) < len(body),
+            "validation_scope": "Current identity/binding and full UTF-8 SHA-256 retrieval only; "
+                                "not proof of host reading, semantic applicability or answer quality"}
+
+
+def hub_read_selected_package(route_record, package_id, offset, max_chars=ROOT_CONTROL_DEFAULT_CHARS):
+    """Expose only a selected, current, verified Technical entrypoint; never execute it."""
+    package = _selected_binding(route_record, package_id)
+    return _artifact_chunk(package["entrypoint"], offset, max_chars)
+
+
+CONCEPT_COMPONENTS = ("entrypoint", "local_catalog")
+CONCEPT_TASK = (
+    "Read both Concept entrypoint and local_catalog completely from offset 0 through has_more=false, "
+    "checking consistent SHA-256 and total_length. Select leaves yourself using the exact core and "
+    "Catalog semantics for the current request/history; Python never infers activation/applicability. "
+    "Return result_schema; empty selection is valid. Preserve unresolved blockers. "
+    "Selection != retrieval != execution; no Authoring/AIS/provider execution."
+)
+
+
+def _concept_interface(route_record):
+    package = _selected_binding(route_record, t9.t8.CONCEPT, allowed=(t9.t8.CONCEPT,))
+    catalog_text = host.t7_read(host.HUB_CATALOG_PATH)
+    local_id = package["local_catalog"]
+    try:
+        block = catalog_text.split("- package_id: " + t9.t8.CONCEPT + "\n", 1)[1].split("\n- package_id:", 1)[0]
+        block = block.split("  local_catalog:\n", 1)[1].split("    location:", 1)[0]
+        for key in ("module_id", "package_id", "runtime_role", "status", "version"):
+            scalar = f"    {key}: "
+            values = [line[len(scalar):].strip("'\"") for line in block.splitlines() if line.startswith(scalar)]
+            if values != [{**local_id, "package_id": t9.t8.CONCEPT, "status": "ACTIVE"}[key]]:
+                raise ValueError("Concept local Catalog interface identity mismatch")
+    except IndexError:
+        raise ValueError("Concept local Catalog interface identity mismatch") from None
+    host.t7_retrieve(package["entrypoint"])
+    local = host.t7_retrieve(local_id)
+    identities = host.t7_catalog_identities(local, "entries", "module_id")
+    return package, identities
+
+
+def hub_read_selected_concept_interface(route_record, component, offset, max_chars=ROOT_CONTROL_DEFAULT_CHARS):
+    """Read only the selected Concept core or local Catalog, never choose leaves."""
+    if not isinstance(component, str) or component not in CONCEPT_COMPONENTS:
+        raise ValueError("Invalid Concept component")
+    package, _ = _concept_interface(route_record)
+    return {**_artifact_chunk(package[component], offset, max_chars),
+            "component": component, "semantic_task": CONCEPT_TASK,
+            "result_schema": copy.deepcopy(host.LEAF_SCHEMA)}
+
+
+def _validated_concept_selection(route_record, leaf_record):
+    record = copy.deepcopy(leaf_record)
+    if (not isinstance(record, dict) or set(record) != set(host.LEAF_SCHEMA["required"])
+        or not isinstance(record["selected_leaves"], list)
+        or not isinstance(record["unresolved_blockers"], list)
+        or not all(isinstance(v, str) for v in record["unresolved_blockers"])
+        or not all(isinstance(item, dict) and set(item) == set(host.LEAF_FIELDS)
+                   and all(isinstance(v, str) for v in item.values()) for item in record["selected_leaves"])):
+        raise ValueError("Invalid Concept leaf structured record")
+    package, identities = _concept_interface(route_record)
+    selected = {}
+    for leaf in record["selected_leaves"]:
+        mid = leaf["module_id"]
+        identity = identities.get(mid)
+        bound = next((a for a in package["leaves"] if a["module_id"] == mid), None)
+        if (mid in selected or identity is None or bound is None or identity["status"] != "ACTIVE"
+            or leaf["runtime_role"] != identity["runtime_role"]
+            or any(bound[k] != identity[k] for k in ("module_id", "runtime_role", "version"))):
+            raise ValueError("Concept leaf identity/status/role/version mismatch or duplicate selection")
+        selected[mid] = bound
+    return record, selected
+
+
+def hub_validate_concept_selection(route_record, leaf_record):
+    """Validate current identities without reading any leaf body or deciding applicability."""
+    record, selected = _validated_concept_selection(route_record, leaf_record)
+    return {"record_valid": True, "leaf_record": record, "selected_module_ids": list(selected),
+            "unresolved_blockers": list(record["unresolved_blockers"]),
+            "validation_scope": "Shape and current verified Concept Catalog/binding only; semantic selection is host-owned",
+            "runtime_execution_enabled": False}
+
+
+def hub_read_selected_concept_leaf(route_record, leaf_record, module_id, offset, max_chars=ROOT_CONTROL_DEFAULT_CHARS):
+    """Revalidate supplied decisions, then read only an explicitly selected bound leaf."""
+    record, selected = _validated_concept_selection(route_record, leaf_record)
+    if not isinstance(module_id, str) or module_id not in selected:
+        raise ValueError("Concept leaf was not selected in the supplied leaf record")
+    if record["unresolved_blockers"]:
+        raise ValueError("Concept selection blocked: " + "; ".join(record["unresolved_blockers"]))
+    return _artifact_chunk(selected[module_id], offset, max_chars)
+
+
 @server.list_tools()
 async def list_tools():
     tools = [types.Tool(
@@ -264,12 +390,52 @@ async def list_tools():
         ("hub_validate_root_selection", "Validate a host-produced root record and selected local bindings; no execution.",
          {"type": "object", "properties": {"route_record": copy.deepcopy(t9.ROUTE_SCHEMA)},
           "required": ["route_record"], "additionalProperties": False}),
+        ("hub_read_selected_package", "Read the exact SHA-256 verified selected Technical body in chunks. Supply the host root record each call; no model execution. Read through has_more=false before use.",
+         {"type": "object", "properties": {
+             "route_record": copy.deepcopy(t9.ROUTE_SCHEMA), "package_id": {"type": "string"},
+             "offset": {"type": "integer", "minimum": 0},
+             "max_chars": {"type": "integer", "minimum": 1, "maximum": ROOT_CONTROL_MAX_CHARS}},
+          "required": ["route_record", "package_id", "offset"], "additionalProperties": False}),
     ))
+    for name, description, fields, required in (
+        ("hub_read_selected_concept_interface", CONCEPT_TASK,
+         {"component": {"type": "string", "enum": list(CONCEPT_COMPONENTS)},
+          "offset": {"type": "integer", "minimum": 0},
+          "max_chars": {"type": "integer", "minimum": 1, "maximum": ROOT_CONTROL_MAX_CHARS}},
+         ["route_record", "component", "offset"]),
+        ("hub_validate_concept_selection", "Validate a host-produced Concept leaf record against the current verified interface; no leaf body reads or semantic selection.",
+         {"leaf_record": copy.deepcopy(host.LEAF_SCHEMA)}, ["route_record", "leaf_record"]),
+        ("hub_read_selected_concept_leaf", "Read only a selected Concept leaf after current root/leaf revalidation, with exact SHA-256 verified chunks. Read through has_more=false before use; no execution.",
+         {"leaf_record": copy.deepcopy(host.LEAF_SCHEMA), "module_id": {"type": "string"},
+          "offset": {"type": "integer", "minimum": 0},
+          "max_chars": {"type": "integer", "minimum": 1, "maximum": ROOT_CONTROL_MAX_CHARS}},
+         ["route_record", "leaf_record", "module_id", "offset"]),
+    ):
+        tools.append(types.Tool(name=name, description=description,
+            inputSchema={"type": "object", "properties": {"route_record": copy.deepcopy(t9.ROUTE_SCHEMA), **fields},
+                         "required": required, "additionalProperties": False},
+            annotations=types.ToolAnnotations(
+                readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False)))
     return tools
 
 
 @server.call_tool()
 async def call_tool(name, arguments):
+    concept_calls = {
+        "hub_read_selected_concept_interface": (hub_read_selected_concept_interface, {"route_record", "component", "offset"}, {"max_chars"}),
+        "hub_validate_concept_selection": (hub_validate_concept_selection, {"route_record", "leaf_record"}, set()),
+        "hub_read_selected_concept_leaf": (hub_read_selected_concept_leaf, {"route_record", "leaf_record", "module_id", "offset"}, {"max_chars"}),
+    }
+    if name in concept_calls:
+        function, required, optional = concept_calls[name]
+        if not isinstance(arguments, dict) or not required <= set(arguments) or set(arguments) - required - optional:
+            raise ValueError("Invalid Concept tool arguments")
+        return function(**arguments)
+    if name == "hub_read_selected_package":
+        if (not isinstance(arguments, dict) or not {"route_record", "package_id", "offset"} <= set(arguments)
+            or set(arguments) - {"route_record", "package_id", "offset", "max_chars"}):
+            raise ValueError("Expected route_record, package_id, offset and optional max_chars")
+        return hub_read_selected_package(**arguments)
     if name == "hub_read_root_control":
         if (not isinstance(arguments, dict) or not {"control_id", "offset"} <= set(arguments)
             or set(arguments) - {"control_id", "offset", "max_chars"}):

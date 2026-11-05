@@ -46,8 +46,8 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
 
     def test_exact_surface_annotations_and_capabilities(self):
         tools = asyncio.run(hub.list_tools())
-        self.assertEqual({t.name for t in tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection"})
-        self.assertEqual(len(tools), 5)
+        self.assertEqual({t.name for t in tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection", "hub_read_selected_package", "hub_read_selected_concept_interface", "hub_validate_concept_selection", "hub_read_selected_concept_leaf"})
+        self.assertEqual(len(tools), 9)
         for tool in tools:
             self.assertTrue(tool.annotations.readOnlyHint)
             self.assertFalse(tool.annotations.destructiveHint)
@@ -55,6 +55,24 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
             if tool.name == "hub_read_root_control":
                 self.assertEqual(tool.inputSchema["properties"]["control_id"]["enum"], list(hub.ROOT_CONTROL_IDS))
                 self.assertEqual(tool.inputSchema["required"], ["control_id", "offset"])
+                self.assertFalse(tool.inputSchema["additionalProperties"])
+                continue
+            if tool.name in {"hub_read_selected_concept_interface", "hub_validate_concept_selection", "hub_read_selected_concept_leaf"}:
+                required = {
+                    "hub_read_selected_concept_interface": ["route_record", "component", "offset"],
+                    "hub_validate_concept_selection": ["route_record", "leaf_record"],
+                    "hub_read_selected_concept_leaf": ["route_record", "leaf_record", "module_id", "offset"],
+                }[tool.name]
+                self.assertEqual(tool.inputSchema["required"], required)
+                self.assertEqual(tool.inputSchema["properties"]["route_record"], hub.t9.ROUTE_SCHEMA)
+                if "leaf_record" in required:
+                    self.assertEqual(tool.inputSchema["properties"]["leaf_record"], hub.host.LEAF_SCHEMA)
+                else:
+                    self.assertEqual(tool.inputSchema["properties"]["component"]["enum"], list(hub.CONCEPT_COMPONENTS))
+                self.assertFalse(tool.inputSchema["additionalProperties"])
+                continue
+            if tool.name == "hub_read_selected_package":
+                self.assertEqual(tool.inputSchema["required"], ["route_record", "package_id", "offset"])
                 self.assertFalse(tool.inputSchema["additionalProperties"])
                 continue
             if tool.name == "hub_validate_root_selection":
@@ -143,7 +161,7 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
                     initialized = await session.initialize()
                     self.assertEqual(initialized.serverInfo.name, "central-hub")
                     tools = await session.list_tools()
-                    self.assertEqual({t.name for t in tools.tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection"})
+                    self.assertEqual({t.name for t in tools.tools}, {"hub_status", "hub_runtime_inventory", "hub_prepare_root_selection", "hub_read_root_control", "hub_validate_root_selection", "hub_read_selected_package", "hub_read_selected_concept_interface", "hub_validate_concept_selection", "hub_read_selected_concept_leaf"})
                     status = await session.call_tool("hub_status", {})
                     self.assertFalse(status.isError)
                     inventory = await session.call_tool("hub_runtime_inventory", {})
