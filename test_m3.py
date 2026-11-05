@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import app
+import runtime_host
 import m1
 import t8
 import t9
@@ -40,16 +41,17 @@ class ExplicitConceptTests(unittest.TestCase):
         source = subprocess.check_output(['git', 'show',
             '8f5487ca8b124edb339192a9704b5d74157bcf00:t8.py']).decode('utf-8')
         exec(compile(source, 'baseline_t8.py', 'exec'), baseline.__dict__)
+        baseline.host = runtime_host  # Historical code uses the current primitive owner.
         prefixes = []
         for number, count in ((1, 7), (2, 4)):
             with self.subTest(workload=number):
                 h = self.harness(number)
                 before = copy.deepcopy(h.messages)
-                with patch.object(app, 'OpenAI', h.client):
+                with patch.object(runtime_host, 'OpenAI', h.client):
                     current_result = m1.call_runtime(h.config, h.messages)
                 current = copy.deepcopy(h.payloads)
                 h.payloads.clear()
-                with patch.object(app, 'OpenAI', h.client), patch.object(t8, 'call_t8', baseline.call_t8):
+                with patch.object(runtime_host, 'OpenAI', h.client), patch.object(t8, 'call_t8', baseline.call_t8):
                     baseline_result = m1.call_runtime(h.config, h.messages)
                 self.assertEqual(h.messages, before)
                 self.assertEqual(current_result, baseline_result)

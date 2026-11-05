@@ -1,7 +1,7 @@
 """Compose the existing local package paths after one semantic root selection."""
 import json
 
-import app as host
+import runtime_host as host
 import t8
 import t9
 

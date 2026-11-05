@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import app
+import runtime_host
 import t8
 import t9
 
@@ -135,7 +136,7 @@ class T9Tests(unittest.TestCase):
 
     def run_t9(self):
         before = copy.deepcopy(self.messages)
-        with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(app, "OpenAI", self.openai):
+        with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(runtime_host, "OpenAI", self.openai):
             result = t9.call_t9(self.config, self.messages)
         self.assertEqual(self.messages, before)
         return result
@@ -270,7 +271,7 @@ class T9Tests(unittest.TestCase):
             with self.subTest(content=content[:50]):
                 self.overrides = {t9.BINDINGS_PATH: content}
                 self.payloads.clear()
-                with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(app, "OpenAI") as client:
+                with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(runtime_host, "OpenAI") as client:
                     with self.assertRaises(ValueError):
                         t9.call_t9(self.config, self.messages)
                     client.assert_not_called()

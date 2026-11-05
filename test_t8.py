@@ -10,6 +10,7 @@ from openai import OpenAI
 from streamlit.testing.v1 import AppTest
 
 import app
+import runtime_host
 import t8
 import test_app
 from test_t7 import package, leaf
@@ -75,7 +76,7 @@ class T8Tests(unittest.TestCase):
 
     def run_t8(self):
         before = copy.deepcopy(self.messages)
-        with patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(app, 'OpenAI', self.client):
+        with patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(runtime_host, 'OpenAI', self.client):
             result = t8.call_t8(self.config, self.messages)
         self.assertEqual(self.messages, before)
         for payload in self.payloads:
@@ -181,7 +182,7 @@ class T8Tests(unittest.TestCase):
         self.assertEqual(len(self.payloads), 2)
         self.assertNotIn(self.original_read(self.author_path).decode('utf-8'), self.final())
         self.overrides[t8.BINDINGS_PATH] = b'{}'
-        with patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(app, 'OpenAI') as client:
+        with patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(runtime_host, 'OpenAI') as client:
             with self.assertRaises(ValueError):
                 t8.call_t8(self.config, self.messages)
             client.assert_not_called()
@@ -312,7 +313,7 @@ class T8Tests(unittest.TestCase):
         for path in self.controls:
             for failure in (FileNotFoundError(), PermissionError(), OSError(), b'\xff', b'', b'\x00'):
                 self.overrides = {path: failure}
-                with self.subTest(path=path, failure=failure), patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(app, 'OpenAI') as client:
+                with self.subTest(path=path, failure=failure), patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(runtime_host, 'OpenAI') as client:
                     with self.assertRaises(ValueError):
                         t8.call_t8(self.config, self.messages)
                     client.assert_not_called()
@@ -333,7 +334,7 @@ class T8Tests(unittest.TestCase):
         invalid.append(json.dumps(manifest))
         for text in invalid:
             self.overrides = {t8.BINDINGS_PATH: text.encode()}
-            with self.subTest(text=text), patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(app, 'OpenAI') as client:
+            with self.subTest(text=text), patch.object(Path, 'read_bytes', lambda path: self.read(path)), patch.object(runtime_host, 'OpenAI') as client:
                 with self.assertRaises(ValueError):
                     t8.call_t8(self.config, self.messages)
                 client.assert_not_called()
@@ -428,7 +429,7 @@ class T8Tests(unittest.TestCase):
             self.assertNotIn(self.original_read(self.author_path).decode('utf-8'), self.final())
 
     def test_ui_t8_history_t3_isolation_and_failure_preserves_state(self):
-        with test_app.Stage2Tests.ui_context(self), patch.object(app, 'OpenAI', self.client):
+        with test_app.Stage2Tests.ui_context(self), patch.object(runtime_host, 'OpenAI', self.client):
             ui = AppTest.from_file('app.py').run()
             ui.radio[0].set_value(app.MODES[8]).run()
             ui.text_area[0].set_value('current')

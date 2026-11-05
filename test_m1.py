@@ -10,6 +10,7 @@ from openai import OpenAI
 from streamlit.testing.v1 import AppTest
 
 import app
+import runtime_host
 import m1
 import t8
 import t9
@@ -74,7 +75,7 @@ class M1Tests(unittest.TestCase):
 
     def run_runtime(self):
         before = copy.deepcopy(self.messages)
-        with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(app, "OpenAI", self.client):
+        with patch.object(Path, "read_bytes", lambda path: self.read(path)), patch.object(runtime_host, "OpenAI", self.client):
             result = m1.call_runtime(self.config, self.messages)
         self.assertEqual(self.messages, before)
         for payload in self.payloads:
@@ -275,7 +276,7 @@ class M1Tests(unittest.TestCase):
         def read_text(path, *args, **kwargs):
             return json.dumps(self.config) if path.resolve() == app.CONFIG_PATH else original(path, *args, **kwargs)
         with patch.object(Path, "read_text", read_text), patch("openai.OpenAI", self.client), \
-             patch.object(app, "OpenAI", self.client):
+             patch.object(runtime_host, "OpenAI", self.client):
             ui = AppTest.from_file("app.py").run()
             self.assertEqual(ui.radio[0].value, m1.MODE)
             ui.text_area[0].set_value("first")

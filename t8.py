@@ -2,7 +2,7 @@
 import json
 import re
 
-import app as host
+import runtime_host as host
 
 
 BINDINGS_PATH = host.T7_BINDINGS_PATH.with_name("HUB_LOCAL_BINDINGS_v0.2.json")
