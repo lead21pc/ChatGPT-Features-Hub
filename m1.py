@@ -18,6 +18,70 @@ NOTE = (
     "evidence work must have its own current task scope. No package bodies have been retrieved yet."
 )
 
+ROOT_TASK = (
+    "Perform semantic TASK_SCOPE and ROOT_PACKAGE_SELECTION only for the current request "
+    "and relevant history. Return exact Catalog identities, version and declared_source_path "
+    "(empty string when absent). Empty selection is valid. Do not inspect leaf inventories "
+    "or suppress applicable packages because their bodies are not yet retrieved. "
+    "Expected pending post-selection retrieval of selected package bodies and local catalogs "
+    "is not an unresolved blocker. The host retrieves them after root selection. "
+    "Report unresolved_blockers only for genuine unresolved conditions, not this normal next retrieval stage."
+)
+
+
+def _root_instructions(controls):
+    return "\n\n".join(controls + [NOTE, ROOT_TASK])
+
+
+def _validate_root_text(raw, catalog, sources, bindings, trace):
+    route = json.loads(raw, object_pairs_hook=t9.unique_object)
+    if (not isinstance(route, dict) or set(route) != set(t9.ROUTE_SCHEMA["required"])
+        or not isinstance(route["task_scope"], str) or not isinstance(route["selected_packages"], list)
+        or not isinstance(route["unresolved_blockers"], list)
+        or not all(isinstance(v, str) for v in route["unresolved_blockers"])):
+        raise ValueError("M1: Root structured không hợp lệ.")
+    trace["unresolved_blockers"].extend(route["unresolved_blockers"])
+    for selection in route["selected_packages"]:
+        if (not isinstance(selection, dict) or set(selection) != set(t9.ROOT_FIELDS["required"])
+            or not all(isinstance(v, str) for v in selection.values())):
+            raise ValueError("M1: Root selected identity không hợp lệ.")
+        pid = selection["package_id"]
+        identity = catalog.get(pid)
+        if (identity is None or pid in trace["root_selected_package_ids"]
+            or any(selection[k] != identity[k] for k in ("entrypoint_module_id", "runtime_role", "version"))
+            or selection["declared_source_path"] != sources.get(pid, "")):
+            raise ValueError("M1: Root identity/version/source không khớp Catalog.")
+        trace["root_selected_package_ids"].append(pid)
+        if pid not in bindings:
+            trace["unresolved_blockers"].append(f"{pid}: local-runtime unavailable; không fallback/emulation.")
+    if trace["unresolved_blockers"]:
+        raise ValueError("; ".join(trace["unresolved_blockers"]))
+    return route
+
+
+def call_root_subscription(config, messages):
+    """Experimental: run only M1 root selection through the stateless subscription backend."""
+    if (len(messages) != 1 or messages[0].get("role") != "user"
+        or not isinstance(messages[0].get("content"), str)):
+        raise ValueError("M1 subscription root proof requires exactly one current user message.")
+    controls = [host.t7_read(p) for p in (host.HUB_CI_PATH, host.HUB_ROUTER_PATH,
+                                        host.HUB_ARCHITECTURE_PATH, host.HUB_CATALOG_PATH)]
+    if any(not text.strip() or "\x00" in text for text in controls):
+        raise ValueError("M1: Control rỗng hoặc chứa NUL; chưa gửi subscription backend.")
+    binding_text = host.t7_read(t9.BINDINGS_PATH)
+    t9.load_bindings(binding_text)
+    bindings = json.loads(binding_text)["packages"]
+    catalog = host.t7_catalog_identities(controls[3], "packages", "package_id")
+    sources = t9.catalog_sources(controls[3])
+    trace = dict(root_selected_package_ids=[], unresolved_blockers=[])
+    import subscription_backend
+    raw = subscription_backend.call_subscription(
+        _root_instructions(controls), messages[0]["content"],
+        model=config["model"], output_schema=t9.ROUTE_SCHEMA,
+    )
+    route = _validate_root_text(raw, catalog, sources, bindings, trace)
+    return route, trace
+
 
 def call_runtime(config, messages):
     """Return (answer, trace), with explicit failures and no history mutation or retry."""
@@ -39,38 +103,12 @@ def call_runtime(config, messages):
         with host.OpenAI(api_key=config["openai_api_key"], base_url="https://api.openai.com/v1",
                          timeout=120.0, max_retries=0) as client:
             response = client.responses.create(model=config["model"], input=messages, store=False,
-                instructions="\n\n".join(controls + [NOTE,
-                    "Perform semantic TASK_SCOPE and ROOT_PACKAGE_SELECTION only for the current request "
-                    "and relevant history. Return exact Catalog identities, version and declared_source_path "
-                    "(empty string when absent). Empty selection is valid. Do not inspect leaf inventories "
-                    "or suppress applicable packages because their bodies are not yet retrieved. "
-                    "Expected pending post-selection retrieval of selected package bodies and local catalogs "
-                    "is not an unresolved blocker. The host retrieves them after root selection. "
-                    "Report unresolved_blockers only for genuine unresolved conditions, not this normal next retrieval stage."]),
+                instructions=_root_instructions(controls),
                 text={"format": {"type": "json_schema", "name": "hub_m1_root",
                                  "schema": t9.ROUTE_SCHEMA, "strict": True}})
-            route = json.loads(t9.output_text(t9.response_data(response)), object_pairs_hook=t9.unique_object)
-            if (not isinstance(route, dict) or set(route) != set(t9.ROUTE_SCHEMA["required"])
-                or not isinstance(route["task_scope"], str) or not isinstance(route["selected_packages"], list)
-                or not isinstance(route["unresolved_blockers"], list)
-                or not all(isinstance(v, str) for v in route["unresolved_blockers"])):
-                raise ValueError("M1: Root structured không hợp lệ.")
-            trace["unresolved_blockers"].extend(route["unresolved_blockers"])
-            for selection in route["selected_packages"]:
-                if (not isinstance(selection, dict) or set(selection) != set(t9.ROOT_FIELDS["required"])
-                    or not all(isinstance(v, str) for v in selection.values())):
-                    raise ValueError("M1: Root selected identity không hợp lệ.")
-                pid = selection["package_id"]
-                identity = catalog.get(pid)
-                if (identity is None or pid in trace["root_selected_package_ids"]
-                    or any(selection[k] != identity[k] for k in ("entrypoint_module_id", "runtime_role", "version"))
-                    or selection["declared_source_path"] != sources.get(pid, "")):
-                    raise ValueError("M1: Root identity/version/source không khớp Catalog.")
-                trace["root_selected_package_ids"].append(pid)
-                if pid not in bindings:
-                    trace["unresolved_blockers"].append(f"{pid}: local-runtime unavailable; không fallback/emulation.")
-            if trace["unresolved_blockers"]:
-                raise ValueError("; ".join(trace["unresolved_blockers"]))
+            route = _validate_root_text(
+                t9.output_text(t9.response_data(response)), catalog, sources, bindings, trace
+            )
             trace["ais_selected"] = t9.AIS in trace["root_selected_package_ids"]
             if trace["ais_selected"]:
                 t9.validate_ais_catalog(controls[3], catalog[t9.AIS], sources.get(t9.AIS))
