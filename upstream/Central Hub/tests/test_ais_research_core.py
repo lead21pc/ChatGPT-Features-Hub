@@ -128,7 +128,7 @@ class AISResearchStaticTests(unittest.TestCase):
         self.assertEqual(len(receipt), 7)
         for row in receipt:
             self.assertFalse((ROOT / row['old']).exists())
-            self.assertEqual(hashlib.sha256((ROOT / row['archive']).read_bytes()).hexdigest(), row['sha256'])
+            self.assertEqual(hashlib.sha256((ROOT / row['archive']).read_bytes()).hexdigest(), row.get('redacted_sha256', row['sha256']))
 
     def test_contract_gates_loop_return_and_evidence_limits(self):
         p = POLICY['research_policy']

@@ -1,0 +1,15 @@
+object_templates:
+  - resource_id: HUB-USER-PROFILE
+    schema_version: '0.1-candidate'
+    section_id: BASICS
+    data:
+      general:
+        market_region: null
+        measurement_system: null
+      preferences:
+        preferred_brand: null
+  - resource_id: HUB-USER-PROFILE
+    schema_version: '0.1-candidate'
+    section_id: HEALTH_CONSTRAINTS
+    data:
+      substances_to_avoid: []

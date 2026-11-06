@@ -43,14 +43,14 @@ class RootSelectionTests(unittest.TestCase):
                 result = hub.hub_prepare_root_selection()
             self.assertEqual([c.args[0] for c in reads.call_args_list], paths + [hub.t9.BINDINGS_PATH])
             self.assertEqual(result["controls"], [
-                {"control_id": cid, "path": str(p), "total_length": len(read(p) + suffix),
+                {"control_id": cid, "path": p.relative_to(REPO).as_posix(), "total_length": len(read(p) + suffix),
                  "sha256": hashlib.sha256((read(p) + suffix).encode("utf-8")).hexdigest()}
                 for cid, p in zip(hub.ROOT_CONTROL_IDS, paths)])
             self.assertTrue(all("text" not in control for control in result["controls"]))
             self.assertEqual(result["result_schema"], hub.t9.ROUTE_SCHEMA)
             self.assertNotIn("leaves", str(result["local_binding_context"]))
             self.assertEqual([p["binding_declared"] for p in result["local_binding_context"]],
-                             [True, True, True, True, False])
+                             [True, True, True, True, False, False])
         result["result_schema"].clear()
         self.assertEqual(hub.hub_prepare_root_selection()["result_schema"], hub.t9.ROUTE_SCHEMA)
 
@@ -60,7 +60,8 @@ class RootSelectionTests(unittest.TestCase):
         with patch.object(hub.host, "t7_retrieve", side_effect=AssertionError("body read")), \
              patch.object(hub, "hub_runtime_inventory", side_effect=AssertionError("leaf inventory")):
             for manifest in prepared["controls"]:
-                path = Path(manifest["path"])
+                self.assertFalse(Path(manifest["path"]).is_absolute())
+                path = hub.REPO_ROOT / manifest["path"]
                 expected = path.read_bytes().decode("utf-8")
                 for size in (None, 137, hub.ROOT_CONTROL_MAX_CHARS):
                     offset, chunks = 0, []
@@ -101,7 +102,7 @@ class RootSelectionTests(unittest.TestCase):
     def test_current_file_hash_length_unicode_and_newlines(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "ci.md"
-            with patch.object(hub.host, "HUB_CI_PATH", path):
+            with patch.object(hub.host, "HUB_CI_PATH", path), patch.object(hub, "REPO_ROOT", path.parent):
                 previous = None
                 for text in ("a\r\nb\nVi\u1ec7t\U0001f600", "a\r\nb\nVi\u1ec7t\U0001f601",
                              "a\r\nb\nVi\u1ec7t\U0001f601 th\u00eam", ""):
@@ -239,7 +240,7 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
                                 break
                             self.assertGreater(chunk["next_offset"], offset)
                             offset = chunk["next_offset"]
-                        self.assertEqual("".join(chunks), Path(control["path"]).read_bytes().decode("utf-8"))
+                        self.assertEqual("".join(chunks), (REPO / control["path"]).read_bytes().decode("utf-8"))
                     for route in (record(), record("HUB-PKG-TECHNICAL"), record("HUB-PKG-IMAGET")):
                         result = await session.call_tool("hub_validate_root_selection", {"route_record": route})
                         self.assertFalse(result.isError)

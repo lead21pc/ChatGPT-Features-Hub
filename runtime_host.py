@@ -7,10 +7,10 @@ from pathlib import Path
 from openai import OpenAI
 
 
-HUB_CI_PATH = Path(__file__).resolve().parent / "upstream" / "Central Hub" / "HUB_CI_v1.1.md"
+HUB_CI_PATH = Path(__file__).resolve().parent / "Central Hub" / "HUB_CI_v1.1.md"
 HUB_ROUTER_PATH = HUB_CI_PATH.with_name("HUB_ROUTER_v1.1.yaml")
-HUB_ARCHITECTURE_PATH = HUB_CI_PATH.with_name("HUB_ARCHITECTURE_v1.9.md")
-HUB_CATALOG_PATH = HUB_CI_PATH.with_name("HUB_PACKAGE_CATALOG_v1.9.yaml")
+HUB_ARCHITECTURE_PATH = HUB_CI_PATH.with_name("HUB_ARCHITECTURE_v1.10.md")
+HUB_CATALOG_PATH = HUB_CI_PATH.with_name("HUB_PACKAGE_CATALOG_v1.10.yaml")
 ROUTE_PACKAGE_FIELDS = (
     "package_id", "entrypoint_module_id", "runtime_role", "application_scope", "reason"
 )

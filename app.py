@@ -130,12 +130,12 @@ def call_model(config, messages, mode=RUNTIME_MODE):
         try:
             instructions["instructions"] = HUB_CI_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
-            raise ValueError("T1: Không đọc được upstream/Central Hub/HUB_CI_v1.1.md. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang T0.") from None
+            raise ValueError("T1: Không đọc được Central Hub/HUB_CI_v1.1.md. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang T0.") from None
     elif mode == MODES[2]:
         try:
             ci = HUB_CI_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
-            raise ValueError("T2: Không đọc được upstream/Central Hub/HUB_CI_v1.1.md; yêu cầu chưa được gửi, không chuyển sang T1/T0.") from None
+            raise ValueError("T2: Không đọc được Central Hub/HUB_CI_v1.1.md; yêu cầu chưa được gửi, không chuyển sang T1/T0.") from None
         try:
             technical = TECHNICAL_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
@@ -201,7 +201,7 @@ def inspect_route(config, prompt):
             controls.append(path.read_bytes().decode("utf-8"))
         except (OSError, UnicodeError):
             raise ValueError(
-                f"T3: Không đọc được upstream/Central Hub/{path.name}. "
+                f"T3: Không đọc được Central Hub/{path.name}. "
                 "Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang chế độ khác."
             ) from None
     with OpenAI(
@@ -255,7 +255,7 @@ T7_BINDING_NOTE = (
     "HUB_LOCAL_BINDINGS_v0.1.json, LOCAL_RUNTIME_FILE is the current T7 binding authority. "
     "An artifact becomes executable only after the platform reads it and verifies its declared SHA-256. "
     "This is a local-host successor binding, not fallback from failed LIBRARY_MODULE. "
-    "ChatGPT Library location/resolution fields in upstream/root/local catalogs remain historical "
+    "ChatGPT Library location/resolution fields in the Hub and local catalogs remain historical "
     "source-host metadata and do not block eligibility under an explicit T7 local binding. "
     "All non-storage semantics of Hub CI, Router, Architecture, Catalog and module bodies remain unchanged. "
     "Unlisted packages/artifacts remain unavailable and must not be emulated. "

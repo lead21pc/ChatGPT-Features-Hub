@@ -1,6 +1,22 @@
-# Central Hub Local — phương án backup
+# ChatGPT Features Hub
 
-Central Hub local/API được giữ làm **BACKUP**, functional status **VERIFIED + LIVE VERIFIED**. Ngày 2026-11-05, người dùng mở lại M3 sau khi tăng project spend limit để hoàn tất đúng thí nghiệm explicit cache đã bị quota chặn trước đó. **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE**; **M4 NOT STARTED**.
+[Central Hub](<Central Hub/README.md>) tổ chức các tính năng của Hub cho **ChatGPT Web**, với Project Instructions, Project Sources và Library. [CI 1.1](<Central Hub/HUB_CI_v1.1.md>), [Router 1.1](<Central Hub/HUB_ROUTER_v1.1.yaml>), [Architecture 1.10](<Central Hub/HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog 1.10](<Central Hub/HUB_PACKAGE_CATALOG_v1.10.yaml>) xác lập hợp đồng. Catalog hiện có sáu gói gồm Technical, Concept Development, Authoring, AIS, ImageT và Shopping. Xem [hồ sơ runtime](<Central Hub/RUNTIME_EVIDENCE_CHANGELOG.md>) để phân biệt trạng thái trong Git với cài đặt và bằng chứng live.
+
+Nguồn hiện hành trong `Central Hub/` lấy từ phần Central Hub của Creative Workshops tại commit `e310b4510ad078981ee6ea82373808c469144ddb`. Creative Workshops vẫn là workspace lore và worldbuilding. `upstream/Central Hub/` giữ snapshot 1.9 cho kiểm chứng lịch sử. Một số báo cáo và log của cả hai bộ đã thay đường dẫn máy bằng ký hiệu trung tính, giữ nguyên kết quả kỹ thuật. Receipt AIS giữ riêng hash gốc và hash bản đã che đường dẫn.
+
+## Bản dự phòng Local/API
+
+Các entry point Python ở gốc và thư mục `runtime/` giữ cách chạy cũ. Runtime đọc bốn control từ `Central Hub/`. Binding local v0.1–v0.3 giữ Technical, Concept, Authoring và AIS theo phạm vi từng chế độ. ImageT và Shopping chưa có binding local. Nếu chế độ tích hợp chọn gói không khả dụng, nó dừng phần phụ thuộc theo quy tắc của chế độ đó. Người muốn tiếp tục phát triển adapter API có thể fork.
+
+Streamlit mặc định bind `127.0.0.1`. MCP cung cấp công cụ kiểm tra chỉ đọc qua stdio, với đường dẫn metadata tương đối tính từ gốc repository. Mỗi phiên giao diện giữ hội thoại trong bộ nhớ và gửi prompt/lịch sử cần thiết đến Responses API. Đường Codex CLI là thử nghiệm riêng và chỉ chạy khi được gọi tường minh.
+
+Đã kiểm tra tĩnh, mô phỏng và kiểm tra tích hợp local với nguồn 1.10. Live Responses API trên bộ 1.10 chưa chạy. Các kết quả ở phần dưới và trong [VERIFICATION.md](VERIFICATION.md) thuộc revision và workload đã ghi. Shopping 1.0 đang ở trạng thái promotion trong Git. Xem [hồ sơ Shopping](<Central Hub/SHOPPING_PROMOTION.md>) để biết trạng thái Library và Project.
+
+Chạy kiểm thử hợp đồng standalone bằng `python -X utf8 -B -m pytest "Central Hub/tests"`. Các ca kiểm tra provenance cần lịch sử Git, nguồn FTH hoặc skill Creative Workshops được chạy trong checkout Creative Workshops gốc.
+
+### Hồ sơ kiểm chứng Local/API trên bộ 1.9
+
+Bản dự phòng Local/API đạt **VERIFIED + LIVE VERIFIED** trong phạm vi các workload đã ghi trên bộ 1.9. Ngày 2026-11-05, người dùng mở lại M3 sau khi tăng project spend limit để hoàn tất đúng thí nghiệm explicit cache đã bị quota chặn trước đó. **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE**; **M4 NOT STARTED**.
 
 **Model hiện cấu hình/ưu tiên cho thử nghiệm và runtime local: `gpt-6.1-sol`**, xác nhận từ `config.json` local được ignore và model trong cả 11 response W1/W2. **GPT-6.1 Sol = LIVE VERIFIED CANDIDATE FOR TESTED CENTRAL HUB W1/W2 SCOPE**, không phải replacement đã kiểm chứng toàn cục cho mọi đường Central Hub. W1 **7/7 semantic PASS** trong phạm vi Authoring + Concept; W2 **4/4 semantic PASS** trong phạm vi Technical + Concept + AIS. Explicit Concept cache: W1 write **6161**, W2 cached **6161**. AIS **evidence-source compliance PASS**, **search-discovery boundary PARTIAL** vì discovery có nguồn ngoài Tauri, còn evidence/citations dùng nguồn Tauri chính thức. Tổng pair ước tính khoảng **$0.506351**, thấp hơn khoảng **44,63%** so với GPT-5.6 Sol M3 retry **$0.914486** trên đúng hai workload, theo bảng giá lưu trong phép thử; không phải mức tiết kiệm phổ quát. Xem [review GPT-6.1 Sol](m3_evidence/GPT61_W1_W2_REVIEW.md). Hồ sơ GPT-5.6 Sol bên dưới giữ nguyên giá trị lịch sử. Tương thích model đã thử không chứng minh khả năng chuyển model cho toàn hệ thống; ưu tiên model hiện tại không quyết định kiến trúc MCP/kênh tương lai. **M4 NOT STARTED**; không triển khai MCP.
 

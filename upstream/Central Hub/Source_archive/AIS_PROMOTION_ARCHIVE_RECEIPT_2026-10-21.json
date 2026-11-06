@@ -22,7 +22,8 @@
   {
     "old": "candidates/ais_research_core/IMPLEMENTATION_REPORT.md",
     "archive": "Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/IMPLEMENTATION_REPORT.md",
-    "sha256": "be335cd764b5524c4a4b3f6ec21a2bea8f6e95b774c56afe255cb81efbc245c8"
+    "sha256": "be335cd764b5524c4a4b3f6ec21a2bea8f6e95b774c56afe255cb81efbc245c8",
+    "redacted_sha256": "3521ed96ceeb41e54277a26140e9cc99008614159e313c81964f30549cc9c4fc"
   },
   {
     "old": "candidates/ais_research_core/RESEARCH_CORE_TEST_CASES.md",

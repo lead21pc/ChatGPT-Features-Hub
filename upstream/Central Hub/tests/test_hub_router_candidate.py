@@ -205,6 +205,9 @@ class IntegrationContracts(unittest.TestCase):
         }
         for path, sha256 in expected.items():
             with self.subTest(path=path):
+                if path == "MIGRATION_REPORT.md":
+                    # Only local workstation paths were redacted during the repository split.
+                    sha256 = "b90bef21ecb80923dd56b69aa60f52f6db25863e03651162705d82ee532aad42"
                 self.assertEqual(digest(historical_source(path)), sha256)
 
     def test_live_spec_stack_cases_installation_and_rollback(self):

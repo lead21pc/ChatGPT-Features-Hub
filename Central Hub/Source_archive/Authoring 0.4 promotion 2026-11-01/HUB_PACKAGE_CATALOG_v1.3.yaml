@@ -1,0 +1,169 @@
+format_version: '1'
+module_id: HUB-CORE-PACKAGE-CATALOG
+runtime_role: PACKAGE_CATALOG
+scope: Major Central Hub package entrypoints only; no leaf-module inventory.
+status: ACTIVE
+version: '1.3'
+active: true
+runtime_ready: true
+identity_binding: EXACT_INSTALLED_V1_1_CI_ROUTER_WITH_V1_3_ARCHITECTURE_CATALOG_CONTRACT
+library_discovery_root: Central Hub Config
+live_library_retrieval: TECHNICAL_ACTIVE_1_0_USER_REPORTED; CONCEPT_PACKAGE_CHATGPT_OBSERVED_LIBRARY_INSPECTION_VERIFIED;
+  CONCEPT_PACKAGE_HUB_RUNTIME_RETRIEVAL_NOT_VERIFIED
+packages:
+- package_id: HUB-PKG-TECHNICAL
+  entrypoint_module_id: HUB-DOM-TECHNICAL
+  runtime_role: REASONING_PROFILE
+  status: ACTIVE
+  version: '1.0'
+  applicability: Mechanism reasoning, distinguishing causes during diagnosis or bounded technical-change evaluation;
+    not simple technical explanations alone.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    library_file_id: libfile_bab7d55cd85c819198291acf135099fd
+    library_version_id: '1'
+    observed_path: Central Hub Config/HUB-DOM-TECHNICAL_v1.0.md
+    observed_surface_file_id: file_000000006da88211aa3412146f6c016c
+    surface_id_usage: Evidence/debug only; not assumed portable canonical locator.
+    verification: USER_REPORTED_ACTIVE_REVISION_VERIFIED
+    retrieval_mechanism: CAPABILITY_DEPENDENT_DIRECT_ADDRESS_OR_ROOT_SCOPED_SEARCH; NOT_INDEPENDENTLY_VERIFIED
+  local_catalog: null
+  requires: []
+  binding_mode: LIBRARY_MODULE
+- package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  entrypoint_module_id: HUB-DOM-CONCEPT-DEVELOPMENT
+  runtime_role: DOMAIN_CONTROL
+  status: ACTIVE
+  version: '1.0'
+  applicability: Concept-specific consistency/causal analysis, bounded concept audit, fictional realization/deepening
+    or specialized premise exploration, including explicit requests for specialized idea expansion. Ordinary topic
+    mentions and lightweight brainstorming alone need no package. Local applicability and leaf selection belong
+    to this package interface.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: libfile_25fe61415e408191b974235fa6608edf
+    library_version_id: null
+    observed_path: Central Hub Config/HUB-DOM-CONCEPT-DEVELOPMENT_v1.0.md
+    observed_surface_file_id: file_00000000e0e48211989902592a6479f8
+    surface_id_usage: Evidence/debug only; not assumed portable canonical locator.
+    verification: CHATGPT_OBSERVED_FULL_FILE_BYTE_EXACT_VERIFIED
+    resolution: RESOLVED
+    read_evidence: FULL_FILE 45/45; has_more=false; 6212 bytes; repository/Library SHA-256
+      5C446E9034FC7CBE106F835AE51381917F6FC49F34BEC084B75749FADF3D2578 matched.
+    duplicate_check: NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE
+    retrieval_mechanism: Root-scoped Library listing/read/materialization verified for this binding. Runtime use still
+      requires the exact bound identity, FULL_FILE and headers/body checks; no repository or Project Source fallback.
+  local_catalog:
+    module_id: HUB-CATALOG-CONCEPT-DEVELOPMENT
+    package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+    runtime_role: PACKAGE_CATALOG
+    status: ACTIVE
+    version: '1.0'
+    location:
+      class: LIBRARY
+      root: Central Hub Config
+      locator: null
+      library_file_id: libfile_a7fa47cd4e10819194237840dde6c86f
+      library_version_id: null
+      observed_path: Central Hub Config/HUB-CATALOG-CONCEPT-DEVELOPMENT_v1.0.yaml
+      observed_surface_file_id: file_00000000c62482078eb5f87f6885de71
+      surface_id_usage: Evidence/debug only; not assumed portable canonical locator.
+      verification: CHATGPT_OBSERVED_FULL_FILE_BYTE_EXACT_VERIFIED
+      resolution: RESOLVED
+      read_evidence: FULL_FILE 57/57; has_more=false; 2766 bytes; repository/Library SHA-256
+        A58C64CD1A64431EA930D267B4E69C06A03783CB7D833E34887311A5C3317D98 matched.
+      duplicate_check: NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE
+      retrieval_mechanism: Root-scoped Library listing/read/materialization verified for this binding. Runtime use still
+        requires the exact bound identity, FULL_FILE and headers/body checks; no repository or Project Source fallback.
+  requires: []
+  binding_mode: LIBRARY_MODULE
+- package_id: HUB-PKG-AUTHORING
+  entrypoint_module_id: HUB-CAP-AUTHORING
+  runtime_role: CAPABILITY
+  status: ACTIVE
+  version: '0.3'
+  applicability: Only when the first non-empty user-authored line exactly equals `/AUTHOR AIS`, `/AUTHOR IMAGET`,
+    `/AUTHOR FTH`, `/AUTHOR CODEX`, `/AUTHOR WORK` or `/AUTHOR GENERIC`; match case-sensitively with exactly one ASCII
+    space and no surrounding whitespace or extra text. Leading empty or space/tab-only lines may be skipped. Quotes,
+    attachments, retrieved content, tool output, prior turns and later-line commands never match. Reassess every turn.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    verification: NOT_PERFORMED
+    resolution: UNRESOLVED
+    retrieval_mechanism: Repository artifact prepared only. Before use, resolve exactly one ACTIVE 0.3 object inside
+      Central Hub Config, read FULL_FILE and verify identity, headers, material body and scoped duplicate coverage.
+      No repository, Project Source, archive or other fallback.
+  local_catalog: null
+  requires: []
+  binding_mode: LIBRARY_MODULE
+- package_id: HUB-PKG-AIS
+  entrypoint_module_id: HUB-PIPE-AIS
+  runtime_role: TOOL_PIPELINE
+  status: LEGACY_EXISTING
+  version: '1.1'
+  applicability: Hub-assigned external evidence verification, collection, comparison, synthesis or option discovery,
+    including explicit search requests.
+  location:
+    class: PROJECT_SOURCES
+    declared_source_path: tool_pipelines/AIS/AIS_PIPELINE_v1.1.md
+    source_name: AIS_PIPELINE_v1.1.md
+    identity_basis: Root Catalog plus exact declared source; catalog Module ID is routing alias, not an existing
+      header.
+    verification: FULL_EXACT_SOURCE_REQUIRED; NEW_REVISION_LIVE_NOT_VERIFIED; USER_REPORTED_COMPONENT_EVIDENCE
+  local_catalog: null
+  requires: []
+  binding_mode: LEGACY_PROJECT_SOURCE
+  repository_revision: OFFICIAL_ACTIVE
+  project_deployment: NOT_PERFORMED
+- package_id: HUB-PKG-IMAGET
+  entrypoint_module_id: HUB-PIPE-IMAGET
+  runtime_role: TOOL_PIPELINE
+  status: LEGACY_EXISTING
+  version: '1.2'
+  applicability: Actual image analysis, creation, editing, variation or correction; not image discussion or descriptive
+    prose alone.
+  location:
+    class: PROJECT_SOURCES
+    declared_source_path: tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.2.md
+    source_name: IMAGE_CONTROLLER_v1.2.md
+    identity_basis: Root Catalog plus exact declared source; catalog Module ID is routing alias, not an existing
+      header.
+    verification: FULL_EXACT_SOURCE_REQUIRED; LIVE_INSTALL_NOT_VERIFIED
+  local_catalog: null
+  requires: []
+  binding_mode: LEGACY_PROJECT_SOURCE
+live_integration: TECHNICAL_PRIOR_EVIDENCE_RETAINED; CONCEPT_PACKAGE_FOUR_OBJECT_LIBRARY_INSTALLATION_AND_FULL_FILE_IDENTITY_CONTENT_BYTE_MATCH_CHATGPT_OBSERVED;
+  NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE; HUB_RUNTIME_RETRIEVAL_NOT_VERIFIED;
+  INTEGRATED_RUNTIME_SMOKE_USER_CONFIRMED_PASS_2026_10_27
+concept_development_evidence:
+  library_evidence_basis: CHATGPT_OBSERVED / USER_PROVIDED; not independently reproduced by Codex
+  runtime_evidence_basis: USER_CONFIRMED_LIVE_PASS; not independently reproduced by Codex
+  root: Central Hub Config
+  root_scoped_listing_objects_observed: 5
+  concept_objects_verified: 4
+  duplicate_check: NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE
+  identity_content: FULL_FILE headers/body matched
+  repository_byte_match: VERIFIED
+  hub_runtime_retrieval: NOT_VERIFIED
+  central_hub_project_switch: USER_CONFIRMED_FOR_INTEGRATED_RUNTIME_SMOKE
+  live_routing: USER_CONFIRMED_PASS_FOR_INTEGRATED_RUNTIME_SMOKE_2026_10_27
+  c01_c12_live: NOT_RUN
+active_revision_evidence:
+  basis: USER_REPORTED; not independently reproduced
+  artifact_version: '1.0'
+  library_version_id: '1'
+  full_file: 19/19
+  has_more: false
+  V01: PASS
+  V02: PASS
+  fallback: NONE_REPORTED
+  ambiguity: NONE_REPORTED
+  integration: USER_REPORTED_SUCCESS_PATHS_PASS; I08_UNVERIFIABLE
+deployment: REPOSITORY_ACTIVE; PROJECT_DEPLOYMENT_NOT_VERIFIED

@@ -430,6 +430,18 @@ class T7Tests(unittest.TestCase):
         archive_files = {archive_prefix + p for p in ('HUB_ARCHITECTURE_v1.8.md',
             'HUB_PACKAGE_CATALOG_v1.8.yaml', 'library_modules/HUB-CAP-AUTHORING_v0.6.md',
             'HUB_ROUTER_v1.1.yaml', 'AUTHORING_PROMOTION.md', 'ARCHIVE_RECEIPT.json')}
+        redacted_reports = {prefix + p for p in (
+            'MIGRATION_REPORT.md',
+            'Source_archive/AIS_PROMOTION_ARCHIVE_RECEIPT_2026-10-21.json',
+            'tests/test_ais_research_core.py',
+            'tests/test_hub_router_candidate.py',
+            'Source_archive/AIS research-core promotion 2026-10-21/candidates/ais_research_core/IMPLEMENTATION_REPORT.md',
+            'candidates/authoring_v0/AUTHORING_TEST_CASES.md',
+            'candidates/fth_afm015_workspace_pilot/PHASE_4_ADMISSION_DRY_RUN.md',
+            'candidates/fth_afm015_workspace_pilot/README.md',
+            'tests/SHOPPING_M2_1_REGRESSIONS.md',
+            'tool_pipelines/AIS/AIS_PROMOTION_REPORT.md',
+        )}
         paths = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', baseline, '--', 'upstream']).decode('utf-8').rstrip('\0').split('\0')
         self.assertEqual(len(paths), 208)
         for path in paths:
@@ -438,7 +450,7 @@ class T7Tests(unittest.TestCase):
                 if path in archived:
                     self.assertFalse(Path(path).exists())
                     self.assertEqual(Path(archive_prefix + path[len(prefix):]).read_bytes(), committed)
-                elif path not in changed:
+                elif path not in changed | redacted_reports:
                     self.assertEqual(Path(path).read_bytes(), committed)
         actual = {p.as_posix() for p in Path('upstream').rglob('*') if p.is_file()
                   and '__pycache__' not in p.parts and '.pytest_cache' not in p.parts}

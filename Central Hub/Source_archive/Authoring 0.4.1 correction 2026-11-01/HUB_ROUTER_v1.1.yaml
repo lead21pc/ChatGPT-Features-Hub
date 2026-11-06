@@ -1,0 +1,294 @@
+format_version: '1'
+module_id: HUB-CORE-ROUTER
+runtime_role: CORE_ROUTER
+router_version: '1.1'
+status: ACTIVE
+active: true
+deployment: REPOSITORY_ACTIVE; PROJECT_DEPLOYMENT_NOT_VERIFIED
+activation_notice: Normal runtime contract after manual installation with exact HUB_CI_v1.1.md delegation. File
+  presence is not deployment or selection; ordinary user-action authorization remains with Hub CI.
+kind: Behavioral contract, not executable routing or Library storage implementation.
+contracts:
+  architecture:
+    file: HUB_ARCHITECTURE_v1.4.md
+    module_id: HUB-CORE-ARCH
+    version: '1.4'
+    status: ACTIVE
+  root_catalog:
+    file: HUB_PACKAGE_CATALOG_v1.4.yaml
+    module_id: HUB-CORE-PACKAGE-CATALOG
+    version: '1.4'
+    status: ACTIVE
+  binding_scope: Exact manually installed Hub CI/Router v1.1 with Architecture/Catalog v1.4 Project Sources. Never
+    discover earlier design or trial controls as substitutes.
+  role_boundary: CORE_ROUTER identifies the existing scoped selector/composer responsibility; no new behavior owner.
+ownership:
+  hub_ci: Global operation, stage, truth, action authorization, verification need and explanation.
+  router: Scoped package selection, package-local interface dispatch, module-set composition and dependency/read
+    validation.
+  package: Internal leaf inventory and applicability; returns scoped selections, never replaces Hub selection.
+  reasoning_profile: Cross-subject reasoning discipline selected by Runtime role and task need, never inferred from
+    directory or Module ID prefix; Hub CI retains global truth/state/action ownership.
+  pipeline: Internal mediation procedures and dependencies; Hub selects only its entrypoint.
+  platform: Actual retrieval and tool execution; instructions alone execute nothing.
+input:
+- task_portion
+- hub_assigned_operation_stage_when_material
+- objective
+- constraints
+- protected_state
+- relevant_context
+- root_package_catalog
+- current_package_module_read_evidence
+output:
+  visibility: Internal by default; expose only requested inspection or material blockers.
+  per_portion:
+  - selected_package_ids
+  - selected_entrypoint_module_ids
+  - selected_leaf_module_ids_if_resolved
+  - runtime_roles
+  - application_scopes
+  - short_selection_reasons
+  - refines_and_complements_relations_used
+  - requires_closure
+  - retrieval_and_full_read_requirements
+  - direct_dependencies
+  - unresolved_blockers
+  - independently_selected_pipeline_entrypoints
+  evidence_limit: Planned selection is not verified retrieval, module application or execution.
+default: Empty package/module set; Hub baseline performs sufficient ordinary work without specialization.
+sequence:
+- TASK_SCOPE
+- ROOT_PACKAGE_SELECTION
+- PACKAGE_INTERFACE_RESOLUTION
+- SCOPED_MODULE_SET
+- HARD_DEPENDENCY_CLOSURE
+- EXACT_RETRIEVAL_AND_VERIFICATION
+- COMPOSITION_VALIDATION
+- SCOPED_HANDOFF
+stages:
+  TASK_SCOPE: Receive Hub-assigned operation/stage, objective, constraints and protected state; do not choose conversation
+    function or factual conclusions. Split independent portions.
+  ROOT_PACKAGE_SELECTION: Select a materially relevant package set from accepted root metadata, not one winner.
+    Applicability requires a concrete contribution; an ordinary topic or previously read package is insufficient.
+    Read only package interfaces here, never a global leaf inventory.
+    Recompute selection from the current task portion before specialized execution. Neither prior package selection
+    nor prior package non-selection is evidence for the current routing decision. When current requirements match
+    a registered owner's Catalog applicability, select that owner before executing its behavior. Direct tool
+    availability does not bypass package selection.
+  PACKAGE_INTERFACE_RESOLUTION: Dispatch by the single declared binding mode. LIBRARY_MODULE requires exact bound
+    identity, FULL_FILE and new headers before use. LEGACY_PROJECT_SOURCE requires full exact declared Project Source;
+    catalog IDs are routing aliases, not claimed file headers. Pipeline entrypoints remain opaque; internal resolution
+    belongs to each pipeline. Singleton returns entrypoint; optional owner catalog remains unchanged.
+  SCOPED_MODULE_SET: Receive package-local selected Module IDs, roles, matched scopes, Refines/Complements/Requires
+    and retrieval bindings. Validate owning Package ID and allowed cross-package declarations. Reassess applicable
+    broad coverage around refinements; collect any independently needed base selection without autoloading relation
+    counterparts.
+  HARD_DEPENDENCY_CLOSURE: Expand only explicit accepted Requires transitively, preserving dependent scopes and
+    recording direct edges. Resolve each target through its owning package interface without scanning other leaf
+    inventories. Detect hard cycles; missing, inactive or unsupported dependencies block all dependent roots/portions,
+    not independent selections.
+  EXACT_RETRIEVAL_AND_VERIFICATION: 'Apply the declared binding-mode verification only. Library: exact bounded retrieval,
+    FULL_FILE, identity/header/version and material body checks. Legacy: exact declared source, full content and
+    existing source/version contract; no new-header claim or Library discovery. Missing/mismatch blocks dependent
+    work, never switches binding.'
+  COMPOSITION_VALIDATION: Check scoped contributions and protected constraints across the verified set. A narrower
+    module refines only its matched responsibility; preserve uncovered applicable base duties. Incompatible same-scope
+    instructions require exposed conflict, separation where possible or blocking; no implicit specificity dominance.
+  SCOPED_HANDOFF: Return only scoped selections, permitted inputs/roles, protected state and completion criteria.
+    Module/pipeline owns its execution procedure. Report unresolved blockers and actual read evidence; selection
+    grants no tool call or state promotion.
+package_interface:
+  singleton: Root entry -> direct entrypoint; no mandatory package-local catalog.
+  growing: Same algorithm -> owner-declared local catalog -> relevant leaf set; package growth changes local inventory,
+    not Router source.
+  local_result_fields:
+  - module_id
+  - package_id
+  - runtime_role
+  - matched_scope
+  - refines
+  - complements
+  - requires
+  - retrieval_binding
+  root_metadata:
+  - package_id
+  - entrypoint_module_id
+  - runtime_role
+  - status
+  - version
+  - applicability
+  - location
+  - local_catalog
+  - requires
+  - binding_mode
+  cross_package: Target Module ID plus owning Package ID must be explicitly declared and admitted. Hub validates
+    composition; no inferred hierarchy or hidden dependencies.
+  invariants:
+  - ROUTER MAY KNOW PACKAGE INTERFACES; ROUTER MUST NOT KNOW PACKAGE LEAF INVENTORIES.
+  - PACKAGE OWNERSHIP != SEMANTIC HIERARCHY.
+  - ROUTING RELATION != ONTOLOGY.
+composition:
+  REFINES:
+    target: Module ID plus owning Package ID for cross-package relations, and declared matched responsibility/scope.
+    behavior: Refine only matched scope; retain independently applicable base responsibility outside it. Read base
+      context only when materially necessary for coverage/authority validation, never by relation alone.
+    autoload: false
+    implies_requires: false
+    replaces: false
+  COMPLEMENTS:
+    target: Module ID plus owning Package ID for cross-package relations; matched responsibility/scope where material.
+    behavior: Independently matched contributions may coexist in the same portion; neither dominates. Relation alone
+      does not select its counterpart.
+    autoload: false
+    implies_requires: false
+  REQUIRES:
+    target: Explicit hard dependency Module ID; owning Package ID for cross-package resolution.
+    transitive: true
+    cycle: BLOCK_DEPENDENT
+    missing: BLOCK_DEPENDENT
+  not_edges:
+  - mention
+  - membership
+  - overlap
+  - refines
+  - complements
+  - source_containment
+  invariants:
+  - SELECTED MODULE != SINGLE WINNER.
+  - MORE SPECIFIC != EXCLUSIVE.
+  - OVERLAP != REPLACEMENT.
+  - SPECIALIZATION REFINES MATCHED SCOPE; IT DOES NOT ERASE UNCOVERED BASE RESPONSIBILITIES.
+eligibility:
+  simulation: Explicit test-only metadata view may use proposed entrypoint identity contracts to represent current
+    active routes; never installs headers, promotes catalogs or proves a Library read.
+  current_files: Existing legacy controls remain unchanged and use their declared compatibility binding; no fabricated
+    new module headers.
+  technical_reconciliation: USER_REPORTED live integration success paths I01-I07/I09-I10 PASS; I08 actual Library
+    failure UNVERIFIABLE. LIVE INTEGRATION PARTIAL. Reassess selection every turn.
+  runtime: 'Only exact catalog bindings after scope selection and full reads: ACTIVE Library module or explicitly
+    declared legacy Project Source. Installed CI must delegate to this exact Router.'
+  candidate_admission: Candidate/inactive package artifacts are not admitted as active. Normal activation of this
+    core does not promote any other candidate or expand action authorization.
+library:
+  root: Central Hub Config
+  invariant: CENTRAL HUB CONFIG = SOLE LIBRARY DISCOVERY ROOT.
+  request: Central Hub Config plus accepted Module ID, Package ID, role, status and artifact version. Use verified
+    internal identity when available; otherwise resolve the specific Library object within that root. A filename
+    or display name is a discovery hint, not identity. Never use repository_path as runtime locator.
+  missing_locator: Internal IDs or locator absent does not forbid root-scoped resolution. Retain UNRESOLVED until
+    one identity path passes; no execution, broadened search or non-Library substitute while unresolved.
+  unavailable: UNVERIFIED / UNRESOLVED; metadata/spec planning only, never module execution.
+  scope: Search/resolve only inside Central Hub Config. If the tool cannot enforce that root, stop; do not discover
+    it by whole-Library search.
+  forbidden_fallbacks:
+  - other_library_root
+  - repository
+  - local_filesystem
+  - project_sources_for_library_binding
+  - memory
+  - prior_chat
+  - archive
+  - lookalike_filename
+  - latest_version_guess
+  retrieval_mechanism: 'Two identity paths within the same LIBRARY_MODULE binding. A: prefer the verified bound
+    library_file_id and Library revision when exposed and usable; verify the exact object, FULL_FILE, all required
+    headers and material body. A mismatch blocks; do not switch paths to evade it. B: when usable internal identity
+    is not exposed, list/search only within Central Hub Config, open the specific candidate object and read FULL_FILE;
+    verify Module ID, Package ID, Runtime role, Status ACTIVE, bound artifact Version and material body/responsibility
+    against accepted metadata. Establish exactly one acceptable ACTIVE identity through sufficient observable scoped
+    coverage: finish relevant pagination/loading and inspect all plausible matches, including differently named
+    candidates; an unread candidate or incomplete coverage leaves UNRESOLVED. Record the root, scope, opened object,
+    full-read evidence and duplicate-check limits. One item on one screen or a filename match is insufficient.
+    Hidden IDs may remain null; never infer Library revision from artifact Version or "current version". Record a
+    durable object locator only if its usefulness/stability is demonstrated; an in-session object reference is not
+    automatically a stable URL. Direct-fetch capability remains UNVERIFIED. Cannot establish root, full content or
+    one acceptable identity => BLOCK_DEPENDENT. Neither path admits repository/local/legacy substitutes.'
+  duplicate: 'Multiple valid matching ACTIVE identities block; do not pick first, rank, newest, filename or
+    "current version". If available scoped coverage cannot establish one acceptable identity, retain UNRESOLVED.
+    NO DUPLICATE OBSERVED IN SUFFICIENT SCOPED SEARCH != GLOBAL UNIQUENESS MATHEMATICALLY PROVEN.'
+verification:
+  read: FULL_FILE
+  headers:
+  - Module ID
+  - Package ID
+  - Runtime role
+  - Status
+  - Version
+  body: Verify material responsibility boundaries and relation declarations against accepted metadata before use.
+  reject:
+  - wrong_id
+  - wrong_package
+  - wrong_role
+  - wrong_version
+  - inactive
+  - candidate_as_active
+  - duplicate_ambiguous_id
+  - snippet_only
+  - header_only
+  - lookalike
+  invariants:
+  - HEADER MATCH != ACTIVATION.
+  - SEARCH RESULT != MODULE READ.
+  - PARTIAL READ != FULL_FILE.
+  headers_apply_to: LIBRARY_MODULE only; legacy dispatch uses its existing source contract, never fabricated Module
+    headers.
+pipelines:
+  selection: Independent Hub selection according to Hub-assigned need/authorization; no domain or capability self-activation.
+  handoff: Scoped objective, constraints, source/input roles and protected state; root and generic Router do not
+    inspect internal inventories.
+  invariants:
+  - HUB SELECTS PIPELINE. PIPELINE RESOLVES INTERNAL DEPENDENCIES.
+  - PIPELINE NEED != PIPELINE AUTHORIZATION.
+  - PIPELINE SELECTION != TOOL EXECUTION.
+failure:
+  root_missing_or_unreadable: BLOCK_DEPENDENT; sufficient independent baseline work continues.
+  unknown_package: BLOCK_DEPENDENT; no filename discovery or fallback.
+  entrypoint_missing: BLOCK_DEPENDENT; no leaf execution before required interface read.
+  required_local_catalog_missing: BLOCK_DEPENDENT; never load the whole package as substitute.
+  leaf_unresolved: BLOCK_DEPENDENT; name the exact target.
+  duplicate_or_header_mismatch: BLOCK_DEPENDENT; resolve exact deployment binding or retain ambiguity.
+  package_role_version_mismatch: BLOCK_DEPENDENT; never repair binding silently.
+  inactive_or_candidate: Exclude from automatic selection; if explicitly required as active, BLOCK_DEPENDENT.
+  requires_missing_or_cycle: BLOCK_DEPENDENT for every affected root; independent roots may continue.
+  conflicting_modules: Expose the conflict; split independent scopes where valid, otherwise BLOCK_DEPENDENT.
+  partial_refinement: Keep base coverage outside matched scope; no single winner.
+  scope_changed: Reassess selection and affected closure/read requirements before dependent work.
+  library_unavailable_or_locator_unresolved: If neither Library identity path can be verified, retain UNRESOLVED /
+    NOT VERIFIED and block dependent execution; an absent internal ID alone is not a failed root-scoped resolution.
+  snippet_header_or_lookalike: BLOCK_DEPENDENT; no FULL_FILE proof or equivalent substitution.
+  unsupported_cross_package_relation: BLOCK_DEPENDENT; never invent admission, owner context or hierarchy.
+  independent_work: BLOCK ONLY DEPENDENT WORK WHERE POSSIBLE. CONTINUE INDEPENDENT HUB-BASELINE WORK WHEN SUFFICIENT.
+    DO NOT INVENT A FALLBACK.
+  legacy_source_missing: BLOCK_DEPENDENT; no Library lookup or alternate source. Preserve existing AIS/ImageT internal
+    failure contracts.
+persistence:
+  reassess: Every turn and material scope change; retain compatible context and actual read evidence only while
+    sufficient.
+  previous_activation: PREVIOUS ACTIVATION != CURRENT ACTIVATION.
+  self_activation: false
+  persistent_modes: false
+evidence:
+  static: YAML and source/contract checks only.
+  spec: Synthetic fixtures with declared semantic matches; no model routing, Library access, source activation or
+    tool calls.
+  live_library_retrieval: USER_REPORTED_SUCCESS_PATHS_VERIFIED; FULL_FILE 19/19 has_more=false
+  single_module_trial: USER_REPORTED ACTIVE/1.0 FULL_FILE 19/19 has_more=false, V01/V02 PASS, no fallback or identity
+    ambiguity; not independently reproduced here.
+  live_routing: LIVE INTEGRATION PARTIAL; I01-I07/I09-I10 PASS; I08 UNVERIFIABLE; USER_REPORTED
+  invariant: STATIC / SPEC PASS != LIVE ROUTING VERIFIED.
+  live_failure_path: UNVERIFIABLE; no safe actual bound-artifact failure injection; no fallback observed on successful
+    paths only.
+  result_record: candidates/integration_v1.1/HUB_V1_1_LIVE_INTEGRATION_RESULT.md; repository evidence only, never a runtime
+    dependency.
+binding_dispatch:
+  LIBRARY_MODULE: Central Hub Config only. Apply library.retrieval_mechanism path A or B to establish one exact
+    Library object, FULL_FILE, required headers and material body before scoped execution. Internal IDs are preferred
+    when exposed and verified, not mandatory when path B succeeds. Wrong root, ambiguity, incomplete read, header/body
+    mismatch or unverified identity blocks dependent execution. Never accept legacy source or non-Library fallback.
+  LEGACY_PROJECT_SOURCE: Transitional compatibility only for explicitly declared unmigrated entries. Catalog
+    Package/Module IDs are technical routing aliases. Read exact declared_source_path/source_name in Project Sources
+    fully; verify existing title/version and responsibility boundaries. No fabricated new headers, no Library discovery;
+    missing or ambiguous exact source blocks dependent scope. Pipeline internals retain their current contracts.
+  singularity: ONE PACKAGE = ONE RUNTIME BINDING. Migration replaces legacy binding; it never adds a fallback.
+  verification_boundary: Legacy compatibility does not weaken permanent Library header/identity requirements.

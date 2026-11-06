@@ -1,0 +1,32 @@
+format_version: '1'
+module_id: HUB-CATALOG-SHOPPING
+package_id: HUB-PKG-SHOPPING
+runtime_role: PACKAGE_CATALOG
+scope: Package-local selection metadata for Shopping; no root package routing, Category inventory or execution.
+status: ACTIVE
+version: '1.0'
+entries:
+- module_id: HUB-PROC-SHOPPING-SEARCH
+  package_id: HUB-PKG-SHOPPING
+  runtime_role: DOMAIN_PROCEDURE
+  scope: Shopping-specific external commerce research preparation and scoped interpretation of research returns.
+  status: ACTIVE
+  version: '1.0'
+  applicability: >-
+    Within a Hub-delegated research-oriented Shopping portion: prepare commerce-specific evidence needs,
+    channel coverage or interpret research returns for external discovery/current product, price or stock work.
+    Fixed supplied evidence sufficient for core identification/comparison/Category interpretation or constraint
+    reevaluation does not select this leaf. Hub independently owns external-evidence need and AIS selection;
+    topic, prior selection and missing evidence alone grant no pipeline or tool activation.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    resolution: UNRESOLVED
+    verification: NOT_PERFORMED
+    retrieval_mechanism: >-
+      Resolve the exact ACTIVE/1.0 object in Central Hub Config under Hub Router. Verify FULL_FILE,
+      identity, body and scoped duplicate coverage before use. No repository, Project Source, archive,
+      prior-chat or filename fallback.

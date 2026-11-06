@@ -18,6 +18,7 @@ REPO = Path(__file__).resolve().parent
 EXPECTED = {
     "HUB-PKG-TECHNICAL": True, "HUB-PKG-CONCEPT-DEVELOPMENT": True,
     "HUB-PKG-AUTHORING": True, "HUB-PKG-AIS": True, "HUB-PKG-IMAGET": False,
+    "HUB-PKG-SHOPPING": False,
 }
 
 
@@ -36,7 +37,7 @@ with patch.object(h.host, 'OpenAI', side_effect=AssertionError('API execution'))
      patch.object(h.t9.t8, 'call_t8', side_effect=AssertionError('T8 execution')), \
      patch.object(h.t9, 'call_t9', side_effect=AssertionError('AIS execution')):
     assert h.hub_status()['read_only']
-    assert len(h.hub_runtime_inventory()['packages']) == 5
+    assert len(h.hub_runtime_inventory()['packages']) == 6
 assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
 """
         result = subprocess.run([sys.executable, "-c", code], cwd=REPO,
@@ -117,13 +118,14 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
         self.assertEqual(before, {p: p.read_bytes() for p in before})
 
     def test_catalog_change_is_seen_next_call(self):
-        original = hub.host.t7_read(hub.host.HUB_CATALOG_PATH)
-        changed = original.replace("  version: '1.0'", "  version: '9.9'", 1)
-        with tempfile.TemporaryDirectory() as directory:
-            catalog = Path(directory) / "catalog.yaml"
-            catalog.write_text(changed, encoding="utf-8", newline="")
-            with patch.object(hub.host, "HUB_CATALOG_PATH", catalog):
-                packages = hub.hub_runtime_inventory()["packages"]
+        read = hub.host.t7_read
+        def changed_catalog(path):
+            text = read(path)
+            if path == hub.host.HUB_CATALOG_PATH:
+                return text.replace("  version: '1.0'", "  version: '9.9'", 1)
+            return text
+        with patch.object(hub.host, "t7_read", side_effect=changed_catalog):
+            packages = hub.hub_runtime_inventory()["packages"]
         technical = next(p for p in packages if p["package_id"] == "HUB-PKG-TECHNICAL")
         self.assertFalse(technical["available"])
         self.assertIn("mismatch", technical["reason"])

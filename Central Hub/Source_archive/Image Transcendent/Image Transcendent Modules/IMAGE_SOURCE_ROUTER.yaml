@@ -1,0 +1,84 @@
+format_version: "1"
+router_version: "2.0.0-yaml-candidate"
+manifest_contract:
+  file: manifest.yaml
+  format_version: "1"
+  require_router_inventory_match: true
+  compare: [file, version, status, sha256]
+  unavailable_sha256: exact_filename_and_header_only_report_unverified_hash
+selection:
+  default: active_ci
+  explicit_target: manifest_ci_id
+  candidate_requirements: [exists_in_manifest, candidate_status, selectable, explicit_user_selection, declared_scope, compatibility_match]
+  isolated_test:
+    require: [isolated_project, identified_test_session, matching_installed_ci]
+    lifetime: current_identified_test
+    on_test_end: clear_selection_restore_baseline_instructions_before_next_operation
+    on_lost_or_uncertain_test_context: stop_and_reselect_or_restore_baseline
+  persist_as_active: false
+  mutate_manifest: false
+  installed_ci_mismatch: stop
+  selected_ci_after_selection: required_readable_exact_source
+  invalid_selection: stop
+resolution:
+  source_of_inventory: manifest
+  filename_match: exact
+  ci_location: project_custom_instructions
+  module_location: project_sources
+  local_path_usage: validation_only
+  compatibility: selected_ci_compatibility_versions_and_router_contract
+  required_source_error: stop
+  inconsistent_inventory: stop
+  forbidden_fallbacks: [archive, lookalike_filename, unselected_candidate, memory, prior_chat, local_git_path]
+  reload: every_operation_and_retry
+load_order: [selected_ci, prior_guard, anti_drift, active_preferences, active_template, current_request]
+activation:
+  listing_activates: false
+  applicability_activates: false
+  active_preferences:
+    inventory: manifest_preferences
+    source_routing: explicit_manifest_activation_only
+    direct_input_experiments: preserve_existing_contract_without_source_activation
+    candidate_ci_contract: binding
+  active_template:
+    inventory: manifest_artifacts_visual_template
+    optional_absent: skip_if_confirmed_absent
+    unexpected_template: stop
+    active_missing_or_invalid: stop
+    explicitly_requested_but_absent: request_template_or_revised_inventory
+authority:
+  processing_order_is_visual_priority: false
+  binding_limits: [platform_safety, tool_capability]
+  target: explicit_current_request
+  lower_priority_fields: compatible_scoped_fields_only
+  invent_visual_defaults: false
+  unknown: not_permission_to_invent
+template_conflicts:
+  require: [identifier, version, status, scope_or_applicability, owned_fields, unowned_fields, override_conditions]
+  malformed_or_contradictory: stop
+  compare: each_field_against_current_request
+  clear_explicit_user_override: change_only_conflicting_field
+  compatible_fields: retain
+  ambiguous_hard_invariant_conflict: smallest_clarification_before_execution
+  hard_invariants: [identity, count, anatomy, topology, attachment, reference_role, protected_region]
+  average_conflicts: false
+  outside_declared_scope: reject
+operations:
+  analyze: inspect_only_no_generation
+  create: compose_from_resolved_request
+  edit: preserve_outside_explicit_delta_as_tool_permits
+  variation: vary_only_authorized_open_fields
+  correct: bounded_failed_fields_or_fresh_creation_for_structural_failure
+execution:
+  prompt_gate: selected_ci_contract
+  ready_gate: selected_ci_contract
+  unresolved_required_source_or_material_decision: stop
+  absent_tool_call: do_not_claim_execution_or_verification
+references:
+  assign: only_attributes_authorized_by_request_or_active_template
+  unassigned_traits: non_authorizing
+  ambiguous_hard_constraint_role: clarify
+freshness:
+  changes: [effective_sources, current_request, references, tool_options, operation_lock]
+  stale: reroute_and_rebuild_lock_under_selected_ci
+  approval: selected_ci_contract

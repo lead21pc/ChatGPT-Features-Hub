@@ -1,5 +1,8 @@
 # Kết quả kiểm chứng Giai đoạn 1
 
+> Các đường dẫn máy trong hồ sơ và log đính kèm đã được thay bằng ký hiệu trung tính. Kết quả kỹ thuật, revision, workload và phạm vi kiểm chứng giữ nguyên. Các PASS lịch sử không xác nhận live cho nguồn 1.10.
+
+
 ## Closeout GPT-6.1 Sol — 2026-11-05
 
 **GPT-6.1 Sol = LIVE VERIFIED CANDIDATE FOR TESTED CENTRAL HUB W1/W2 SCOPE**; không phải replacement đã kiểm chứng toàn cục cho mọi đường Central Hub.

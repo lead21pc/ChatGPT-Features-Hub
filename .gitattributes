@@ -1,4 +1,11 @@
 * text=auto eol=lf
 upstream/** -text
+"Central Hub/**" -text whitespace=cr-at-eol
 runtime/packages/concept-development/** -text
 m3_evidence/** -text
+
+# Preserve the original whitespace of imported historical evidence.
+"Central Hub/candidates/fth_afm002_differentiation_stress_pilot/AFM-002_FULL_FILE_SNAPSHOT.md" -whitespace
+"Central Hub/candidates/fth_afm015_workspace_pilot/PHASE_2_RUNTIME_OUTPUTS.md" -whitespace
+"Central Hub/candidates/fth_afm015_workspace_pilot/PHASE_4_AFM015_PROPOSED.patch" -whitespace
+"Central Hub/Source_archive/Image Transcendent/Image Transcendent Modules/historical_sources/IMAGE_ANTI_PRIOR.md" -whitespace

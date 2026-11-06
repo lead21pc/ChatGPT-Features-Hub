@@ -1,0 +1,163 @@
+format_version: '1'
+router_version: 3.1.0
+manifest_contract:
+  file: manifest.yaml
+  format_version: '1'
+  require_router_inventory_match: true
+  compare:
+  - file
+  - version
+  - status
+  - sha256
+  unavailable_sha256: exact_filename_and_header_only_report_unverified_hash
+selection:
+  default: active_controller
+  explicit_target: manifest_controller_id
+  experimental_requirements:
+  - exists_in_manifest
+  - experimental_status
+  - selectable
+  - explicit_user_selection
+  - declared_isolated_scope
+  - compatibility_match
+  persist_as_active: false
+  mutate_manifest: false
+  selected_controller_after_selection: required_readable_exact_project_source
+  invalid_selection: stop
+  experimental_expiry: End/lost/uncertain test context clears selection; reroute baseline before next image operation.
+    Never replace Hub instructions.
+resolution:
+  source_of_inventory: manifest
+  filename_match: exact
+  module_location: project_sources
+  local_path_usage: validation_only
+  compatibility: selected_controller_compatibility_versions_and_router_contract
+  required_source_error: stop
+  inconsistent_inventory: stop
+  forbidden_fallbacks:
+  - archive
+  - lookalike_filename
+  - unselected_candidate
+  - memory
+  - prior_chat
+  - local_git_path
+  reload: every_operation_and_retry
+  controller_location: project_sources
+load_order:
+- selected_controller
+- prior_guard
+- anti_drift
+- active_preferences
+- active_template
+- current_request
+activation:
+  listing_activates: false
+  applicability_activates: false
+  active_preferences:
+    inventory: manifest_preferences
+    source_routing: explicit_manifest_activation_only
+    direct_input_experiments: preserve_existing_contract_without_source_activation
+    controller_contract: binding
+  active_template:
+    inventory: manifest_artifacts_visual_template
+    optional_absent: skip_if_confirmed_absent
+    unexpected_template: stop
+    active_missing_or_invalid: stop
+    explicitly_requested_but_absent: request_template_or_revised_inventory
+authority:
+  processing_order_is_visual_priority: false
+  binding_limits:
+  - platform_safety
+  - tool_capability
+  target: explicit_current_request
+  lower_priority_fields: compatible_scoped_fields_only
+  invent_visual_defaults: false
+  unknown: not_permission_to_invent
+template_conflicts:
+  require:
+  - identifier
+  - version
+  - status
+  - scope_or_applicability
+  - owned_fields
+  - unowned_fields
+  - override_conditions
+  malformed_or_contradictory: stop
+  compare: each_field_against_current_request
+  clear_explicit_user_override: change_only_conflicting_field
+  compatible_fields: retain
+  ambiguous_hard_invariant_conflict: smallest_clarification_before_execution
+  hard_invariants:
+  - identity
+  - count
+  - anatomy
+  - topology
+  - attachment
+  - reference_role
+  - protected_region
+  average_conflicts: false
+  outside_declared_scope: reject
+operations:
+  analyze: inspect_only_no_generation
+  create: compose_from_resolved_request
+  edit: preserve_outside_explicit_delta_as_tool_permits
+  variation: vary_only_authorized_open_fields
+  correct: bounded_failed_fields_or_fresh_creation_for_structural_failure
+execution:
+  prompt_gate: selected_controller_contract
+  ready_gate: manifest_selected_ready_gate_contract
+  unresolved_required_source_or_material_decision: stop
+  absent_tool_call: do_not_claim_execution_or_verification
+references:
+  assign: only_attributes_authorized_by_request_or_active_template
+  unassigned_traits: non_authorizing
+  ambiguous_hard_constraint_role: clarify
+freshness:
+  changes:
+  - effective_sources
+  - current_request
+  - tool_facing_prompt
+  - operation_lock
+  - references
+  - reference_roles
+  - tool_options
+  - attachments
+  - relevant_execution_inputs
+  stale: reload_affected_sources_and_rebuild_under_controller; Ready_Gate_owns_approval_invalidation
+  approval: selected_ready_gate_contract
+generation_dependencies:
+  operations:
+  - create
+  - edit
+  - variation
+  - correct
+  retry: each_generation_call
+  ready_gate:
+    inventory: manifest.artifacts.ready_gate
+    compatibility: selected_controller.compatibility.ready_gate
+    require:
+    - exact_filename
+    - readable
+    - active
+    - required
+    - matching_version
+    - matching_hash_when_available
+    - compatible
+    unavailable_hash: exact_filename_and_header_report_unverified_hash
+    resolve: before_generation; load for authorization after Prompt Gate and before PENDING_APPROVAL
+    failure: Stop dependent generation, name the exact dependency, no image tool call; independent work may continue.
+    forbidden_fallbacks:
+    - archive
+    - embedded_controller
+    - lookalike_filename
+    - memory
+    - prior_chat
+  analyze: no_generation_no_ready_gate
+generation_sequence:
+- operation_lock
+- tool_facing_prompt
+- prompt_gate
+- active_ready_gate
+- approved_exact_snapshot
+- tool_execution
+- visible_verification

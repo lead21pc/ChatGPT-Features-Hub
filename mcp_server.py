@@ -4,6 +4,7 @@ import copy
 import hashlib
 import json
 import secrets
+from pathlib import Path
 
 from mcp import types
 from mcp.server.lowlevel import Server
@@ -13,6 +14,7 @@ import runtime_host as host
 import t9
 
 
+REPO_ROOT = Path(__file__).resolve().parent
 server = Server("central-hub")
 _PROCESS_NONCE = secrets.token_hex(16)
 
@@ -87,8 +89,8 @@ def hub_runtime_inventory():
         "runtime_mode": host.RUNTIME_MODE,
         "binding_version": manifest["binding_version"],
         "retrieval_authority": manifest["retrieval_authority"],
-        "bindings_path": str(t9.BINDINGS_PATH),
-        "catalog_path": str(host.HUB_CATALOG_PATH),
+        "bindings_path": t9.BINDINGS_PATH.relative_to(REPO_ROOT).as_posix(),
+        "catalog_path": host.HUB_CATALOG_PATH.relative_to(REPO_ROOT).as_posix(),
         "availability_scope": "Local retrieval only; no activation, execution or deployment proof",
         "packages": inventory,
     }
@@ -109,7 +111,7 @@ ROOT_TASK = (
 LOCAL_ROOT_BOUNDARY = (
     "LOCAL_RUNTIME_FILE v0.3 supplies the existing Technical, Concept, Authoring and AIS storage "
     "bindings only; historical Library/Project storage metadata does not block these local bindings. "
-    "All non-storage semantics remain unchanged. ImageT has no local binding; select it if applicable "
+    "All non-storage semantics remain unchanged. ImageT and Shopping have no local binding; select them if applicable "
     "and expose unavailability. Availability never activates a package. This milestone executes no "
     "package, resolves no leaves and grants no tool execution or state promotion."
 )
@@ -124,7 +126,7 @@ def _root_control_paths():
 
 
 def _control_identity(control_id, path, text):
-    return {"control_id": control_id, "path": str(path), "total_length": len(text),
+    return {"control_id": control_id, "path": path.relative_to(REPO_ROOT).as_posix(), "total_length": len(text),
             "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()}
 
 

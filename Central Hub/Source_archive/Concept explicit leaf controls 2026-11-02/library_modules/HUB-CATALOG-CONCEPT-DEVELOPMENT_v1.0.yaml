@@ -1,0 +1,161 @@
+format_version: '1'
+module_id: HUB-CATALOG-CONCEPT-DEVELOPMENT
+package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+runtime_role: PACKAGE_CATALOG
+scope: Scoped selection metadata for the concept-development package; no global package routing or execution.
+status: ACTIVE
+version: '1.0'
+anti_drift_configuration: >-
+  Experiment switch: use only the status of the three anti-drift entries below, not source presence or a runtime
+  selector. BASELINE = all three INACTIVE; A = only HUB-DOM-ANTI-PRIOR ACTIVE; B = only
+  HUB-DOM-MODULAR-CONCEPT-ARCHITECTURE and HUB-DOM-WORLDBUILDING-INTERNAL-LOGIC ACTIVE.
+  Missing, duplicate or unsupported status entries, an incomplete B pair, or A ACTIVE with either B member ACTIVE
+  are configuration errors. Block only anti-drift-dependent portions; select no winner or fallback. Check this
+  metadata before reading anti-drift bodies. Status enables eligibility, never task selection. Never read the
+  inactive alternative. WIL is dependency-only, never independently selected. B selects MCA, whose one-way
+  Requires closure must fully verify WIL before either executes on the same matched portion. A failed companion
+  blocks B, never permits MCA-only execution. Reassess on every material task/scope change; no persistent mode.
+  Deployment must align the exact catalog, core and selected module content in Central Hub Config. All three
+  module artifacts carry eligible Status ACTIVE; their catalog entries default INACTIVE for the baseline.
+  Change only these three catalog statuses together to configure a test; do not change Creative/Brainstorm.
+  Unobserved Library identities remain unresolved; neither configuration nor repository files prove deployment.
+entries:
+- module_id: HUB-DOM-CREATIVE
+  package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  runtime_role: DOMAIN_CONTROL
+  status: ACTIVE
+  version: '1.1'
+  applicability: Realization/deepening inside the supplied selected premise through imagery, action, rhythm, situations,
+    relationships and functional fictional detail; not a fiction topic alone. A material premise change does not
+    by itself select Creative.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: libfile_9a5f1f01a39c8191b3b299cbe8c03b8b
+    library_version_id: null
+    observed_path: Central Hub Config/HUB-DOM-CREATIVE_v1.1.md
+    observed_surface_file_id: file_000000005f1482079a499865628b7576
+    surface_id_usage: Evidence/debug only; not assumed portable canonical locator.
+    verification: CHATGPT_OBSERVED_FULL_FILE_BYTE_EXACT_VERIFIED
+    resolution: RESOLVED
+    read_evidence: FULL_FILE 15/15; has_more=false; 1633 bytes; repository/Library SHA-256
+      0430934D81B57743854543C52D9B78100D6209D8415A59C890E89F19296B4052 matched.
+    duplicate_check: NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE
+    retrieval_mechanism: Root-scoped Library listing/read/materialization verified for this binding. Runtime use still
+      requires the exact bound identity, FULL_FILE and headers/body checks; no repository or Project Source fallback.
+  refines: []
+  complements: []
+  requires: []
+- module_id: HUB-CAP-BRAINSTORM
+  package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  runtime_role: CAPABILITY
+  status: ACTIVE
+  version: '1.1'
+  applicability: Premise-changing branches, reversal or relaxation, second-order consequences, feedback or links
+    between incomplete premises; not ordinary brainstorming alone. Explicit user requests using the canonical
+    Vietnamese phrase "thử động não", the alias "brainstorm sâu", or semantically equivalent imperatives such
+    as "động não thử cái này" are strong selection signals for this specialized capability. Interpret request
+    intent, not literal substrings; mentions, definition or ability questions, quoted examples and negation are
+    not explicit triggers. TRIGGER PHRASE != KEYWORD CONTAINS. Plain "brainstorm" alone does not force specialized
+    selection; independent technique applicability still applies without a trigger. Scope explicit requests to
+    the requested task portion only; no persistent mode. BRAINSTORM selection grants no other package, pipeline
+    or tool activation and remains subject to existing Router binding and failure contracts; selection proves
+    no retrieval or execution.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: libfile_9573068db03081918819492a2f297377
+    library_version_id: null
+    observed_path: Central Hub Config/HUB-CAP-BRAINSTORM_v1.1.md
+    observed_surface_file_id: file_000000008a6c8211b0b9236c790d343f
+    surface_id_usage: Evidence/debug only; not assumed portable canonical locator.
+    verification: CHATGPT_OBSERVED_FULL_FILE_BYTE_EXACT_VERIFIED
+    resolution: RESOLVED
+    read_evidence: FULL_FILE 50/50; has_more=false; 3167 bytes; repository/Library SHA-256
+      3758BF748AB11886656F0EA2A73472323301D14E7BF93BCA5767079FEA824843 matched.
+    duplicate_check: NO_DUPLICATE_OBSERVED_IN_INSPECTED_CENTRAL_HUB_CONFIG_SCOPE
+    retrieval_mechanism: Root-scoped Library listing/read/materialization verified for this binding. Runtime use still
+      requires the exact bound identity, FULL_FILE and headers/body checks; no repository or Project Source fallback.
+  refines: []
+  complements: []
+  requires: []
+- module_id: HUB-DOM-ANTI-PRIOR
+  package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  runtime_role: DOMAIN_CONTROL
+  status: INACTIVE
+  version: '1.0'
+  applicability: >-
+    Select only for a current portion that must supply an undetermined material actor/system/world premise and
+    risks silently deriving it from a familiar prior/analogy. Not mere Concept/Creative/Brainstorm selection,
+    fiction topic, prior selection, complete-premise realization, non-system literary detail, explicit trope or
+    Earth-analogue use, permitted blank-slate invention, openly declared invented assumptions or lightweight
+    brainstorming independent of protected/current structure. A different undeclared material premise in a
+    branch still requires its own applicability assessment.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    resolution: UNRESOLVED
+    verification: NOT_VERIFIED
+    retrieval_mechanism: Exact bound ACTIVE/1.0 identity and FULL_FILE in Central Hub Config under Hub Router;
+      root-scoped resolution when usable verified IDs are absent. Filename is a hint only; no non-Library fallback.
+  refines: []
+  complements: []
+  requires: []
+- module_id: HUB-DOM-MODULAR-CONCEPT-ARCHITECTURE
+  package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  runtime_role: DOMAIN_CONTROL
+  status: INACTIVE
+  version: '1.0'
+  applicability: >-
+    Selectable entry for Alternative B only when both B entries are ACTIVE and A INACTIVE. Match a concrete
+    current need for module autonomy/typed relations, composition/decomposition, host/interface compatibility,
+    cross-boundary authority, state transitions, actor information/agency, architecture stress testing, or world
+    subsystem/institution/systemic coherence, causal propagation, feedback/temporal viability or comparison of
+    system-design branches. Named entities, fiction topic, ordinary options/brainstorming, Creative/Brainstorm
+    activation and previous selection alone are insufficient. Do not select for a locally closed question with
+    no material architectural/systemic distinction. Both controls apply to the same matched portion, preserving
+    their internal conditional gates and stop rules; pairing does not force a full world checklist or suppress
+    explicitly requested tropes, free invention or labeled hypothetical branches.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    resolution: UNRESOLVED
+    verification: NOT_VERIFIED
+    retrieval_mechanism: Exact bound ACTIVE/1.0 identity and FULL_FILE in Central Hub Config under Hub Router;
+      root-scoped resolution when usable verified IDs are absent. Filename is a hint only; no non-Library fallback.
+  refines: []
+  complements: []
+  requires:
+  - module_id: HUB-DOM-WORLDBUILDING-INTERNAL-LOGIC
+- module_id: HUB-DOM-WORLDBUILDING-INTERNAL-LOGIC
+  package_id: HUB-PKG-CONCEPT-DEVELOPMENT
+  runtime_role: DOMAIN_CONTROL
+  status: INACTIVE
+  version: '1.0'
+  applicability: >-
+    Dependency-only companion of HUB-DOM-MODULAR-CONCEPT-ARCHITECTURE for Alternative B; never select independently.
+    Resolve through MCA's hard Requires on exactly the same matched task portion. Both must pass FULL_FILE,
+    identity/status/version/body verification before either executes; no partial pair. Retain internal gates for
+    ontology, institutions, actor/system coherence, bounded propagation, feedback and temporal design; no mandatory
+    complete-world expansion. WIL alone is an invalid B configuration.
+  location:
+    class: LIBRARY
+    root: Central Hub Config
+    locator: null
+    library_file_id: null
+    library_version_id: null
+    resolution: UNRESOLVED
+    verification: NOT_VERIFIED
+    retrieval_mechanism: Exact bound ACTIVE/1.0 identity and FULL_FILE in Central Hub Config under Hub Router;
+      root-scoped resolution when usable verified IDs are absent. Filename is a hint only; no non-Library fallback.
+  refines: []
+  complements: []
+  requires: []

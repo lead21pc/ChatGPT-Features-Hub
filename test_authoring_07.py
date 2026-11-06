@@ -5,11 +5,11 @@ import re
 import unittest
 from pathlib import Path
 
-import app
+import runtime_host
 import t8
 import t9
 
-HUB = app.HUB_CI_PATH.parent
+HUB = Path(__file__).resolve().parent / "upstream" / "Central Hub"
 OLD = HUB / 'Source_archive/Authoring 0.7 M2 2026-11-05'
 CANDIDATE = HUB / 'candidates/authoring_v0_7'
 
@@ -48,16 +48,16 @@ class Authoring07Contracts(unittest.TestCase):
 
     def test_minimum_catalog_router_delta_and_unchanged_other_packages(self):
         old = (OLD / 'HUB_PACKAGE_CATALOG_v1.8.yaml').read_text(encoding='utf-8')
-        new = app.HUB_CATALOG_PATH.read_text(encoding='utf-8')
+        new = (HUB / "HUB_PACKAGE_CATALOG_v1.9.yaml").read_text(encoding='utf-8')
         def other(text):
             first, rest = text.split('- package_id: HUB-PKG-AUTHORING\n', 1)
             return first.split('packages:\n')[1], rest.split('- package_id: HUB-PKG-AIS\n')[1]
         self.assertEqual(other(old), other(new))
-        identity = app.t7_catalog_identities(new, 'packages', 'package_id')[t8.AUTHORING]
+        identity = runtime_host.t7_catalog_identities(new, 'packages', 'package_id')[t8.AUTHORING]
         self.assertEqual((identity['version'], identity['status'], identity['runtime_role']), ('0.7', 'ACTIVE', 'CAPABILITY'))
         self.assertIn('ISOLATED last', new)
         self.assertIn('contributor + ISOLATED', new)
-        self.assertEqual(app.HUB_ROUTER_PATH.read_text(encoding='utf-8'),
+        self.assertEqual((HUB / "HUB_ROUTER_v1.1.yaml").read_text(encoding='utf-8'),
                          (OLD / 'HUB_ROUTER_v1.1.yaml').read_text(encoding='utf-8').replace('1.8', '1.9'))
 
     def test_archive_receipt_and_runtime_bindings(self):

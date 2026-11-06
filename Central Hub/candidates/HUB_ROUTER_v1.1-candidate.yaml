@@ -1,0 +1,165 @@
+format_version: '1'
+module_id: HUB-CORE-ROUTER
+runtime_role: CORE_ROUTER
+router_version: '1.1-candidate'
+status: CANDIDATE
+active: false
+deployment: DO NOT DEPLOY
+activation_notice: NOT ACTIVE; candidate presence never changes installed Hub delegation.
+kind: Behavioral contract, not executable routing or Library storage implementation.
+contracts:
+  architecture:
+    file: HUB_ARCHITECTURE_v0.1.md
+    module_id: HUB-CORE-ARCH
+    version: '0.1'
+    status: CANDIDATE
+  root_catalog:
+    file: HUB_PACKAGE_CATALOG_v0.1.yaml
+    module_id: HUB-CORE-PACKAGE-CATALOG
+    version: '0.1'
+    status: CANDIDATE
+  binding_scope: Candidate-local spec references only; not installed Project Sources.
+  role_boundary: CORE_ROUTER identifies the existing scoped selector/composer responsibility; no new behavior owner.
+ownership:
+  hub_ci: Global operation, stage, truth, action authorization, verification need and explanation.
+  router: Scoped package selection, package-local interface dispatch, module-set composition and dependency/read validation.
+  package: Internal leaf inventory and applicability; returns scoped selections, never replaces Hub selection.
+  reasoning_profile: Cross-subject reasoning discipline selected by Runtime role and task need, never inferred from directory or Module ID prefix; Hub CI retains global truth/state/action ownership.
+  pipeline: Internal mediation procedures and dependencies; Hub selects only its entrypoint.
+  platform: Actual retrieval and tool execution; instructions alone execute nothing.
+input:
+  - task_portion
+  - hub_assigned_operation_stage_when_material
+  - objective
+  - constraints
+  - protected_state
+  - relevant_context
+  - root_package_catalog
+  - current_package_module_read_evidence
+output:
+  visibility: Internal by default; expose only requested inspection or material blockers.
+  per_portion:
+    - selected_package_ids
+    - selected_entrypoint_module_ids
+    - selected_leaf_module_ids_if_resolved
+    - runtime_roles
+    - application_scopes
+    - short_selection_reasons
+    - refines_and_complements_relations_used
+    - requires_closure
+    - retrieval_and_full_read_requirements
+    - direct_dependencies
+    - unresolved_blockers
+    - independently_selected_pipeline_entrypoints
+  evidence_limit: Planned selection is not verified retrieval, module application or execution.
+default: Empty package/module set; Hub baseline performs sufficient ordinary work without specialization.
+sequence:
+  - TASK_SCOPE
+  - ROOT_PACKAGE_SELECTION
+  - PACKAGE_INTERFACE_RESOLUTION
+  - SCOPED_MODULE_SET
+  - HARD_DEPENDENCY_CLOSURE
+  - EXACT_RETRIEVAL_AND_VERIFICATION
+  - COMPOSITION_VALIDATION
+  - SCOPED_HANDOFF
+stages:
+  TASK_SCOPE: Receive Hub-assigned operation/stage, objective, constraints and protected state; do not choose conversation function or factual conclusions. Split independent portions.
+  ROOT_PACKAGE_SELECTION: Select a materially relevant package set from accepted root metadata, not one winner. Applicability requires a concrete contribution; an ordinary topic or previously read package is insufficient. Read only package interfaces here, never a global leaf inventory.
+  PACKAGE_INTERFACE_RESOLUTION: Resolve and FULL_FILE verify the bound entrypoint before using it. Singleton returns that module directly. A growing package resolves its declared local catalog through its owner; read/verify that catalog before using its metadata. Pipeline entrypoints are opaque to this generic step; pipelines resolve internals themselves.
+  SCOPED_MODULE_SET: Receive package-local selected Module IDs, roles, matched scopes, Refines/Complements/Requires and retrieval bindings. Validate owning Package ID and allowed cross-package declarations. Reassess applicable broad coverage around refinements; collect any independently needed base selection without autoloading relation counterparts.
+  HARD_DEPENDENCY_CLOSURE: Expand only explicit accepted Requires transitively, preserving dependent scopes and recording direct edges. Resolve each target through its owning package interface without scanning other leaf inventories. Detect hard cycles; missing, inactive or unsupported dependencies block all dependent roots/portions, not independent selections.
+  EXACT_RETRIEVAL_AND_VERIFICATION: Construct exact bounded requests from accepted bindings; retrieve FULL_FILE and compare identity, Package ID, role, status, version and material relations/boundaries. Metadata closure remains provisional until all decisive artifacts pass. Mismatch stops dependent work, never silently edits the catalog or selects a newer version.
+  COMPOSITION_VALIDATION: Check scoped contributions and protected constraints across the verified set. A narrower module refines only its matched responsibility; preserve uncovered applicable base duties. Incompatible same-scope instructions require exposed conflict, separation where possible or blocking; no implicit specificity dominance.
+  SCOPED_HANDOFF: Return only scoped selections, permitted inputs/roles, protected state and completion criteria. Module/pipeline owns its execution procedure. Report unresolved blockers and actual read evidence; selection grants no tool call or state promotion.
+package_interface:
+  singleton: Root entry -> direct entrypoint; no mandatory package-local catalog.
+  growing: Same algorithm -> owner-declared local catalog -> relevant leaf set; package growth changes local inventory, not Router source.
+  local_result_fields: [module_id, package_id, runtime_role, matched_scope, refines, complements, requires, retrieval_binding]
+  root_metadata: [package_id, entrypoint_module_id, runtime_role, status, version, applicability, location, local_catalog, requires]
+  cross_package: Target Module ID plus owning Package ID must be explicitly declared and admitted. Hub validates composition; no inferred hierarchy or hidden dependencies.
+  invariants:
+    - ROUTER MAY KNOW PACKAGE INTERFACES; ROUTER MUST NOT KNOW PACKAGE LEAF INVENTORIES.
+    - PACKAGE OWNERSHIP != SEMANTIC HIERARCHY.
+    - ROUTING RELATION != ONTOLOGY.
+composition:
+  REFINES:
+    target: Module ID plus owning Package ID for cross-package relations, and declared matched responsibility/scope.
+    behavior: Refine only matched scope; retain independently applicable base responsibility outside it. Read base context only when materially necessary for coverage/authority validation, never by relation alone.
+    autoload: false
+    implies_requires: false
+    replaces: false
+  COMPLEMENTS:
+    target: Module ID plus owning Package ID for cross-package relations; matched responsibility/scope where material.
+    behavior: Independently matched contributions may coexist in the same portion; neither dominates. Relation alone does not select its counterpart.
+    autoload: false
+    implies_requires: false
+  REQUIRES:
+    target: Explicit hard dependency Module ID; owning Package ID for cross-package resolution.
+    transitive: true
+    cycle: BLOCK_DEPENDENT
+    missing: BLOCK_DEPENDENT
+  not_edges: [mention, membership, overlap, refines, complements, source_containment]
+  invariants:
+    - SELECTED MODULE != SINGLE WINNER.
+    - MORE SPECIFIC != EXCLUSIVE.
+    - OVERLAP != REPLACEMENT.
+    - SPECIALIZATION REFINES MATCHED SCOPE; IT DOES NOT ERASE UNCOVERED BASE RESPONSIBILITIES.
+eligibility:
+  future_runtime: Only ACTIVE artifacts in accepted deployed catalogs, after selection and exact reads. Self-declared headers grant no admission.
+  candidate_runtime: Block this candidate and its candidate contracts from automatic runtime activation.
+  simulation: Explicit test-only metadata view may use proposed entrypoint identity contracts to represent current active routes; never installs headers, promotes catalogs or proves a Library read.
+  current_files: CURRENT ACTIVE FILE != FUTURE MODULE ID CONTRACT. Existing active controls remain unchanged and need no new header in this milestone.
+  technical_reconciliation: Canonical identity remains stable; candidate Runtime role is REASONING_PROFILE. A successful trial is evidence only for its exact revision/scope, not deployment of the real migration candidate.
+library:
+  root: Central Hub Config
+  invariant: CENTRAL HUB CONFIG = SOLE LIBRARY DISCOVERY ROOT.
+  request: Bound root plus exact accepted locator, Module ID, Package ID, role and version; never use repository_path as runtime locator.
+  missing_locator: UNRESOLVED; no retrieval, no broadened search.
+  unavailable: UNVERIFIED / UNRESOLVED; metadata/spec planning only, never module execution.
+  scope: Search/resolve only inside Central Hub Config. If the tool cannot enforce that root, stop; do not discover it by whole-Library search.
+  forbidden_fallbacks: [other_library_root, repository, local_filesystem, project_sources_for_library_binding, memory, prior_chat, archive, lookalike_filename, latest_version_guess]
+verification:
+  read: FULL_FILE
+  headers: [Module ID, Package ID, Runtime role, Status, Version]
+  body: Verify material responsibility boundaries and relation declarations against accepted metadata before use.
+  reject: [wrong_id, wrong_package, wrong_role, wrong_version, inactive, candidate_as_active, duplicate_ambiguous_id, snippet_only, header_only, lookalike]
+  invariants:
+    - HEADER MATCH != ACTIVATION.
+    - SEARCH RESULT != MODULE READ.
+    - PARTIAL READ != FULL_FILE.
+pipelines:
+  selection: Independent Hub selection according to Hub-assigned need/authorization; no domain or capability self-activation.
+  handoff: Scoped objective, constraints, source/input roles and protected state; root and generic Router do not inspect internal inventories.
+  invariants:
+    - HUB SELECTS PIPELINE. PIPELINE RESOLVES INTERNAL DEPENDENCIES.
+    - PIPELINE NEED != PIPELINE AUTHORIZATION.
+    - PIPELINE SELECTION != TOOL EXECUTION.
+failure:
+  root_missing_or_unreadable: BLOCK_DEPENDENT; sufficient independent baseline work continues.
+  unknown_package: BLOCK_DEPENDENT; no filename discovery or fallback.
+  entrypoint_missing: BLOCK_DEPENDENT; no leaf execution before required interface read.
+  required_local_catalog_missing: BLOCK_DEPENDENT; never load the whole package as substitute.
+  leaf_unresolved: BLOCK_DEPENDENT; name the exact target.
+  duplicate_or_header_mismatch: BLOCK_DEPENDENT; resolve exact deployment binding or retain ambiguity.
+  package_role_version_mismatch: BLOCK_DEPENDENT; never repair binding silently.
+  inactive_or_candidate: Exclude from automatic selection; if explicitly required as active, BLOCK_DEPENDENT.
+  requires_missing_or_cycle: BLOCK_DEPENDENT for every affected root; independent roots may continue.
+  conflicting_modules: Expose the conflict; split independent scopes where valid, otherwise BLOCK_DEPENDENT.
+  partial_refinement: Keep base coverage outside matched scope; no single winner.
+  scope_changed: Reassess selection and affected closure/read requirements before dependent work.
+  library_unavailable_or_locator_unresolved: UNRESOLVED / NOT VERIFIED; no actual retrieval or execution claim.
+  snippet_header_or_lookalike: BLOCK_DEPENDENT; no FULL_FILE proof or equivalent substitution.
+  unsupported_cross_package_relation: BLOCK_DEPENDENT; never invent admission, owner context or hierarchy.
+  independent_work: BLOCK ONLY DEPENDENT WORK WHERE POSSIBLE. CONTINUE INDEPENDENT HUB-BASELINE WORK WHEN SUFFICIENT. DO NOT INVENT A FALLBACK.
+persistence:
+  reassess: Every turn and material scope change; retain compatible context and actual read evidence only while sufficient.
+  previous_activation: PREVIOUS ACTIVATION != CURRENT ACTIVATION.
+  self_activation: false
+  persistent_modes: false
+evidence:
+  static: YAML and source/contract checks only.
+  spec: Synthetic fixtures with declared semantic matches; no model routing, Library access, source activation or tool calls.
+  live_library_retrieval: ROUTER_INTEGRATION_NOT_RUN
+  single_module_trial: USER_REPORTED_SCOPED_PASS; proves neither this Router integration nor real candidate deployment.
+  live_routing: NOT_RUN
+  invariant: STATIC / SPEC PASS != LIVE ROUTING VERIFIED.

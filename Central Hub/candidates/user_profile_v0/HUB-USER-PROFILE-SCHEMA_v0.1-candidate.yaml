@@ -1,0 +1,41 @@
+resource_id: HUB-USER-PROFILE
+schema_version: '0.1-candidate'
+status: CANDIDATE
+resource_kind: SHARED_NON_MODULE_RESOURCE
+input_mode: SUPPLIED_INPUT_SPEC_ONLY
+library_resolution: NOT_IMPLEMENTED
+owner: USER
+customizable: true
+customization_mode: MANUAL_USER_ONLY
+mutation:
+  model_allowed: false
+  general_file_write_authorization_applies: false
+  forbidden_model_actions:
+    - write
+    - append
+    - delete
+    - infer_and_store
+    - normalize_and_save
+    - persist_chat_to_profile
+    - refresh_stale_values
+  proposed_change: RETURN_TO_USER_WITHOUT_WRITING
+storage:
+  public_repository: SCHEMA_ACCESS_TEMPLATE_AND_SYNTHETIC_FIXTURES_ONLY
+  actual_values: PRIVATE_USER_MANAGED_OUTSIDE_REPOSITORY
+sections:
+  BASICS:
+    general:
+      market_region: optional_string
+      measurement_system: optional_string
+    preferences:
+      preferred_brand: optional_string
+  HEALTH_CONSTRAINTS:
+    substances_to_avoid: optional_list_of_strings
+default_access: DENY
+access:
+  HUB-PKG-SHOPPING:
+    BASICS:
+      - purchase_filtering
+      - product_compatibility
+    HEALTH_CONSTRAINTS:
+      - product_compatibility
