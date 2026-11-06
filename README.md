@@ -1,99 +1,73 @@
 # ChatGPT Features Hub
 
-[Central Hub](<Central Hub/README.md>) tổ chức các tính năng của Hub cho **ChatGPT Web**, với Project Instructions, Project Sources và Library. [CI 1.1](<Central Hub/HUB_CI_v1.1.md>), [Router 1.1](<Central Hub/HUB_ROUTER_v1.1.yaml>), [Architecture 1.10](<Central Hub/HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog 1.10](<Central Hub/HUB_PACKAGE_CATALOG_v1.10.yaml>) xác lập hợp đồng. Catalog hiện có sáu gói gồm Technical, Concept Development, Authoring, AIS, ImageT và Shopping. Xem [hồ sơ runtime](<Central Hub/RUNTIME_EVIDENCE_CHANGELOG.md>) để phân biệt trạng thái trong Git với cài đặt và bằng chứng live.
+**Một workspace ChatGPT đa dụng để chẩn đoán kỹ thuật, phát triển ý tưởng, soạn prompt, nghiên cứu, xử lý ảnh và hỗ trợ quyết định mua sắm.**
 
-Nguồn hiện hành trong `Central Hub/` lấy từ phần Central Hub của Creative Workshops tại commit `e310b4510ad078981ee6ea82373808c469144ddb`. Creative Workshops vẫn là workspace lore và worldbuilding. `upstream/Central Hub/` giữ snapshot 1.9 cho kiểm chứng lịch sử. Một số báo cáo và log của cả hai bộ đã thay đường dẫn máy bằng ký hiệu trung tính, giữ nguyên kết quả kỹ thuật. Receipt AIS giữ riêng hash gốc và hash bản đã che đường dẫn.
+[Cách Hub xử lý công việc](#cách-hub-xử-lý-công-việc) · [Các gói hiện hành](#các-gói-hiện-hành) · [Soạn prompt](#soạn-prompt-với-authoring) · [Chọn điểm bắt đầu](#chọn-điểm-bắt-đầu) · [Trạng thái kiểm chứng](#trạng-thái-kiểm-chứng)
 
-## Bản dự phòng Local/API
+## Hub được xây dựng để làm gì
 
-Các entry point Python ở gốc và thư mục `runtime/` giữ cách chạy cũ. Runtime đọc bốn control từ `Central Hub/`. Binding local v0.1–v0.3 giữ Technical, Concept, Authoring và AIS theo phạm vi từng chế độ. ImageT và Shopping chưa có binding local. Nếu chế độ tích hợp chọn gói không khả dụng, nó dừng phần phụ thuộc theo quy tắc của chế độ đó. Người muốn tiếp tục phát triển adapter API có thể fork.
+Central Hub là dự án cá nhân phát triển qua sử dụng thực tế, từ việc ghi nhận lỗi hành vi của mô hình đến điều chỉnh Custom Instructions, kiểm tra hồi quy và thử nghiệm từng revision. **ChatGPT Web / Project + Library** là môi trường chính. Các hợp đồng hiện hành nằm trong [Central Hub/](<Central Hub/README.md>).
 
-Streamlit mặc định bind `127.0.0.1`. MCP cung cấp công cụ kiểm tra chỉ đọc qua stdio, với đường dẫn metadata tương đối tính từ gốc repository. Mỗi phiên giao diện giữ hội thoại trong bộ nhớ và gửi prompt/lịch sử cần thiết đến Responses API. Đường Codex CLI là thử nghiệm riêng và chỉ chạy khi được gọi tường minh.
+## Cách Hub xử lý công việc
 
-Đã kiểm tra tĩnh, mô phỏng và kiểm tra tích hợp local với nguồn 1.10. Live Responses API trên bộ 1.10 chưa chạy. Các kết quả ở phần dưới và trong [VERIFICATION.md](VERIFICATION.md) thuộc revision và workload đã ghi. Shopping 1.0 đang ở trạng thái promotion trong Git. Xem [hồ sơ Shopping](<Central Hub/SHOPPING_PROMOTION.md>) để biết trạng thái Library và Project.
+Hub giữ mục tiêu của yêu cầu hiện tại và giao từng phần việc cho gói phù hợp. Một lượt giải thích hoặc trao đổi thông thường có thể chỉ cần Hub CI. Khi nhiều gói cùng tham gia, mỗi gói đóng góp trong phạm vi được giao và Hub tổng hợp kết quả.
 
-Chạy kiểm thử hợp đồng standalone bằng `python -X utf8 -B -m pytest "Central Hub/tests"`. Các ca kiểm tra provenance cần lịch sử Git, nguồn FTH hoặc skill Creative Workshops được chạy trong checkout Creative Workshops gốc.
+```text
+Yêu cầu hiện tại
+  ↓
+Hub CI · thao tác, trạng thái và quyền hành động
+  ↓
+Router + Catalog · phạm vi, lựa chọn gói và xác minh nguồn
+  ↓
+Gói được chọn · mô-đun nội bộ hoặc pipeline theo phạm vi
+  ↓
+Hub tổng hợp kết quả
+```
 
-### Hồ sơ kiểm chứng Local/API trên bộ 1.9
+[Hub CI 1.1](<Central Hub/HUB_CI_v1.1.md>) là Custom Instructions của Project. [Router 1.1](<Central Hub/HUB_ROUTER_v1.1.yaml>) dùng [Architecture 1.10](<Central Hub/HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog 1.10](<Central Hub/HUB_PACKAGE_CATALOG_v1.10.yaml>) để xác định gói, kiểm tra binding và phân công theo phạm vi. Gói tự phân giải mô-đun nội bộ theo Catalog của mình. ChatGPT thực hiện truy xuất và gọi công cụ khi có đủ điều kiện.
 
-Bản dự phòng Local/API đạt **VERIFIED + LIVE VERIFIED** trong phạm vi các workload đã ghi trên bộ 1.9. Ngày 2026-11-05, người dùng mở lại M3 sau khi tăng project spend limit để hoàn tất đúng thí nghiệm explicit cache đã bị quota chặn trước đó. **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE**; **M4 NOT STARTED**.
+## Các gói hiện hành
 
-**Model hiện cấu hình/ưu tiên cho thử nghiệm và runtime local: `gpt-6.1-sol`**, xác nhận từ `config.json` local được ignore và model trong cả 11 response W1/W2. **GPT-6.1 Sol = LIVE VERIFIED CANDIDATE FOR TESTED CENTRAL HUB W1/W2 SCOPE**, không phải replacement đã kiểm chứng toàn cục cho mọi đường Central Hub. W1 **7/7 semantic PASS** trong phạm vi Authoring + Concept; W2 **4/4 semantic PASS** trong phạm vi Technical + Concept + AIS. Explicit Concept cache: W1 write **6161**, W2 cached **6161**. AIS **evidence-source compliance PASS**, **search-discovery boundary PARTIAL** vì discovery có nguồn ngoài Tauri, còn evidence/citations dùng nguồn Tauri chính thức. Tổng pair ước tính khoảng **$0.506351**, thấp hơn khoảng **44,63%** so với GPT-5.6 Sol M3 retry **$0.914486** trên đúng hai workload, theo bảng giá lưu trong phép thử; không phải mức tiết kiệm phổ quát. Xem [review GPT-6.1 Sol](m3_evidence/GPT61_W1_W2_REVIEW.md). Hồ sơ GPT-5.6 Sol bên dưới giữ nguyên giá trị lịch sử. Tương thích model đã thử không chứng minh khả năng chuyển model cho toàn hệ thống; ưu tiên model hiện tại không quyết định kiến trúc MCP/kênh tương lai. **M4 NOT STARTED**; không triển khai MCP.
+| Gói | Vai trò trong yêu cầu |
+| --- | --- |
+| **Technical** | Giải thích cơ chế, phân biệt giả thuyết và thiết kế phép kiểm tra để xác định nguyên nhân hoặc kiểm chứng một thay đổi kỹ thuật. |
+| [**Concept Development**](<Central Hub/library_modules/HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md>) | Phát triển và kiểm tra ý tưởng. Creative mở rộng bên trong tiền đề, Brainstorm phát triển các nhánh và Debate phản biện đề xuất. |
+| [**Authoring**](<Central Hub/library_modules/HUB-CAP-AUTHORING_v0.7.md>) | Chuyển yêu cầu thành prompt tự chứa cho đích được chọn. |
+| [**AIS**](<Central Hub/tool_pipelines/AIS/AIS_PIPELINE_v1.1.md>) | Tìm, đọc và đánh giá bằng chứng bên ngoài để Hub sử dụng trong phần việc cần nghiên cứu. |
+| [**ImageT**](<Central Hub/tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.2.md>) | Phân tích ảnh và chuẩn bị hoặc thực hiện thao tác ảnh theo quyền và điều kiện kiểm tra của pipeline. |
+| [**Shopping**](<Central Hub/library_modules/HUB-DOM-SHOPPING_v1.0.md>) | So sánh phương án mua theo yêu cầu, SKU, offer, giá và độ phủ bằng chứng. Hub chọn AIS độc lập khi cần nghiên cứu bên ngoài. |
 
-Experiment 1 giữ nguyên **FAILED TARGET**. Experiment 2 explicit Concept cache đã **STATIC VERIFIED + LIVE VERIFIED / TARGET ACHIEVED**: W1 7/7 và W2 4/4 Responses calls hoàn tất, W2 Concept đọc lại 6.161 cached tokens từ prefix đã ghi ở W1. Concept combined input billing giảm từ baseline $0.100224 xuống $0.0619934, khoảng 38.145% tại đúng bucket được tối ưu. Tổng retry pair ước tính $0.914486 nhưng không dùng whole-pair delta làm causal savings vì cache warmth/output/AIS/search biến thiên. Candidate được promote local; không thêm prewarm/retry/call merge hoặc experiment thứ ba. Xem [trạng thái M3 cuối](m3_evidence/M3_FINAL_STATUS.md), [review retry](m3_evidence/EXPERIMENT_2_RETRY_REVIEW.md) và [VERIFICATION.md](VERIFICATION.md).
+## Soạn prompt với Authoring
 
-Checkpoint M2 ngày 2026-11-05: Authoring **0.7 ACTIVE trong runtime local**, Architecture/Catalog 1.9; CI/Router 1.1. Binding v0.2/v0.3 dùng bản 0.7 byte-exact. Exact `/AUTHOR <OUTPUT_TARGET> ISOLATED` hoặc `/AUTHOR <OUTPUT_TARGET> P<n> ISOLATED` giới hạn nguồn task material cho lượt hiện tại; không có suffix thì giữ hành vi 0.6. Không xóa lịch sử, không lưu chế độ và không cấp quyền chạy target. Contributor + ISOLATED không kích hoạt. Các mô tả phiên bản trong hồ sơ T0–T9 bên dưới giữ bối cảnh kiểm chứng lịch sử; xem [VERIFICATION.md](VERIFICATION.md) và [bằng chứng 0.7](m2_evidence/authoring_0_7/) cho kết quả hiện tại. Tại checkpoint M2 này M3/M4 chưa bắt đầu; trạng thái M3 hiện hành sau retry nằm ở đầu tài liệu.
+Dùng `/AUTHOR` với đích được chọn, sau đó mô tả yêu cầu bằng ngôn ngữ thông thường. Authoring tạo prompt và kết thúc ở đó.
 
-Yêu cầu Python 3.11 trở lên. Mở PowerShell trong thư mục chứa README này.
+```text
+/AUTHOR CODEX
+Soạn prompt để Codex chẩn đoán vì sao ứng dụng chậm khi mở tệp lớn.
+Yêu cầu đo trước khi đề xuất thay đổi.
+```
 
-1. Cài dependency:
+Thêm `ISOLATED` khi muốn giới hạn nguồn nội dung cho lượt soạn prompt hiện tại. Các đích, preset và điều kiện kích hoạt nằm trong [hợp đồng Authoring 0.7](<Central Hub/library_modules/HUB-CAP-AUTHORING_v0.7.md>).
 
-   ```powershell
-   python -m pip install -r requirements.txt
-   ```
+## Chọn điểm bắt đầu
 
-2. Mở `config.json`, điền API key vào `openai_api_key`, giữ model `gpt-5.6-sol`. Nếu chưa có file (ví dụ sau khi clone), tạo cạnh `app.py` với nội dung:
+| Bạn muốn | Điểm vào |
+| --- | --- |
+| Đọc hoặc đánh giá bộ ChatGPT Project + Library | [Mục lục Central Hub](<Central Hub/README.md>) |
+| Xem các điều kiện chọn gói và truy xuất | [Architecture](<Central Hub/HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog](<Central Hub/HUB_PACKAGE_CATALOG_v1.10.yaml>) |
+| Đối chiếu promotion và kết quả theo revision | [Hồ sơ runtime](<Central Hub/RUNTIME_EVIDENCE_CHANGELOG.md>) và [kiểm thử Hub](<Central Hub/tests/>) |
+| Thử bản dự phòng Python/Responses API | [Hướng dẫn Local/API](legacy/README.md) |
+| Tìm snapshot 1.9 hoặc bằng chứng M2/M3 | [Hồ sơ kiểm thử Local/API](legacy/README.md) và [VERIFICATION.md](VERIFICATION.md) |
 
-   ```json
-   {
-     "openai_api_key": "",
-     "model": "gpt-6.1-sol"
-   }
-   ```
+## Trạng thái kiểm chứng
 
-   File này được Git bỏ qua để tránh commit key thật. Ứng dụng đọc key từ đây, không dùng key trong biến môi trường. Request API có thể phát sinh chi phí.
+Bộ nguồn hiện hành dùng CI/Router 1.1 và Architecture/Catalog 1.10. Nguồn được tách từ thư mục Central Hub của ChatGPT Creative Workshops tại commit `e310b451`. Các kiểm tra tĩnh và mô phỏng Local/API trên bộ 1.10 đã chạy. Các lượt live Responses API trước đó giữ phạm vi theo workload và revision đã ghi. Trạng thái Library, Project và định tuyến Shopping live được theo dõi riêng trong [hồ sơ Shopping 1.0](<Central Hub/SHOPPING_PROMOTION.md>).
 
-3. Chạy:
+<details>
+<summary>Bản dự phòng Local/API</summary>
 
-   ```powershell
-   python -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
-   ```
+Entry point Python và binding local vẫn ở gốc repository và trong `runtime/`. Runtime đọc control hiện hành từ `Central Hub/`. Streamlit mặc định chạy ở `127.0.0.1`. MCP cung cấp kiểm tra chỉ đọc qua stdio. Shopping và ImageT chưa có binding local.
 
-4. Mở [giao diện local](http://127.0.0.1:8501), nhập prompt rồi bấm **Send**. Mặc định là **Central Hub - Local Runtime**: Hub → Root Router → tập package được chọn → phản hồi. Chỉ gửi khi muốn chạy API thật; M1 được kiểm chứng bằng static/mock, không tự chạy chiến dịch live.
+Chạy kiểm thử Local/API từ gốc repository bằng `python -X utf8 -B -m unittest discover -s legacy/tests`. Snapshot 1.9, log và bằng chứng M2/M3 nằm trong [legacy/](legacy/).
 
-Lịch sử chỉ giữ trong Streamlit session, không ghi xuống `sessions/`. Khi tải lại trang hoặc khởi động lại app, lịch sử có thể mất. Lượt lỗi không được thêm vào lịch sử; prompt vẫn còn để gửi lại. Nếu thiếu key, hết quota, mất mạng hoặc không có quyền truy cập model, giao diện hiển thị lỗi; đó chưa phải live PASS.
-
-Chọn **Chế độ** trước khi gửi:
-
-- **Central Hub - Local Runtime** (mặc định): `m1.call_runtime(config, messages)` chọn root một lần bằng chính CI/Router/Architecture/Catalog hiện hành, kiểm tra identity/version/source rồi dùng inventory binding v0.3 sẵn có. Không chọn package thì dùng Hub baseline. Technical/Concept dùng lại truy xuất/hash và chọn leaf của T7 qua T8; Authoring dùng nguyên admission, contributor và quy tắc kết thúc ở prompt artifact của T8. AIS dùng lại kiểm tra Catalog, truy xuất cặp pipeline/router và kiểm tra bằng chứng `web_search_call` của T9, với native Responses `web_search`. Hub nhận bằng chứng AIS và giữ quyền diễn đạt kết luận/trạng thái. Khi Technical/Concept được root chọn độc lập cùng Authoring, kết quả theo phạm vi được chuyển cho Authoring để làm căn cứ; thân control không được đưa vào pha Authoring cuối. Việc soạn prompt cho AIS/ImageT không tự chạy target. Chọn root ImageT gây lỗi `local-runtime unavailable`, không đọc body, không mô phỏng hoặc fallback. Lỗi root/package/binding/tool chặn lượt, giữ history và prompt; M1 hiện dừng cả lượt khi có blocker. Hàm trả `(answer, trace)`; UI chỉ hiện phản hồi hoặc lỗi. Các chế độ T0–T9 bên dưới vẫn là đường chẩn đoán/hiệu chuẩn.
-- **T0 - Raw API**: API thuần như Giai đoạn 1, không nạp CI, không gửi `instructions`.
-- **T1 - Hub CI**: cùng model, tham số và lịch sử như T0; mỗi request đọc nguyên nội dung UTF-8 của `upstream/Central Hub/HUB_CI_v1.1.md` vào trường `instructions` của Responses API. Không sửa CI, không nạp Router hoặc module nào khác. Nếu không đọc được CI, ứng dụng báo lỗi và không gửi request, không chuyển sang T0.
-- **T2 - Hub CI + Technical**: mỗi request đọc nguyên CI trên và `runtime/packages/technical/HUB-DOM-TECHNICAL_v1.0.md`, ghép vào `instructions` theo thứ tự CI → ghi chú liên kết kiểm thử cục bộ → Technical. Ghi chú chỉ xác định Technical được chọn thủ công cho phần yêu cầu/nhiệm vụ hiện tại vì Router vắng mặt; không thay đổi ngữ nghĩa Technical. Bản runtime sao chép byte-exact từ nguồn ACTIVE v1.0 tại `upstream/Central Hub/candidates/promotion/HUB-DOM-TECHNICAL_v1.0.md`. Thiếu hoặc không đọc được một trong hai control sẽ báo lỗi trước API, không chuyển sang T1/T0. Đây là phép thử một module chọn thủ công; không nạp Router, Architecture, Root Catalog hay package khác.
-
-- **T3 - Hub Routing Inspect**: chỉ mô phỏng `eligibility.simulation` của Router, thực hiện `TASK_SCOPE` và `ROOT_PACKAGE_SELECTION`. Mỗi request đọc nguyên bốn control hiện hành trong `upstream/Central Hub/`: `HUB_CI_v1.1.md`, `HUB_ROUTER_v1.1.yaml`, `HUB_ARCHITECTURE_v1.8.md`, `HUB_PACKAGE_CATALOG_v1.8.yaml`, kèm adapter tiếng Anh tối thiểu. Model chọn package theo ngữ nghĩa; Python chỉ yêu cầu, phân tích và kiểm tra cấu trúc bản ghi qua Responses API Structured Outputs (`text.format`, `json_schema`, `strict=true`, `store=False`). UI hiển thị JSON có nhãn T3; `selected_packages: []` là NONE. Thiếu hoặc không đọc được bất kỳ control nào sẽ báo lỗi trước API, không chuyển chế độ hoặc dùng nguồn thay thế. T3 dừng trước truy xuất/thực thi package, không đọc package body, không giải quyết Library/filesystem binding và không gọi công cụ.
-
-- **T4 - Hub CI + Concept Core**: hiệu chuẩn chọn thủ công `HUB-PKG-CONCEPT-DEVELOPMENT` cho phần yêu cầu/nhiệm vụ hiện tại, không chạy Router. Mỗi request đọc lại CI → ghi chú T4 tối thiểu bằng tiếng Anh → core 1.1 → Catalog cục bộ 1.1 vào `instructions`, qua `call_model` để trả lời thông thường. Hai tệp trong `runtime/packages/concept-development/` là bản sao nguyên byte của nguồn ACTIVE cùng tên trong `upstream/Central Hub/library_modules/`. Catalog là metadata lựa chọn bắt buộc của core; không cung cấp thân leaf. Span hợp lệ có thể được nhận diện nhưng thực thi chuyên biệt bị chặn; cụm từ tự nhiên không kích hoạt leaf. Công việc concept thông thường đủ dữ kiện tiếp tục qua core. Thiếu tệp, lỗi đọc hoặc UTF-8 ở CI/core/Catalog sẽ dừng trước API, không chuyển chế độ. Đây không phải thực thi package tích hợp Router, truy xuất Library hay migration binding cục bộ. Không nạp Creative, Brainstorm, Debate, anti-drift hoặc package khác.
-
-- **T5 - Concept Scoped Leaves**: chọn thủ công Concept package, dùng `call_model` trả lời thông thường. Mỗi request đọc lại CI → adapter hiệu chuẩn cục bộ → core 1.1 → Catalog cục bộ 1.1 → Creative 1.1 → Brainstorm 1.1 → Debate 1.0. Core/Catalog nhận diện và chọn span; Python chỉ nạp nội dung, không phân tích control. Ba leaf khả dụng tại local chỉ thực thi trong span hợp lệ được chọn, không duy trì qua terminator hoặc lượt sau. Không nạp anti-drift hay package body khác. Thiếu/lỗi đọc/UTF-8 ở bất kỳ tệp bắt buộc nào sẽ dừng trước API, giữ history, không fallback. Đây là calibration package chọn thủ công, không tích hợp retrieval Router và không migration ChatGPT Library. Debate được kiểm tra byte-exact với upstream ACTIVE cho **T5 local test binding only**; binding ChatGPT Library cũ vẫn UNRESOLVED. Kết quả live có PARTIAL/FAILURE; xem `VERIFICATION.md`.
-
-- **T6 - Concept + Technical Composition**: hiệu chuẩn phối hợp thủ công Technical 1.0 và Concept Development 1.1. Mỗi request đọc lại nguyên byte CI → adapter T6 tiếng Anh tối thiểu → Technical → Concept core → Catalog cục bộ → Creative → Brainstorm → Debate. Mỗi package chỉ đóng góp trong trách nhiệm hiện có; Python không chia phạm vi, chọn package hay phân tích span. Thiếu/lỗi đọc/UTF-8 ở bất kỳ tệp bắt buộc nào sẽ dừng trước API, giữ history và route records, không fallback. Binding cũ giữ nguyên: Debate có thể tiếp tục bị chặn; Authoring cố ý không được nạp vì binding cũ UNRESOLVED/NOT_PERFORMED, không mô phỏng Authoring. Không tích hợp retrieval Router hoặc migration binding Library. T6 đã qua 29/29 kiểm thử tĩnh và live composition A–H đạt trong phạm vi đã thử; xem VERIFICATION.md. Kết quả live không chứng minh T6 tạo năng lực mới so với T2/T5, chỉ chứng minh ranh giới phối hợp trong campaign hiện tại.
-
-- **T7 - Router Local Retrieval**: model chọn root package qua Structured Outputs từ CI 1.1, Router 1.1, Architecture 1.8, Root Catalog 1.8 và manifest local được đọc lại mỗi request. Python kiểm tra identity, đường dẫn trong `runtime/` và SHA-256 trước khi dùng nội dung. Nếu chọn Concept, model đọc core + Catalog để chọn leaf trước khi Python nạp riêng leaf đó. Payload cuối theo thứ tự CI → ghi chú T7 → Technical nếu được chọn → core + Catalog Concept nếu được chọn → leaf được chọn theo thứ tự manifest. Không chọn package thì chỉ dùng CI và ghi chú T7. `call_t7(config, messages)` trả `(answer, trace)` cho kiểm chứng nội bộ; UI thường chỉ hiển thị phản hồi và nhãn chế độ.
-
-`runtime/HUB_LOCAL_BINDINGS_v0.1.json` là chủ sở hữu binding local duy nhất của T7, chỉ bind Technical và năm artifact Concept. JSON phục vụ khả năng đọc bằng thư viện chuẩn Python, tránh thêm PyYAML; đây không phải lựa chọn kiến trúc mới. Binding kế nhiệm chỉ đổi nơi lưu/truy xuất sang `LOCAL_RUNTIME_FILE`, không xác minh ChatGPT Library hoặc sửa metadata nguồn cũ. Authoring/AIS/ImageT chưa có binding, không nạp body hoặc mô phỏng; phần độc lập đủ dữ kiện vẫn có thể tiếp tục. Lỗi control/config dừng trước API; lỗi artifact đã chọn chặn phần phụ thuộc, không fallback hoặc đổi chế độ. T7 đã qua 47/47 kiểm thử tĩnh và live A–I đạt trong phạm vi đã thử. Debate được chọn, hash-verify, truy xuất và thực thi thành công qua LOCAL_RUNTIME_FILE; điều này giải quyết failure host-binding T5 trên đường T7 local, không thay đổi trạng thái ChatGPT Library cũ.
-
-T3 chỉ gửi prompt hiện tại, không gửi lịch sử T0/T1/T2/T4/T5/T6/T7 hoặc các bản ghi T3 trước đó. Các bản ghi T3 được giữ riêng trong session, không đưa vào lịch sử trả lời thông thường. Phản hồi lỗi, bị từ chối, chưa hoàn tất, thiếu văn bản hoặc JSON sai cấu trúc không tạo bản ghi mới; prompt và bản ghi thành công trước đó vẫn còn. Dùng **session mới cho mỗi ca so sánh T3 sạch**. Khi kiểm tra thủ công, chọn T3, gửi `Giải thích RAM và SSD khác nhau thế nào.` rồi xác nhận bản ghi có nhãn T3 và NONE; dùng session mới cho yêu cầu chẩn đoán nguyên nhân máy khựng để kiểm tra lựa chọn Technical.
-
-Với T0/T1/T2/T4/T5/T6/T7/T8/T9, chế độ hiện ở phía trên và cạnh từng phản hồi. Đổi chế độ giữ nguyên lịch sử chung giữa chín chế độ này, kể cả phản hồi từ chế độ trước; nhãn chế độ không gửi vào API. Để so sánh A/B T0/T1/T2/T4/T5/T6/T7 với lịch sử trống, mở session mới cho mỗi phép thử. Kiểm tra T1 bằng hai prompt tương tự bước 4, thay `T0 OK` bằng `T1 OK`. Với T2, dùng session mới, chọn T2 và hỏi chẩn đoán máy khựng khi mở nhiều tab nhưng chưa có log; hỏi tiếp nguyên nhân nào chắc chắn nhất. Kiểm tra phản hồi có giữ nguyên nhân chưa xác định, phân biệt triệu chứng/giả thuyết và đưa phép kiểm tra phân biệt có giới hạn.
-
-`upstream/Central Hub/` là bản sao tham chiếu nguyên trạng từ `<WORKSHOPS_REPO>\Central Hub`, repo nguồn tại HEAD `b3f470a46c87c4bfad68d74bf031f78d7abc87b4`, working tree sạch khi sao chép. T0 không đọc thư mục này; T1 và T2 chỉ đọc đúng `HUB_CI_v1.1.md` từ upstream khi chạy. Technical trong T2 được đọc từ bản runtime riêng, không đọc nguồn promotion. Ứng dụng không ghi vào bản sao.
-
-Ứng dụng dùng [Responses API](https://developers.openai.com/api/docs/quickstart) và model [GPT-5.6 Sol](https://developers.openai.com/api/docs/models/gpt-5.6-sol). T3 dùng [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses). Quyền truy cập model phụ thuộc tài khoản API thực tế.
-
-- **T8 - Authoring Lifecycle**: dùng riêng `runtime/HUB_LOCAL_BINDINGS_v0.2.json` gồm Technical + Concept như v0.1 và Authoring 0.6. Mỗi lượt đọc lại controls và manifest; root model không nhận inventory leaf hoặc manifest thô. Sau root selection, host xác minh hash/UTF-8 Authoring và model quyết định admission hiện tại qua Structured Outputs. Python không phân tích `/AUTHOR`. Inactive chỉ dùng Hub CI ở pha cuối; activation không duy trì qua lượt hay clarification/reauthor.
-
-T8 active tạo một prompt rồi dừng; target AIS/IMAGET/CODEX/WORK/GENERIC và preset không cấp phép thực thi target. Với CREATIVE/BRAINSTORM, Concept owner phân giải theo core/Catalog chính xác; chỉ leaf được chọn và xác minh mới được đọc, thực thi thành contribution có scope/provenance/protected constraints. Nhãn contributor không bỏ qua gate Concept. Contributor lỗi chặn prompt phối hợp, không thay bằng single-target tương đương. Pha Authoring cuối nhận contribution thực tế, không nhận lại raw Concept/leaf controls; nội dung sinh ra không tự trở thành canon/design được chấp nhận.
-
-`from t8 import call_t8`; `call_t8(config, messages)` trả `(answer, trace)` với root/retrieval, admission target/preset/contributor, contributor retrieval và blockers. UI dùng lịch sử thường và nhãn T8; T3 vẫn tách riêng. T7 chỉ dùng v0.1 và không có Authoring binding. Metadata ChatGPT Library cũ vẫn `UNRESOLVED / NOT_PERFORMED`; v0.2 là binding kế nhiệm local riêng, không sửa upstream.
-
-T8 static/mock sau correction đạt 23/23; full T0–T8 đạt 70/70. Live campaign dùng 3/4 user requests rồi dừng đúng cost policy: single-target/preset và no-persistence PASS; contributor path lộ sequencing failure, đã sửa cục bộ và kiểm static/mock nhưng chưa live-reverify. Không chạy request thứ 4. Xem VERIFICATION.md.
-
-- **T9 - AIS Local Execution**: mỗi lượt đọc lại Hub CI 1.1, Router 1.1, Architecture/Catalog 1.8 và manifest v0.3. Root model chọn scope bằng Structured Outputs; chỉ AIS được chọn mới được đọc cặp pipeline 1.1/router 1.2 và xác minh SHA-256. Không chọn AIS thì không đọc AIS, không có web_search và trả lời bằng Hub CI baseline. Các package khác chỉ được giữ scope, không được thực thi trong T9.
-
-Executor là [native OpenAI Responses API web_search](https://developers.openai.com/api/docs/guides/tools-web-search), với `tool_choice="required"` và `include=["web_search_call.action.sources"]`. AIS trả evidence artifact về pha Hub cuối không có tools; Hub giữ câu trả lời và claim/state. `from t9 import call_t9`; hàm trả `(answer, trace)`, UI chỉ hiện câu trả lời và nhãn chế độ.
-
-v0.3 giữ nguyên các entries v0.2, chỉ thêm AIS. v0.1/v0.2 và metadata Project Sources cũ giữ nguyên; local binding không tuyên bố Project deployment. ImageT: **OUT OF SCOPE / REMOVED FROM THIS MIGRATION** theo quyết định người dùng.
-
-T9 hiện đã qua 15/15 kiểm thử tập trung và 85/85 full suite. Live dùng đúng **1 user request** có lực phân biệt cao: Root chọn AIS, local pipeline/router được SHA-256 verify, native `web_search` tạo `web_search_call` hoàn tất, source/citation URL được capture và evidence quay về Hub với blocker rỗng. Negative-control live không chạy vì static đã phủ đường no-AIS và không tạo thêm bằng chứng đáng kể.
-
-ImageT đã được loại khỏi migration này theo quyết định người dùng; không có T10/ImageT trong kế hoạch hiện tại. Xem `VERIFICATION.md` để phân biệt checkpoint tĩnh cũ, incident mock/concurrent-write và PASS live cuối.
+</details>

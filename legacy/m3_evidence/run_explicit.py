@@ -8,14 +8,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+import httpx
 import app
 import m1
 from m2_acceptance import PROMPTS
 from openai.resources.responses import Responses
 
-OUT = ROOT / 'm3_evidence'
+OUT = Path(__file__).resolve().parent
 PRICES = dict(model='gpt-5.6-sol', ordinary_input_per_million=4,
               cached_input_per_million=0.40, cache_write_30m_per_million=5,
               output_per_million=20, web_search_per_call=0.01,
@@ -39,6 +40,12 @@ def snapshot():
 
 def run(checkpoint, number):
     target = OUT / f'{checkpoint}_workload_{number}.json'
+    checks = json.loads((OUT / 'explicit_static_checks.json').read_text(encoding='utf-8'))
+    assert checks['static_pass'], 'Static gate not passed'
+    assert checkpoint == 'explicit'
+    if number == 2:
+        first = json.loads((OUT / 'explicit_workload_1.json').read_text(encoding='utf-8'))
+        assert first['error'] is None and first['responses_api_calls'] == 7
     config = app.read_config()
     record = dict(checkpoint=checkpoint, workload=number, prompt=PROMPTS[number],
                   model=config['model'], started_utc=now(), prices=PRICES,
@@ -57,6 +64,8 @@ def run(checkpoint, number):
                     max_retries=client._client.max_retries, request=kwargs)
         record['calls'].append(call)
         marker = '[T8 VERIFIED HANDOFF]\n'
+        if phase == 'hub_t8_concept':
+            instructions = kwargs['input'][1]['content'][0]['text']
         if marker in instructions:
             call['handoff'] = json.JSONDecoder().raw_decode(instructions.split(marker, 1)[1])[0]
             call['handoff_field_bytes'] = {k: len(json.dumps(v, ensure_ascii=False).encode())
@@ -75,8 +84,16 @@ def run(checkpoint, number):
             call['finished_utc'] = now()
             save(target, record)
 
+    original_send = httpx.Client.send
+
+    def observed_send(client, request, *args, **kwargs):
+        if request.url.path.endswith('/responses'):
+            record['calls'][-1]['serialized_request'] = json.loads(request.content)
+            save(target, record)
+        return original_send(client, request, *args, **kwargs)
+
     try:
-        with patch.object(Responses, 'create', observed):
+        with patch.object(Responses, 'create', observed), patch.object(httpx.Client, 'send', observed_send):
             record['final_output'], record['trace'] = m1.call_runtime(
                 config, [dict(role='user', content=PROMPTS[number])])
     except Exception as exc:
@@ -93,7 +110,7 @@ def run(checkpoint, number):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('checkpoint', choices=['baseline_current', 'post'])
+    parser.add_argument('checkpoint', choices=['explicit'])
     parser.add_argument('workload', type=int, choices=[1, 2])
     args = parser.parse_args()
     run(args.checkpoint, args.workload)

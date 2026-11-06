@@ -16,7 +16,7 @@ from mcp.client.stdio import stdio_client
 import mcp_server as hub
 
 
-REPO = Path(__file__).resolve().parent
+REPO = Path(__file__).resolve().parents[2]
 
 
 def record(*pids):

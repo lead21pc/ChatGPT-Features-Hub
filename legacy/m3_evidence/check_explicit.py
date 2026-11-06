@@ -7,15 +7,15 @@ import subprocess
 import sys
 import tempfile
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[2]
 os.chdir(ROOT)
 stage=sys.argv[1]
 assert stage in ('static','final')
-OUT=ROOT/'m3_evidence'
+OUT=Path(__file__).resolve().parent
 blocked="import socket,unittest,sys; from unittest.mock import patch; p=patch.object(socket.socket,'connect',side_effect=AssertionError('network blocked globally')); p.start(); "
 commands={
- 'local': [sys.executable,'-X','utf8','-B','-c',blocked+"r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('.',pattern='test_*.py')); sys.exit(not r.wasSuccessful())"],
- 'upstream_authoring':[sys.executable,'-X','utf8','-B','-c',blocked+"sys.path.insert(0,'upstream/Central Hub/tests'); r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromNames(['test_authoring_isolation','test_authoring_candidate','test_authoring_m1','test_authoring_m2','test_authoring_m4'])); sys.exit(not r.wasSuccessful())"]}
+ 'local': [sys.executable,'-X','utf8','-B','-c',blocked+"r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('legacy/tests',pattern='test_*.py')); sys.exit(not r.wasSuccessful())"],
+ 'upstream_authoring':[sys.executable,'-X','utf8','-B','-c',blocked+"sys.path.insert(0,'legacy/upstream/Central Hub/tests'); r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromNames(['test_authoring_isolation','test_authoring_candidate','test_authoring_m1','test_authoring_m2','test_authoring_m4'])); sys.exit(not r.wasSuccessful())"]}
 results={}
 for name,cmd in commands.items():
  r=subprocess.run(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)

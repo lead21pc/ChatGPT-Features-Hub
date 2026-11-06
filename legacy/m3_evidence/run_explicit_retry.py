@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 import httpx
 import app
@@ -16,7 +16,7 @@ import m1
 from m2_acceptance import PROMPTS
 from openai.resources.responses import Responses
 
-OUT = ROOT / 'm3_evidence'
+OUT = Path(__file__).resolve().parent
 PRICES = dict(model='gpt-5.6-sol', ordinary_input_per_million=4,
               cached_input_per_million=0.40, cache_write_30m_per_million=5,
               output_per_million=20, web_search_per_call=0.01,
@@ -39,12 +39,12 @@ def snapshot():
 
 
 def run(checkpoint, number):
-    target = OUT / f'{checkpoint}_workload_{number}.json'
+    target = OUT / f'{checkpoint}_retry_workload_{number}.json'
     checks = json.loads((OUT / 'explicit_static_checks.json').read_text(encoding='utf-8'))
     assert checks['static_pass'], 'Static gate not passed'
     assert checkpoint == 'explicit'
     if number == 2:
-        first = json.loads((OUT / 'explicit_workload_1.json').read_text(encoding='utf-8'))
+        first = json.loads((OUT / 'explicit_retry_workload_1.json').read_text(encoding='utf-8'))
         assert first['error'] is None and first['responses_api_calls'] == 7
     config = app.read_config()
     record = dict(checkpoint=checkpoint, workload=number, prompt=PROMPTS[number],

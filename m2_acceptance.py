@@ -16,7 +16,7 @@ PROMPTS = {
     2: 'Evaluate this proposal for Central Hub after M4: use Tauri as the desktop UI layer while keeping the current Python runtime behind it.\n1) Use Technical to analyze integration boundaries and technical risks of connecting a desktop frontend to the Python runtime.\n2) Use Concept to develop at least 3 architecture candidates using this explicit scoped control: /BRAINSTORM Produce at least three materially different integration architecture variants. Keep them parallel candidates and do not accept or rank a winner. #\n3) Use AIS to verify the current Tauri documentation about sidecars and bundling external binaries or processes, using official Tauri sources only.\n4) Let Hub synthesize the final answer, clearly separating external evidence, Concept candidates, and Technical diagnosis. Do not accept any Concept candidate as a project decision.',
 }
 
-OUT = Path("m2_evidence")
+OUT = Path(__file__).resolve().parent / "legacy" / "m2_evidence"
 
 
 def save(path, value):

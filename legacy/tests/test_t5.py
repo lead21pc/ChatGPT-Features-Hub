@@ -23,7 +23,7 @@ class T5Tests(unittest.TestCase):
         for path, version in ((app.CREATIVE_PATH, b'1.1'),
                               (app.BRAINSTORM_PATH, b'1.1'), (app.DEBATE_PATH, b'1.0')):
             body = path.read_bytes()
-            self.assertEqual(body, (Path('upstream/Central Hub/library_modules') / path.name).read_bytes())
+            self.assertEqual(body, (Path('legacy/upstream/Central Hub/library_modules') / path.name).read_bytes())
             self.assertIn(b'Status: ACTIVE', body)
             self.assertIn(b'Version: ' + version, body)
 

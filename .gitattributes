@@ -1,8 +1,8 @@
 * text=auto eol=lf
-upstream/** -text
+legacy/upstream/** -text
 "Central Hub/**" -text whitespace=cr-at-eol
 runtime/packages/concept-development/** -text
-m3_evidence/** -text
+legacy/m3_evidence/** -text
 
 # Preserve the original whitespace of imported historical evidence.
 "Central Hub/candidates/fth_afm002_differentiation_stress_pilot/AFM-002_FULL_FILE_SNAPSHOT.md" -whitespace

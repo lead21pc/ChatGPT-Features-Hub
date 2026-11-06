@@ -1,5 +1,17 @@
 # Central Hub
 
+## Bắt đầu với bộ hiện hành
+
+| Thành phần | Tệp hoặc thư mục |
+| --- | --- |
+| Project Instructions | [Hub CI 1.1](HUB_CI_v1.1.md) |
+| Project Sources | [Router 1.1](HUB_ROUTER_v1.1.yaml), [Architecture 1.10](HUB_ARCHITECTURE_v1.10.md), [Package Catalog 1.10](HUB_PACKAGE_CATALOG_v1.10.yaml) |
+| Library | [Module và Catalog cục bộ](library_modules/) |
+| Pipeline | [AIS](tool_pipelines/AIS/) và [ImageT](tool_pipelines/ImageT/) |
+| Kiểm chứng | [Kiểm thử Hub](tests/) và [hồ sơ runtime](RUNTIME_EVIDENCE_CHANGELOG.md) |
+
+## Trạng thái và bằng chứng
+
 Trạng thái repository: **Central Hub CI/Router v1.1 với Architecture/Catalog v1.10, Authoring 0.7 và Shopping 1.0 ACTIVE**. ImageT controller 1.2 đã được promotion với Open Gate nội bộ. REPOSITORY ACTIVE != PROJECT DEPLOYED. Việc stage/commit/push repository không upload module, sửa Project hoặc xác nhận deployment.
 
 [Hub CI v1.1](HUB_CI_v1.1.md) kế thừa ngữ nghĩa ChatGPT v9.0; [Hub Router v1.1](HUB_ROUTER_v1.1.yaml), [shared architecture v1.10](HUB_ARCHITECTURE_v1.10.md) và [root package Catalog v1.10](HUB_PACKAGE_CATALOG_v1.10.yaml) là bộ active trong repository. Router chọn package set có phạm vi; chat/support/viết thông thường có thể dùng baseline NONE. Module không tự kích hoạt nhau hoặc công cụ.

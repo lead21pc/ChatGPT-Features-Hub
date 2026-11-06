@@ -447,12 +447,13 @@ class T7Tests(unittest.TestCase):
         for path in paths:
             with self.subTest(path=path):
                 committed = subprocess.check_output(['git', 'cat-file', 'blob', baseline+':'+path])
+                relocated = Path('legacy') / path
                 if path in archived:
-                    self.assertFalse(Path(path).exists())
-                    self.assertEqual(Path(archive_prefix + path[len(prefix):]).read_bytes(), committed)
+                    self.assertFalse(relocated.exists())
+                    self.assertEqual((Path('legacy') / (archive_prefix + path[len(prefix):])).read_bytes(), committed)
                 elif path not in changed | redacted_reports:
-                    self.assertEqual(Path(path).read_bytes(), committed)
-        actual = {p.as_posix() for p in Path('upstream').rglob('*') if p.is_file()
+                    self.assertEqual(relocated.read_bytes(), committed)
+        actual = {p.relative_to('legacy').as_posix() for p in Path('legacy/upstream').rglob('*') if p.is_file()
                   and '__pycache__' not in p.parts and '.pytest_cache' not in p.parts}
         self.assertEqual(actual - set(paths), added | archive_files)
 

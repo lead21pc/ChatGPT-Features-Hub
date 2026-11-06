@@ -64,7 +64,7 @@ class Stage2Tests(unittest.TestCase):
             technical.read_bytes.assert_not_called()
 
     def test_runtime_technical_is_byte_exact_active_source(self):
-        source = Path("upstream/Central Hub/candidates/promotion/HUB-DOM-TECHNICAL_v1.0.md").read_bytes()
+        source = Path("legacy/upstream/Central Hub/candidates/promotion/HUB-DOM-TECHNICAL_v1.0.md").read_bytes()
         self.assertEqual(app.TECHNICAL_PATH.read_bytes(), source)
         self.assertIn(b"Status: ACTIVE", source)
         self.assertIn(b"Version: 1.0", source)

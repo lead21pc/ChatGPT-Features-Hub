@@ -9,7 +9,7 @@ import runtime_host
 import t8
 import t9
 
-HUB = Path(__file__).resolve().parent / "upstream" / "Central Hub"
+HUB = Path(__file__).resolve().parents[1] / "upstream" / "Central Hub"
 OLD = HUB / 'Source_archive/Authoring 0.7 M2 2026-11-05'
 CANDIDATE = HUB / 'candidates/authoring_v0_7'
 

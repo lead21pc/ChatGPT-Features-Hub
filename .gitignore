@@ -4,6 +4,8 @@
 /sessions/*
 !/sessions/.gitkeep
 /upstream/Central Hub/.pytest_cache/
+/legacy/upstream/Central Hub/.pytest_cache/
+/legacy/tests/__pycache__/
 /.env
 /.env.*
 /.streamlit/secrets.toml

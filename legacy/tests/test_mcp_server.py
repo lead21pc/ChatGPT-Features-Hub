@@ -14,7 +14,7 @@ from mcp.client.stdio import stdio_client
 import mcp_server as hub
 
 
-REPO = Path(__file__).resolve().parent
+REPO = Path(__file__).resolve().parents[2]
 EXPECTED = {
     "HUB-PKG-TECHNICAL": True, "HUB-PKG-CONCEPT-DEVELOPMENT": True,
     "HUB-PKG-AUTHORING": True, "HUB-PKG-AIS": True, "HUB-PKG-IMAGET": False,
