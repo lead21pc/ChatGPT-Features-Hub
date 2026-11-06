@@ -414,7 +414,7 @@ class T7Tests(unittest.TestCase):
         self.assertIn('leaf scoped ambiguity', self.payloads[-1]['instructions'])
 
     def test_upstream_unchanged_outside_authorized_m2_promotion(self):
-        baseline = 'c619a5a6895cf0d9aa67a92ebb46f36a8bb9e228'
+        baseline = '2d02d75eafd10e38851896aab11d1562ea60219f'
         prefix = 'upstream/Central Hub/'
         changed = {
             prefix + p for p in (
@@ -446,7 +446,7 @@ class T7Tests(unittest.TestCase):
         self.assertEqual(len(paths), 208)
         for path in paths:
             with self.subTest(path=path):
-                committed = subprocess.check_output(['git', 'show', baseline+':'+path])
+                committed = subprocess.check_output(['git', 'cat-file', 'blob', baseline+':'+path])
                 if path in archived:
                     self.assertFalse(Path(path).exists())
                     self.assertEqual(Path(archive_prefix + path[len(prefix):]).read_bytes(), committed)

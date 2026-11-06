@@ -39,7 +39,7 @@ class ExplicitConceptTests(unittest.TestCase):
     def test_serialized_pair_and_unchanged_other_phases_against_head(self):
         baseline = types.ModuleType('baseline_t8')
         source = subprocess.check_output(['git', 'show',
-            '8f5487ca8b124edb339192a9704b5d74157bcf00:t8.py']).decode('utf-8')
+            'f949cdc5a453744c9e02958c343fb27cdd1a42d0:t8.py']).decode('utf-8')
         exec(compile(source, 'baseline_t8.py', 'exec'), baseline.__dict__)
         baseline.host = runtime_host  # Historical code uses the current primitive owner.
         prefixes = []
