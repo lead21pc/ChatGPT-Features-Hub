@@ -1,73 +1,73 @@
 # ChatGPT Features Hub
 
-**Một workspace ChatGPT đa dụng để chẩn đoán kỹ thuật, phát triển ý tưởng, soạn prompt, nghiên cứu, xử lý ảnh và hỗ trợ quyết định mua sắm.**
+**A general-purpose ChatGPT workspace for technical diagnosis, concept development, prompt authoring, research, image workflows, and shopping decisions.**
 
-[Cách Hub xử lý công việc](#cách-hub-xử-lý-công-việc) · [Các gói hiện hành](#các-gói-hiện-hành) · [Soạn prompt](#soạn-prompt-với-authoring) · [Chọn điểm bắt đầu](#chọn-điểm-bắt-đầu) · [Trạng thái kiểm chứng](#trạng-thái-kiểm-chứng)
+[How the Hub handles tasks](#how-the-hub-handles-tasks) · [Current packages](#current-packages) · [Prompt authoring](#prompt-authoring-with-authoring) · [Where to start](#where-to-start) · [Verification status](#verification-status)
 
-## Hub được xây dựng để làm gì
+## What the Hub is for
 
-Central Hub là dự án cá nhân phát triển qua sử dụng thực tế, từ việc ghi nhận lỗi hành vi của mô hình đến điều chỉnh Custom Instructions, kiểm tra hồi quy và thử nghiệm từng revision. **ChatGPT Web / Project + Library** là môi trường chính. Các hợp đồng hiện hành nằm trong [mục lục Hub](HUB_OVERVIEW.md).
+Central Hub is a personal project developed through practical use. Observed model behavior failures inform changes to Custom Instructions, regression checks, and tests of individual revisions. **ChatGPT Web / Project + Library** is the primary environment. The [Hub overview](HUB_OVERVIEW.md) links to the current contracts.
 
-## Cách Hub xử lý công việc
+## How the Hub handles tasks
 
-Hub giữ mục tiêu của yêu cầu hiện tại và giao từng phần việc cho gói phù hợp. Một lượt giải thích hoặc trao đổi thông thường có thể chỉ cần Hub CI. Khi nhiều gói cùng tham gia, mỗi gói đóng góp trong phạm vi được giao và Hub tổng hợp kết quả.
+The Hub keeps the objective of the current request in view and assigns each part of the task to an appropriate package. A routine explanation or conversation may only need Hub CI. When several packages contribute, each works within its assigned scope and the Hub brings the results together.
 
 ```text
-Yêu cầu hiện tại
+Current request
   ↓
-Hub CI · thao tác, trạng thái và quyền hành động
+Hub CI · operation, state, and authorization to act
   ↓
-Router + Catalog · phạm vi, lựa chọn gói và xác minh nguồn
+Router + Catalog · scope, package selection, and source verification
   ↓
-Gói được chọn · mô-đun nội bộ hoặc pipeline theo phạm vi
+Selected packages · internal modules or pipelines for the assigned scope
   ↓
-Hub tổng hợp kết quả
+The Hub combines the results
 ```
 
-[Hub CI 1.1](<HUB_CI_v1.1.md>) là Custom Instructions của Project. [Router 1.1](<HUB_ROUTER_v1.1.yaml>) dùng [Architecture 1.10](<HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog 1.10](<HUB_PACKAGE_CATALOG_v1.10.yaml>) để xác định gói, kiểm tra binding và phân công theo phạm vi. Gói tự phân giải mô-đun nội bộ theo Catalog của mình. ChatGPT thực hiện truy xuất và gọi công cụ khi có đủ điều kiện.
+[Hub CI 1.1](<HUB_CI_v1.1.md>) provides the Project's Custom Instructions. [Router 1.1](<HUB_ROUTER_v1.1.yaml>) uses [Architecture 1.10](<HUB_ARCHITECTURE_v1.10.md>) and [Package Catalog 1.10](<HUB_PACKAGE_CATALOG_v1.10.yaml>) to identify packages, check bindings, and assign work by scope. Each package resolves its internal modules through its own catalog. ChatGPT retrieves sources and calls tools when the applicable conditions are met.
 
-## Các gói hiện hành
+## Current packages
 
-| Gói | Vai trò trong yêu cầu |
+| Package | Role in a request |
 | --- | --- |
-| **Technical** | Giải thích cơ chế, phân biệt giả thuyết và thiết kế phép kiểm tra để xác định nguyên nhân hoặc kiểm chứng một thay đổi kỹ thuật. |
-| [**Concept Development**](<library_modules/HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md>) | Phát triển và kiểm tra ý tưởng. Creative mở rộng bên trong tiền đề, Brainstorm phát triển các nhánh và Debate phản biện đề xuất. |
-| [**Authoring**](<library_modules/HUB-CAP-AUTHORING_v0.7.md>) | Chuyển yêu cầu thành prompt tự chứa cho đích được chọn. |
-| [**AIS**](<tool_pipelines/AIS/AIS_PIPELINE_v1.1.md>) | Tìm, đọc và đánh giá bằng chứng bên ngoài để Hub sử dụng trong phần việc cần nghiên cứu. |
-| [**ImageT**](<tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.2.md>) | Phân tích ảnh và chuẩn bị hoặc thực hiện thao tác ảnh theo quyền và điều kiện kiểm tra của pipeline. |
-| [**Shopping**](<library_modules/HUB-DOM-SHOPPING_v1.0.md>) | So sánh phương án mua theo yêu cầu, SKU, offer, giá và độ phủ bằng chứng. Hub chọn AIS độc lập khi cần nghiên cứu bên ngoài. |
+| **Technical** | Explains mechanisms, distinguishes between hypotheses, and designs tests to identify a cause or verify a technical change. |
+| [**Concept Development**](<library_modules/HUB-DOM-CONCEPT-DEVELOPMENT_v1.1.md>) | Develops and examines ideas. Creative elaborates within a premise, Brainstorm develops alternatives, and Debate challenges proposals. |
+| [**Authoring**](<library_modules/HUB-CAP-AUTHORING_v0.7.md>) | Turns a request into a self-contained prompt for the selected target. |
+| [**AIS**](<tool_pipelines/AIS/AIS_PIPELINE_v1.1.md>) | Finds, reads, and evaluates external evidence for the parts of a Hub task that require research. |
+| [**ImageT**](<tool_pipelines/ImageT/IMAGE_CONTROLLER_v1.2.md>) | Analyzes images and prepares or performs image operations according to the pipeline's authorization and verification requirements. |
+| [**Shopping**](<library_modules/HUB-DOM-SHOPPING_v1.0.md>) | Compares purchase options against requirements, SKUs, offers, prices, and evidence coverage. The Hub selects AIS separately when external research is needed. |
 
-## Soạn prompt với Authoring
+## Prompt authoring with Authoring
 
-Dùng `/AUTHOR` với đích được chọn, sau đó mô tả yêu cầu bằng ngôn ngữ thông thường. Authoring tạo prompt và kết thúc ở đó.
+Use `/AUTHOR` with the desired target, then describe the request in ordinary language. Authoring produces the prompt and stops there.
 
 ```text
 /AUTHOR CODEX
-Soạn prompt để Codex chẩn đoán vì sao ứng dụng chậm khi mở tệp lớn.
-Yêu cầu đo trước khi đề xuất thay đổi.
+Write a prompt for Codex to diagnose why the app slows down when opening large files.
+Require measurements before proposing changes.
 ```
 
-Thêm `ISOLATED` khi muốn giới hạn nguồn nội dung cho lượt soạn prompt hiện tại. Các đích, preset và điều kiện kích hoạt nằm trong [hợp đồng Authoring 0.7](<library_modules/HUB-CAP-AUTHORING_v0.7.md>).
+Add `ISOLATED` to limit which sources can supply content for the current authoring turn. The [Authoring 0.7 contract](<library_modules/HUB-CAP-AUTHORING_v0.7.md>) specifies the available targets, presets, and activation conditions.
 
-## Chọn điểm bắt đầu
+## Where to start
 
-| Bạn muốn | Điểm vào |
+| If you want to | Start here |
 | --- | --- |
-| Đọc hoặc đánh giá bộ ChatGPT Project + Library | [Mục lục Central Hub](HUB_OVERVIEW.md) |
-| Xem các điều kiện chọn gói và truy xuất | [Architecture](<HUB_ARCHITECTURE_v1.10.md>) và [Package Catalog](<HUB_PACKAGE_CATALOG_v1.10.yaml>) |
-| Đối chiếu promotion và kết quả theo revision | [Hồ sơ runtime](<RUNTIME_EVIDENCE_CHANGELOG.md>) và [kiểm thử Hub](<tests/>) |
-| Thử bản dự phòng Python/Responses API | [Hướng dẫn Local/API](legacy/README.md) |
-| Tìm snapshot 1.9 hoặc bằng chứng M2/M3 | [Hồ sơ kiểm thử Local/API](legacy/README.md) và [VERIFICATION.md](legacy/VERIFICATION.md) |
+| Read or evaluate the ChatGPT Project + Library setup | [Central Hub overview](HUB_OVERVIEW.md) |
+| Understand package selection and retrieval requirements | [Architecture](<HUB_ARCHITECTURE_v1.10.md>) and [Package Catalog](<HUB_PACKAGE_CATALOG_v1.10.yaml>) |
+| Review promotions and results by revision | [Runtime evidence log](<RUNTIME_EVIDENCE_CHANGELOG.md>) and [Hub tests](<tests/>) |
+| Try the Python/Responses API backup | [Local/API guide](legacy/README.md) |
+| Find the 1.9 snapshot or M2/M3 evidence | [Local/API test records](legacy/README.md) and [VERIFICATION.md](legacy/VERIFICATION.md) |
 
-## Trạng thái kiểm chứng
+## Verification status
 
-Bộ nguồn hiện hành dùng CI/Router 1.1 và Architecture/Catalog 1.10. Nguồn được tách từ thư mục Central Hub của ChatGPT Creative Workshops tại commit `e310b451`. Các kiểm tra tĩnh và mô phỏng Local/API trên bộ 1.10 đã chạy. Các lượt live Responses API trước đó giữ phạm vi theo workload và revision đã ghi. Trạng thái Library, Project và định tuyến Shopping live được theo dõi riêng trong [hồ sơ Shopping 1.0](<SHOPPING_PROMOTION.md>).
+The current source uses CI/Router 1.1 and Architecture/Catalog 1.10. It was split out from the Central Hub directory of ChatGPT Creative Workshops at commit `e310b451`. Static and mock Local/API checks have been run against 1.10. Earlier live Responses API results apply to the recorded workloads and revisions. Library installation, Project deployment, and live Shopping routing are tracked separately in the [Shopping 1.0 record](<SHOPPING_PROMOTION.md>).
 
 <details>
-<summary>Bản dự phòng Local/API</summary>
+<summary>Local/API backup</summary>
 
-Python, binding runtime và cấu hình Streamlit nằm trong `legacy/`. Runtime đọc control hiện hành từ gốc repository. Streamlit mặc định chạy ở `127.0.0.1`. MCP cung cấp kiểm tra chỉ đọc qua stdio. Shopping và ImageT chưa có binding local.
+The Python entry points, runtime bindings, and Streamlit configuration are in `legacy/`. The runtime reads the current controls from the repository root. Streamlit listens on `127.0.0.1` by default. MCP provides read-only inspection over stdio. Shopping and ImageT currently have no local bindings.
 
-Trong `legacy/`, chạy `python -X utf8 -B -m unittest discover -s tests` để kiểm thử Local/API. Snapshot 1.9, log và bằng chứng M2/M3 nằm trong [legacy/](legacy/).
+From `legacy/`, run `python -X utf8 -B -m unittest discover -s tests` to test Local/API. The 1.9 snapshot, logs, and M2/M3 evidence are in [legacy/](legacy/).
 
 </details>
