@@ -14,7 +14,7 @@
 - AIS **evidence-source compliance PASS**, **search-discovery boundary PARTIAL**: discovery có nguồn ngoài Tauri; evidence/citations sử dụng nguồn Tauri chính thức. Không kết luận AIS thất bại toàn cục.
 - Tương thích model trong phạm vi đã thử không chứng minh khả năng chuyển model cho toàn hệ thống. Giữ nguyên mọi provenance GPT-5.6 Sol lịch sử, gồm hồ sơ M3 bên dưới. **M4 NOT STARTED**; không triển khai MCP.
 
-Review, hash raw evidence, phép tính và kiểm chứng closeout: [GPT61_W1_W2_REVIEW.md](legacy/m3_evidence/GPT61_W1_W2_REVIEW.md). Raw sessions/config giữ local và được ignore, không commit key.
+Review, hash raw evidence, phép tính và kiểm chứng closeout: [GPT61_W1_W2_REVIEW.md](m3_evidence/GPT61_W1_W2_REVIEW.md). Raw sessions/config giữ local và được ignore, không commit key.
 
 ## M3 explicit-cache completion — 2026-11-05
 
@@ -30,7 +30,7 @@ Review, hash raw evidence, phép tính và kiểm chứng closeout: [GPT61_W1_W2
 - Candidate lịch sử có chuỗi lỗi T7 sai ở nhánh Concept validation; promotion sửa wording này thành lỗi T8/Concept phù hợp mà không đổi validation/failure behavior.
 - **M3 TOKEN/CACHE OPTIMIZATION: COMPLETE FOR ACCEPTED SCOPE. M4: NOT STARTED.**
 
-Bằng chứng: [M3_FINAL_STATUS.md](legacy/m3_evidence/M3_FINAL_STATUS.md), [EXPERIMENT_2_RETRY_REVIEW.md](legacy/m3_evidence/EXPERIMENT_2_RETRY_REVIEW.md), [explicit_retry_metrics.json](legacy/m3_evidence/explicit_retry_metrics.json), [explicit_retry_workload_1.json](legacy/m3_evidence/explicit_retry_workload_1.json), [explicit_retry_workload_2.json](legacy/m3_evidence/explicit_retry_workload_2.json).
+Bằng chứng: [M3_FINAL_STATUS.md](m3_evidence/M3_FINAL_STATUS.md), [EXPERIMENT_2_RETRY_REVIEW.md](m3_evidence/EXPERIMENT_2_RETRY_REVIEW.md), [explicit_retry_metrics.json](m3_evidence/explicit_retry_metrics.json), [explicit_retry_workload_1.json](m3_evidence/explicit_retry_workload_1.json), [explicit_retry_workload_2.json](m3_evidence/explicit_retry_workload_2.json).
 
 Các file review trước retry vẫn là bằng chứng lịch sử của checkpoint quota-blocked; các claim `M3 NOT COMPLETE` / `LIVE NOT ESTABLISHED` trong chúng không phải trạng thái hiện hành sau retry.
 
@@ -45,7 +45,7 @@ Chạy trước mọi active mutation, đúng I1 và I3 từ `ISOLATION_TEST_CAS
 - I1: prompt so sánh cedar/ash chỉ dùng số đo được cung cấp, giữ chưa chọn phương án, không bịa số đo; không GOLD/CANARY_LEDGER/CANARY_PROJECT.
 - I3: một yêu cầu làm rõ nguồn quyết định kiến trúc bằng cách cung cấp hoặc định danh duy nhất tài liệu truy cập được, đặc biệt giao diện lưu trữ; không CANARY_POSTGRES/CANARY_FILES và không đoán quyết định.
 
-Bằng chứng đầy đủ: [candidate_I1.json](legacy/m2_evidence/authoring_0_7/candidate_I1.json), [candidate_I3.json](legacy/m2_evidence/authoring_0_7/candidate_I3.json). Có toàn payload/response, hash controls/input/output, model, SDK, versions, thời gian và semantic review; không dùng khớp câu chữ đáp án mẫu để chấm output tiếng Việt.
+Bằng chứng đầy đủ: [candidate_I1.json](m2_evidence/authoring_0_7/candidate_I1.json), [candidate_I3.json](m2_evidence/authoring_0_7/candidate_I3.json). Có toàn payload/response, hash controls/input/output, model, SDK, versions, thời gian và semantic review; không dùng khớp câu chữ đáp án mẫu để chấm output tiếng Việt.
 
 ### Promotion và STATIC/SPEC PASS
 
@@ -59,7 +59,7 @@ Binding v0.2 (T8 diagnostic) và v0.3 (M1 runtime) cùng đổi sang module 0.7 
 - Static/mock phủ exact activation, preset+isolated, malformed/unsupported forms, no-suffix false, no persistence sau clarification/reauthor, impossible combinations, genuine blockers, giữ history, source-boundary handoff và no-target execution. Các ca này không chứng minh model tuân thủ mọi dạng cú pháp trong live.
 - Đối chiếu toàn bộ 208 file upstream tại checkpoint với allowlist promotion cụ thể: PASS; ImageT, candidate và package ngoài Authoring không đổi. Các predecessor bị thay thế được archive byte-exact, có receipt/hash. Test cũ “mọi upstream file giống HEAD” được thay bằng kiểm tra baseline cố định để cho phép đúng promotion đã duyệt, vẫn kiểm mọi file ngoài scope.
 
-Chi tiết: [static_summary.json](legacy/m2_evidence/authoring_0_7/static_summary.json), [local_static.txt](legacy/m2_evidence/authoring_0_7/local_static.txt), [focused_upstream.txt](legacy/m2_evidence/authoring_0_7/focused_upstream.txt). Các mismatch static ban đầu do kỳ vọng revision cũ đã được sửa trong phạm vi; log ban đầu giữ riêng, không phải kết quả nghiệm thu cuối.
+Chi tiết: [static_summary.json](m2_evidence/authoring_0_7/static_summary.json), [local_static.txt](m2_evidence/authoring_0_7/local_static.txt), [focused_upstream.txt](m2_evidence/authoring_0_7/focused_upstream.txt). Các mismatch static ban đầu do kỳ vọng revision cũ đã được sửa trong phạm vi; log ban đầu giữ riêng, không phải kết quả nghiệm thu cuối.
 
 Giới hạn mirror-wide upstream được người dùng cung cấp trước: thiếu original git-history objects và Project Feather files. Đây là giới hạn môi trường mirror, tách khỏi Authoring 0.7. Không chạy lại toàn suite upstream trong lượt promotion; không suy full upstream PASS từ focused PASS.
 
@@ -69,7 +69,7 @@ Chỉ chạy sau static gate PASS, dùng đúng current turn do người dùng c
 
 Đúng **một top-level request**, **3 Responses API calls**, tất cả completed, `max_retries=0`, không tools và không target execution. Root chỉ chọn HUB-PKG-AUTHORING; admission/handoff ghi `isolated=true`; trace `authoring_isolated=true`, target GENERIC, preset/contributor NONE; blocker rỗng. Module runtime được đọc và SHA-256 verified. Prompt cuối chỉ so sánh giấy/văn bản thuần túy, giữ cả hai chưa quyết định, không nhập canary hoặc quyết định cũ. Không thực thi so sánh thay cho việc tạo prompt.
 
-Bằng chứng: [active_runtime.json](legacy/m2_evidence/authoring_0_7/active_runtime.json), có đầy đủ inputs/outputs của cả ba pha, hashes, versions và trace. Tổng phần Authoring 0.7 trong lượt này: **5 Responses API calls**, gồm hai candidate cases và một active top-level request; **0 retry**, không live attempt bổ sung.
+Bằng chứng: [active_runtime.json](m2_evidence/authoring_0_7/active_runtime.json), có đầy đủ inputs/outputs của cả ba pha, hashes, versions và trace. Tổng phần Authoring 0.7 trong lượt này: **5 Responses API calls**, gồm hai candidate cases và một active top-level request; **0 retry**, không live attempt bổ sung.
 
 `STATIC/SPEC PASS != CANDIDATE LIVE PASS != ACTIVE LOCAL RUNTIME LIVE PASS`. Kết quả chỉ xác minh phạm vi đã chạy, không chứng minh ChatGPT Library installation/retrieval hoặc Project deployment. Các bằng chứng M1/M2 trước đây được giữ nguyên. Commit/push promotion được thực hiện sau khi kiểm tra staged snapshot; hash commit và trạng thái remote được báo ở kết quả tác vụ.
 

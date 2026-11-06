@@ -211,14 +211,14 @@ with patch.object(h.host, 'OpenAI', side_effect=AssertionError('API')), \\
     h.hub_validate_root_selection(dict(task_scope='ordinary', selected_packages=[], unresolved_blockers=[]))
 assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
 '''
-        result = subprocess.run([sys.executable, "-c", code], cwd=REPO,
+        result = subprocess.run([sys.executable, "-c", code], cwd=REPO / "legacy",
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, "")
 
     def test_stdio_prepare_validate_and_errors(self):
         async def inspect():
-            params = StdioServerParameters(command=sys.executable, args=[str(REPO / "mcp_server.py")],
+            params = StdioServerParameters(command=sys.executable, args=[str(REPO / "legacy" / "mcp_server.py")],
                                            cwd=tempfile.gettempdir())
             async with stdio_client(params) as (reader, writer):
                 async with ClientSession(reader, writer, read_timeout_seconds=timedelta(seconds=20)) as session:

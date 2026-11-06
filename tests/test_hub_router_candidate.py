@@ -877,7 +877,7 @@ class PriorSingletonMigration(unittest.TestCase):
             self.assertIn(invariant, previous)
             self.assertIn(invariant, architecture)
         self.assertIn('Runtime control language: English only', architecture)
-        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        readme = (ROOT / 'HUB_OVERVIEW.md').read_text(encoding='utf-8')
         for name in ['HUB_CI_v1.1.md', 'HUB_ROUTER_v1.1.yaml', 'HUB_ARCHITECTURE_v1.10.md',
                      'HUB_PACKAGE_CATALOG_v1.10.yaml', 'REPOSITORY ACTIVE != PROJECT DEPLOYED']:
             self.assertIn(name, readme)

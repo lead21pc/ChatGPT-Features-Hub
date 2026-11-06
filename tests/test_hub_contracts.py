@@ -602,7 +602,11 @@ class HubTests(unittest.TestCase):
         for row in rows:
             self.assertEqual(digest(ROOT / row['archive']), row['sha256'])
             self.assertFalse((ROOT.parent / row['old']).exists())
-        archives = [p for p in ROOT.rglob('*') if p.is_dir() and p.name.lower() == 'source_archive']
+        current_dirs = ('Source_archive', 'candidates', 'capabilities', 'domains',
+                        'library_modules', 'tests', 'tool_pipelines')
+        archives = [p for name in current_dirs for base in (ROOT / name,)
+                    for p in (base, *base.rglob('*'))
+                    if p.is_dir() and p.name.lower() == 'source_archive']
         self.assertEqual(archives, [ROOT / 'Source_archive'])
 
     def check_candidate_package_catalog(self, catalog):

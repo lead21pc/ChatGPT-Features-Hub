@@ -40,7 +40,7 @@ with patch.object(h.host, 'OpenAI', side_effect=AssertionError('API execution'))
     assert len(h.hub_runtime_inventory()['packages']) == 6
 assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
 """
-        result = subprocess.run([sys.executable, "-c", code], cwd=REPO,
+        result = subprocess.run([sys.executable, "-c", code], cwd=REPO / "legacy",
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, "")
@@ -106,7 +106,7 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
         self.assertEqual(status, hub.hub_status())
 
     def test_real_inventory_and_no_mutation(self):
-        paths = [*REPO.joinpath("runtime").rglob("*"), hub.host.HUB_CATALOG_PATH]
+        paths = [*REPO.joinpath("legacy", "runtime").rglob("*"), hub.host.HUB_CATALOG_PATH]
         before = {p: p.read_bytes() for p in paths if p.is_file()}
         with patch.object(Path, "write_bytes", side_effect=AssertionError("write")), \
              patch.object(Path, "write_text", side_effect=AssertionError("write")), \
@@ -156,7 +156,7 @@ assert not {'app', 'streamlit', 'm1'} & set(sys.modules)
         async def inspect_process():
             # Launch from outside the repo: all paths must be script-relative.
             parameters = StdioServerParameters(
-                command=sys.executable, args=[str(REPO / "mcp_server.py")],
+                command=sys.executable, args=[str(REPO / "legacy" / "mcp_server.py")],
                 cwd=tempfile.gettempdir())
             async with stdio_client(parameters) as (reader, writer):
                 async with ClientSession(reader, writer, read_timeout_seconds=timedelta(seconds=20)) as session:

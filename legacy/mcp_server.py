@@ -14,7 +14,7 @@ import runtime_host as host
 import t9
 
 
-REPO_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parents[1]
 server = Server("central-hub")
 _PROCESS_NONCE = secrets.token_hex(16)
 

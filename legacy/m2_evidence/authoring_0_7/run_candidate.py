@@ -5,14 +5,14 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 import app
 import openai
 from openai import OpenAI
 
 OUT = Path(__file__).resolve().parent
-HUB = ROOT / 'legacy/upstream/Central Hub'
+HUB = ROOT / 'upstream/Central Hub'
 CANDIDATE = HUB / 'candidates/authoring_v0_7'
 
 

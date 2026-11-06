@@ -130,12 +130,12 @@ def call_model(config, messages, mode=RUNTIME_MODE):
         try:
             instructions["instructions"] = HUB_CI_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
-            raise ValueError("T1: Không đọc được Central Hub/HUB_CI_v1.1.md. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang T0.") from None
+            raise ValueError("T1: Không đọc được HUB_CI_v1.1.md. Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang T0.") from None
     elif mode == MODES[2]:
         try:
             ci = HUB_CI_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
-            raise ValueError("T2: Không đọc được Central Hub/HUB_CI_v1.1.md; yêu cầu chưa được gửi, không chuyển sang T1/T0.") from None
+            raise ValueError("T2: Không đọc được HUB_CI_v1.1.md; yêu cầu chưa được gửi, không chuyển sang T1/T0.") from None
         try:
             technical = TECHNICAL_PATH.read_bytes().decode("utf-8")
         except (OSError, UnicodeError):
@@ -201,7 +201,7 @@ def inspect_route(config, prompt):
             controls.append(path.read_bytes().decode("utf-8"))
         except (OSError, UnicodeError):
             raise ValueError(
-                f"T3: Không đọc được Central Hub/{path.name}. "
+                f"T3: Không đọc được {path.name}. "
                 "Hãy kiểm tra tệp, quyền đọc và mã hóa UTF-8; yêu cầu chưa được gửi, không chuyển sang chế độ khác."
             ) from None
     with OpenAI(

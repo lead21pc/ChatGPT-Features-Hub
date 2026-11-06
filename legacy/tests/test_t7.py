@@ -92,7 +92,7 @@ class T7Tests(unittest.TestCase):
             self.assertTrue(path.is_relative_to(repo/'runtime'))
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), artifact['sha256'])
             self.assertEqual(app.t7_retrieve(artifact).encode('utf-8'), path.read_bytes())
-            committed = subprocess.check_output(['git', 'show', 'HEAD:'+artifact['path']])
+            committed = subprocess.check_output(['git', 'cat-file', 'blob', ':legacy/'+artifact['path']])
             self.assertEqual(path.read_bytes(), committed)
 
     def test_root_rereads_exact_controls_and_config_without_bodies(self):
@@ -442,18 +442,18 @@ class T7Tests(unittest.TestCase):
             'tests/SHOPPING_M2_1_REGRESSIONS.md',
             'tool_pipelines/AIS/AIS_PROMOTION_REPORT.md',
         )}
-        paths = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', baseline, '--', 'upstream']).decode('utf-8').rstrip('\0').split('\0')
+        paths = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', '--full-tree', baseline, '--', 'upstream']).decode('utf-8').rstrip('\0').split('\0')
         self.assertEqual(len(paths), 208)
         for path in paths:
             with self.subTest(path=path):
                 committed = subprocess.check_output(['git', 'cat-file', 'blob', baseline+':'+path])
-                relocated = Path('legacy') / path
+                relocated = Path(path)
                 if path in archived:
                     self.assertFalse(relocated.exists())
-                    self.assertEqual((Path('legacy') / (archive_prefix + path[len(prefix):])).read_bytes(), committed)
+                    self.assertEqual(Path(archive_prefix + path[len(prefix):]).read_bytes(), committed)
                 elif path not in changed | redacted_reports:
                     self.assertEqual(relocated.read_bytes(), committed)
-        actual = {p.relative_to('legacy').as_posix() for p in Path('legacy/upstream').rglob('*') if p.is_file()
+        actual = {p.as_posix() for p in Path('upstream').rglob('*') if p.is_file()
                   and '__pycache__' not in p.parts and '.pytest_cache' not in p.parts}
         self.assertEqual(actual - set(paths), added | archive_files)
 

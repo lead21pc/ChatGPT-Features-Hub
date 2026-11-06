@@ -3,8 +3,8 @@ import hashlib
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-HUB = ROOT / 'legacy/upstream/Central Hub'
+ROOT = Path(__file__).resolve().parents[2]
+HUB = ROOT / 'upstream/Central Hub'
 OUT = Path(__file__).resolve().parent
 ARCHIVE = HUB / 'Source_archive/Authoring 0.7 M2 2026-11-05'
 

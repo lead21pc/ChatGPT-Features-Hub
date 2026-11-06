@@ -20,7 +20,7 @@ class T4Tests(unittest.TestCase):
         self.assertEqual(set(paths[0].parent.iterdir()),
                          set(paths) | {app.CREATIVE_PATH, app.BRAINSTORM_PATH, app.DEBATE_PATH})
         for path in paths:
-            source = Path('legacy/upstream/Central Hub/library_modules') / path.name
+            source = Path('upstream/Central Hub/library_modules') / path.name
             self.assertEqual(path.read_bytes(), source.read_bytes())
         self.assertIn(b'Status: ACTIVE', paths[0].read_bytes())
         self.assertIn(b'Version: 1.1', paths[0].read_bytes())

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 import app
 import m1
@@ -46,7 +46,7 @@ def run():
                   model=config['model'], messages=messages, calls=[], trace=None, result='NOT_EVALUATED',
                   started_utc=datetime.now(timezone.utc).isoformat(),
                   versions=gate['versions'], static_gate_sha256=hashlib.sha256((OUT / 'static_summary.json').read_bytes()).hexdigest(),
-                  controls={p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in control_paths})
+                  controls={p.relative_to(ROOT.parent).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in control_paths})
     with target.open('x', encoding='utf-8') as stream:
         stream.write(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
     original = Responses.create

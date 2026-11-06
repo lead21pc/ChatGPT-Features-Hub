@@ -1,12 +1,24 @@
 /config.json
+/legacy/config.json
 /__pycache__/
 /.venv/
 /sessions/*
+/legacy/sessions/*
 !/sessions/.gitkeep
-/upstream/Central Hub/.pytest_cache/
-/legacy/upstream/Central Hub/.pytest_cache/
+!/legacy/sessions/.gitkeep
+/upstream/.pytest_cache/
+/legacy/.pytest_cache/
+/legacy/upstream/.pytest_cache/
+/legacy/.pytest_cache/
 /legacy/tests/__pycache__/
+/tests/__pycache__/
 /.env
 /.env.*
 /.streamlit/secrets.toml
-/Central Hub/.pytest_cache/
+/legacy/.streamlit/secrets.toml
+/legacy/.env
+/legacy/.env.*
+/legacy/__pycache__/
+/legacy/.venv/
+/.pytest_cache/
+/legacy/.pytest_cache/

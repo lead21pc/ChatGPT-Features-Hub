@@ -20,7 +20,7 @@ unexpected = [name for name in sys.modules
               if name == 'app' or name == 'streamlit' or name.startswith('streamlit.')]
 assert not unexpected, unexpected
 """],
-            cwd=Path(__file__).resolve().parents[2],
+            cwd=Path(__file__).resolve().parents[1],
             capture_output=True,
             text=True,
         )
