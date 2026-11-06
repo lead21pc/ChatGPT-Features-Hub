@@ -23,9 +23,15 @@ class CliModelTests(unittest.TestCase):
 
         run.side_effect = fake_run
         self.assertEqual(
-            cli_model.call_codex_cli("", [{"role": "user", "content": "test"}]),
+            cli_model.call_codex_cli(
+                "",
+                [{"role": "user", "content": "test"}],
+                output_schema={"type": "object"},
+            ),
             "C1 CLI OK",
         )
+        command = run.call_args.args[0]
+        self.assertIn("--output-schema", command)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ This module does not perform Hub routing or replace M1 yet.
 """
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import tempfile
@@ -32,6 +33,7 @@ def call_codex_cli(
     *,
     model: str = "gpt-6.1-sol",
     timeout: float = 120.0,
+    output_schema: dict | None = None,
 ) -> str:
     """Call Codex CLI through the logged-in ChatGPT subscription and return final text."""
     prompt = _prompt(instructions, messages)
@@ -52,8 +54,12 @@ def call_codex_cli(
             "-C", str(root),
             "-m", model,
             "-o", str(output_path),
-            "-",
         ]
+        if output_schema is not None:
+            schema_path = root / "output_schema.json"
+            schema_path.write_text(json.dumps(output_schema, ensure_ascii=False), encoding="utf-8")
+            command.extend(["--output-schema", str(schema_path)])
+        command.append("-")
         try:
             result = subprocess.run(
                 command,
