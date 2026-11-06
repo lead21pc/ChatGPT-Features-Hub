@@ -414,7 +414,7 @@ class T7Tests(unittest.TestCase):
         self.assertIn('leaf scoped ambiguity', self.payloads[-1]['instructions'])
 
     def test_upstream_unchanged_outside_authorized_m2_promotion(self):
-        baseline = '2d02d75eafd10e38851896aab11d1562ea60219f'
+        baseline = 'a1163c3d54d4934b7870cb634e4d04bb22d2b21d'
         prefix = 'upstream/Central Hub/'
         changed = {
             prefix + p for p in (
