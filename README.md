@@ -2,6 +2,8 @@
 
 **A general-purpose ChatGPT workspace for technical diagnosis, concept development, prompt authoring, research, image workflows, and shopping decisions.**
 
+**[Get started with ChatGPT Web](GETTING_STARTED.md)** for the exact Project Instructions, Project Sources, and Library files.
+
 [How the Hub handles tasks](#how-the-hub-handles-tasks) · [Current packages](#current-packages) · [Prompt authoring](#prompt-authoring-with-authoring) · [Where to start](#where-to-start) · [Verification status](#verification-status)
 
 ## What the Hub is for
