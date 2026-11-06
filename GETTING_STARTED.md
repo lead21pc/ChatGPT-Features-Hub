@@ -111,11 +111,42 @@ Put the command on the first nonempty line you write, outside quotes or code fen
 
 Presets are `P1`, `P2`, or `P3`. `ISOLATED` goes last and limits the source material admitted for this turn. Contributors are `CREATIVE` or `BRAINSTORM`. Use a corresponding valid Concept span in the request body when asking that leaf to contribute. The contributor name alone does not activate it. Contributor forms cannot include a preset or `ISOLATED`. Repeat the command on a new Authoring turn, including when replying to a clarification. Authoring returns a prompt or asks a necessary clarification. Target execution requires a separate request and its own permissions. See [Authoring 0.7](library_modules/HUB-CAP-AUTHORING_v0.7.md).
 
-### Example workflows
+## How packages work together
 
-- **Diagnose a slowdown.** Describe the symptom and constraints. Technical can compare plausible mechanisms and propose a test, and the Hub reports what the evidence supports.
-- **Research, develop an idea, then prepare an image.** Ask AIS to verify a factual premise when evidence is needed. Use a scoped Creative directive to develop an idea within the supplied premise. On another turn, use `/AUTHOR IMAGET` to draft a prompt. If you later want an image, explicitly request execution, state whether to preserve the authored prompt's meaning, and review the Ready Gate snapshot before approving it. This is one possible composition, with each step chosen for its own purpose.
-- **Hand a task to Codex.** Use `/AUTHOR CODEX` and describe the goal and limits. Review the resulting prompt before passing it to Codex yourself.
+Bring your current task to the Hub. The Router can choose zero, one, or several packages, including different packages for different parts of a request. Each package contributes within its own scope. The next turn can use a different combination, or invoke the same capability again if the new request calls for it.
+
+| Request | One possible composition |
+| --- | --- |
+| Write a brief thank-you note. | Hub baseline alone. |
+| Diagnose a slowdown from symptoms and logs already supplied. | Technical compares mechanisms and proposes a distinguishing test. |
+| Verify a documented hardware limit, then assess whether it explains the slowdown. | AIS checks the external evidence. The Hub can use the supported findings in the scoped Technical analysis. |
+| Review an idea for consistency, or explore alternate premises. | Concept core can handle a review alone. A valid `/BRAINSTORM … #` span can add premise exploration. A `/CREATIVE … #` span can develop a chosen premise separately. |
+| Create or edit an image from a clear request. | ImageT can handle it directly, with the applicable gates before a generation call. |
+| Turn an existing diagnosis into a task for Codex. | `/AUTHOR CODEX` produces the requested handoff prompt and stops. |
+
+AIS returns supported evidence and gaps to the Hub. The Hub may use that evidence in a direct answer, Technical analysis, Concept development, an Authoring handoff, or an ImageT task that needs factual constraints. An evidence source is not automatically an image reference asset. Creative and Brainstorm have independent scopes. Neither needs to run merely because the other was selected. A declared refinement or complementary relation describes how scoped contributions relate. Refinement and complementarity alone add no hard dependency. Required reads follow the applicable contract and any declared hard dependencies. See [Architecture](HUB_ARCHITECTURE_v1.10.md).
+
+## Full walkthrough example — not required order
+
+This optional walkthrough illustrates how to turn research into an image of a historical spacecraft. Use a Project with the core files, the applicable Library modules, both pipeline file sets, and working tools. Send each quoted prompt as a separate turn in the same Project chat. Continue dependent steps only when the previous step supplied the evidence or material they need.
+
+1. **Check the baseline.** Ask “Write a one-sentence thank-you note for a neighbor.” No specialized package is needed for this example.
+2. **Ask for research.** Try “Search official NASA sources for the visible landing-gear features of the Apollo 11 Lunar Module. Cite the sources you actually read and flag any details they do not establish.” Use supported findings as constraints. Keep unresolved details open.
+3. **Develop one visual premise.** Try `/CREATIVE Develop a single museum illustration concept from the supported findings above. Keep the verified landing-gear features, and keep unsupported details open. #`. If you instead want to explore different premises, use a valid Brainstorm span in a separate request and choose which premise to carry forward.
+4. **Prepare a handoff prompt.** Use `/AUTHOR IMAGET` on the first line. On the next line ask for a self-contained image prompt from the chosen concept and supported findings. Review the returned prompt. This turn ends at the prompt.
+5. **Request the image.** Supply the prompt and say “Generate the image from this final authored prompt. Preserve its semantic content. Show me the snapshot and wait for my approval before calling the tool.” Your current instruction supplies the preservation authority for Open Gate. ImageT resolves its sources, checks the tool-facing prompt at Prompt Gate, and presents the numbered Ready Gate snapshot. Check the prompt, references and roles, and options. Research citations alone do not authorize reference assets.
+6. **Approve and inspect.** If the snapshot matches the intended operation, explicitly approve that exact version for one call. If a field needs revision, ask for the change and review the new snapshot. After a successful tool call, inspect the visible result against the verified constraints. You can then ask to analyze the result or explore a variation as a new task.
+
+### You can skip or reorder most of this
+
+A request with sufficient evidence can skip AIS. A clear image request can go straight to ImageT, or use research evidence without developing a separate Concept or Authoring artifact. Concept can inform an image request directly or supply material for an Authoring handoff. Technical can precede a Codex handoff, and AIS findings can support Technical before Concept if the task actually needs all three. Authoring alone and the Hub baseline alone are also useful.
+
+Only real dependencies and applicable contracts constrain local order. For example, ImageT generation requires Prompt Gate before Ready Gate and approval before the image tool call. That sequence belongs to ImageT. The Hub reassesses which packages to use for each task or turn.
+
+## Add or request a capability
+
+- **Build your own.** Fork or clone the repository and extend a module, package, or pipeline under the existing [architecture](HUB_ARCHITECTURE_v1.10.md). Keep the new responsibility with its appropriate owner.
+- **Request a change.** [Open an issue](https://github.com/lead21pc/ChatGPT-Features-Hub/issues/new) describing the capability, the current problem, and what you expect to happen. Name a relevant package or module if you know it. You can propose the behavior without designing the implementation. The maintainer can extend an existing package, add a module or pipeline, or decline the proposal.
 
 ## Common setup mistakes
 
@@ -123,7 +154,8 @@ Presets are `P1`, `P2`, or `P3`. `ISOLATED` goes last and limits the source mate
 | --- | --- |
 | A correct CI is installed, but specialization is blocked. | Confirm Router 1.1 and both 1.10 sources are present and readable in Project Sources. A package body alone cannot replace the Root Catalog. |
 | Library retrieval is missing or ambiguous. | Check the exact root, file identity, version, active status, full read, and duplicate coverage. Install the listed files rather than uploading the entire module tree. |
-| A listed file or previous package selection is assumed active for this request. | Reassess the current task and verify the selected artifact. Presence or prior selection alone does not activate it. |
+| Every task is expected to use all installed packages. | Select only the contributions needed for the current task. AIS contributes when external evidence is needed, and ImageT can handle a clear image request directly. |
+| A file's location or a previous selection is treated as a dependency. | Check the current scope and declared dependencies. Files in the same folder have no implied execution order. |
 | An authored prompt, an AIS finding, or an ImageT snapshot is treated as an action or decision. | Look for separate authorization and evidence of execution or an accepted decision. A prompt is a handoff, evidence is scoped, and an image requires an actual tool result. |
 
 ## Optional Local/API backup
